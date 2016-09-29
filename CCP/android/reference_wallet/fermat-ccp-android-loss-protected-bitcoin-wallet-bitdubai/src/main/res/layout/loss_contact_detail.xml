@@ -34,7 +34,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:id="@+id/image_view_profile"
             android:scaleType="centerCrop"
@@ -123,7 +123,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:gravity="center_vertical"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textStyle="normal"
                         android:textColor="#999999"
                         android:textColorHint="#4f4f4f"

@@ -53,9 +53,9 @@
     <string name="fee_High">Rapido</string>
     <string name="fee_Medium">Normal</string>
     <string name="fee_advances_text">Configuracion avanzada</string>
-    <string name="fee_amount_text">Taza</string>
+    <string name="fee_amount_text">Tasa</string>
     <string name="fee_low">Lento</string>
-    <string name="fee_option_text">Restar taza al  monto</string>
+    <string name="fee_option_text">Restar tasa al  monto</string>
     <string name="fermat_network_offline_text">Red Fermat offline</string>
     <string name="footer_message_text"></string>
     <string name="fragment_send_account_details_summary">Detalles de cuenta</string>
@@ -111,7 +111,7 @@
     <string name="swype_refresh">Deslice hacia abajo para refrescar</string>
     <string name="the_process_of_downloading_text">Se estan bajando los bloques de\nla  Blockchain.\n  Mientras esto ocurre, la barra superior se mostrara en rojo.</string>
     <string name="this_is_a_simple_bitcoin_only_wallet_text">Esta cartera maneja bitcoins\nCon ella se puede:</string>
-    <string name="title_Fee">Configuracion de Taza</string>
+    <string name="title_Fee">Configuracion de Tasa</string>
     <string name="title_activity_blank">Administrador de Carteras</string>
     <string name="title_activity_requests_received">Solicitudes recibidas</string>
     <string name="title_activity_pay_to_contact">Pagar a contacto</string>
@@ -151,7 +151,7 @@
     <string name="error_msg_no_address">No se tiene una direccion para inviar\nPor favor, espere un rato</string>
     <string name="error_msg_trying_to_reconnect">Por favor espere un momento, intentando reconectar...</string>
     <string name="msg_report_send">Reporte enviado</string>
-    <string name="error_std_message">Ha habido un error. Por favor intente de nuevo</string>
+    <string name="error_std_message">Ocurrio un error. Por favor intente de nuevo</string>
     <string name="request_sent">Solicitud enviada</string>
     <string name="success_msg_address_copied_clipboard">Direccion copiada al portapapeles</string>
     <string name="success_msg_address_sent_wait">Direccion enviada, por favor espere 2 minutos</string>
@@ -211,10 +211,6 @@
     <string name="pr_status_9">En Proceso</string>
     <string name="pr_status_10">Denegado</string>
     <string name="pr_status_11">Error, contacte a soporte</string>
-
-
-
-
     <!--Generic messages -->
     <!-- Amounts Messages-->
     <string name="invalid_amount_limit">Monto invalido, debe ser mayor que </string>
@@ -236,8 +232,12 @@
     <string name="notification_payment_denied">Requerimiento de Pago Denegado</string>
     <string name="notification_payment_denied_2">Su Requerimiento de Pago por </string>
     <string name="notification_payment_denied_3"> BTC fue denegado.</string>
-    <string name="notification_payment_error">Requerimeinto de Pago Reversado</string>
+    <string name="notification_payment_error">Requerimiento de Pago Reversado</string>
     <string name="notification_payment_error_2">Su Requerimiento de Pago por </string>
     <string name="notification_payment_error_3"> BTC fue reversado.</string>
 
+    <!--Delete Wallet Contact Dialog-->
+    <string name="delete_title">Borrar Contacto</string>
+    <string name="delete_sub_title">Quieres eliminar este contacto de tu cartera?</string>
+    <string name="deleted_toast">Contacto Borrado</string>
 </resources>

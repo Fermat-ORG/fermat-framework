@@ -30,17 +30,14 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.util.List;
-import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
@@ -152,16 +149,16 @@ public class ChatMessageListFragment
         }
     }
 
-    public void onUpdateViewUIThread() {
+    public void onUpdateViewUIThread(String remotePk) {
         if(isAttached) {
             if (searchView != null) {
                 if (searchView.getQuery().toString().equals("")) {
-                    adapterView.refreshEvents();
+                    //adapterView.refreshEvents(remotePk, h);
                 }
             } else {
-                adapterView.refreshEvents();
+               // adapterView.refreshEvents(remotePk, h);
             }
-        }
+        }else adapterView.clean();
     }
 
     @Override
@@ -225,19 +222,24 @@ public class ChatMessageListFragment
     }
 
     @Override
-    public void onPause() {
+    public void onPause()
+    {
         super.onPause();
         unbindDrawables(adapterView.getRootView().findViewById(R.id.messagesContainer));
         unbindDrawables(adapterView.getRootView().findViewById(R.id.chatSendButton));
         System.gc();
     }
 
-    private void unbindDrawables(View view) {
-        if (view.getBackground() != null) {
+    private void unbindDrawables(View view)
+    {
+        if (view.getBackground() != null)
+        {
             view.getBackground().setCallback(null);
         }
-        if (view instanceof ViewGroup && !(view instanceof AdapterView)) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        if (view instanceof ViewGroup && !(view instanceof AdapterView))
+        {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+            {
                 unbindDrawables(((ViewGroup) view).getChildAt(i));
             }
             ((ViewGroup) view).removeAllViews();
@@ -312,43 +314,8 @@ public class ChatMessageListFragment
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
-
-                        int chatBroadcasterType = fermatBundle.getInt(ChatBroadcasterConstants.CHAT_BROADCASTER_TYPE);
-
-                        switch (chatBroadcasterType) {
-                            case ChatBroadcasterConstants.WRITING_NOTIFICATION_TYPE:
-
-                                String remotePK = fermatBundle.getString(ChatBroadcasterConstants.CHAT_REMOTE_PK);
-
-                                if (adapterView != null)
-                                    adapterView.checkStatus(remotePK, h);
-
-                                break;
-                            case ChatBroadcasterConstants.MESSAGE_STATUS_UPDATE_TYPE:
-
-                                UUID messageId = (UUID) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_ID);
-
-                                MessageStatus messageStatus = (MessageStatus) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE_STATUS);
-
-                                if (adapterView != null)
-                                    adapterView.updateMessageStatus(messageId, messageStatus);
-                                break;
-                            case ChatBroadcasterConstants.NEW_MESSAGE_TYPE:
-
-                                Message message = (Message) fermatBundle.getSerializable(ChatBroadcasterConstants.CHAT_MESSAGE);
-
-                                if (adapterView != null)
-                                    adapterView.addMessage(message);
-
-                                break;
-                            default:
-
-                                System.out.println("ChatMessageListFragment -> No deberia pasar por aca.");
-
-                                onUpdateViewUIThread();
-                                break;
-                        }
-
+                        String remotePK =""; //fermatBundle.getString(ChatBroadcasterConstants.CHAT_WRITING_NOTIFICATION);
+                        onUpdateViewUIThread(remotePK);
                     }
                 }
             } catch (ClassCastException e) {

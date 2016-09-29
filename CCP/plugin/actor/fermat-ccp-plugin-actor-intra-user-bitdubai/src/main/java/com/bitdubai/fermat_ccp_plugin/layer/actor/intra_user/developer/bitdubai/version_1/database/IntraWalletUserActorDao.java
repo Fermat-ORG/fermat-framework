@@ -1,17 +1,10 @@
 package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
-import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
-
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetUserDeveloperIdentitiesException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -30,6 +23,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantUpdateIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantAddPendingIntraWalletUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraWalletUserActorException;
@@ -41,7 +37,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorRecord;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -105,16 +100,15 @@ public class IntraWalletUserActorDao {
 
         try {
 
-            if (getIntraUserConnectedInfo(intraUserToAddPublicKey)==null){
+            DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
 
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME                , intraUserToAddPublicKey   , DatabaseFilterType.EQUAL);
 
-                /**
-                 * Get actual date
-                 */
-                Date d = new Date();
-                long milliseconds = d.getTime();
+            if (table.getCount() == 0){
 
-                DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
+                long milliseconds = System.currentTimeMillis();
+
                 DatabaseTableRecord record = table.getEmptyRecord();
 
                 record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey);
@@ -133,18 +127,14 @@ public class IntraWalletUserActorDao {
                 /**
                  * Persist profile image on a file
                  */
-                if(profileImage!=null && profileImage.length > 0) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
+                if(profileImage != null && profileImage.length > 0)
+                    persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
 
-
-            }else {
+            } else {
                 System.out.println("THE INTRA WALLET USER IS ALREADY CREATED IN THE DB, I have to update it");
 
-                updateConnectionState(intraUserLoggedInPublicKey,intraUserToAddPublicKey,contactState);
-
+                updateConnectionStateAndData(table, intraUserToAddPublicKey, intraUserToAddName, profileImage, contactState,phrase,city,country);
             }
-
-
-
 
         } catch (CantInsertRecordException e) {
 
@@ -162,62 +152,49 @@ public class IntraWalletUserActorDao {
 
     }
 
-
-  /*  public void createActorIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, ConnectionState contactState) throws CantCreateIntraWalletUserException {
-
+    public void updateIntraWalletUserdata(final String intraUserToUpdatePublicKey,
+                                          final String intraUserName,
+                                          final String intraUserPhrase,
+                                          final byte[] profileImage,
+                                          final String city,
+                                          final String country) throws CantUpdateIntraWalletUserException{
         try {
 
-            /**
-             * if intra user exist on table
-             * change status
-             */
-         /*   if (intraUserExists(intraUserToAddPublicKey)) {
+            /**Get the Table**/
+            final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
 
-                this.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, contactState);
+            /**Filter by keys**/
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME,intraUserToUpdatePublicKey,DatabaseFilterType.EQUAL);
 
-            } else {
-                /**
-                 * Get actual date
-                 */
-            /*    Date d = new Date();
-                long milliseconds = d.getTime();
+            /**Get a Record to set Data **/
+            DatabaseTableRecord record = table.getEmptyRecord();
 
-                DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
-                DatabaseTableRecord record = table.getEmptyRecord();
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME,intraUserName);
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME,intraUserPhrase);
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CITY_COLUMN_NAME,city);
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_COUNTRY_COLUMN_NAME,country);
 
-                record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey);
-                record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME, intraUserToAddName);
-                record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode());
-                record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey);
-                record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
-                record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
+            //only connections users
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode());
 
-                table.insertRecord(record);
-
+            if(table.numRecords() > 0){
+                table.updateRecord(record);
 
                 /**
                  * Persist profile image on a file
                  */
-             /*   if(profileImage!=null && profileImage.length > 0) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
-
+                if(profileImage != null && profileImage.length > 0)
+                    persistNewUserProfileImage(intraUserToUpdatePublicKey, profileImage);
             }
 
 
-        } catch (CantInsertRecordException e) {
 
-            throw new CantCreateIntraWalletUserException("CAN'T INSERT INTRA USER", e, "", "Cant create new intra user, insert database problems.");
+        }catch (Exception e){
+            throw new CantUpdateIntraWalletUserException("CAN'T INSERT INTRA USER", e, "", "Cant Update intra user, insert database problems.");
 
-        } catch (CantUpdateConnectionException e) {
-
-            throw new CantCreateIntraWalletUserException("CAN'T INSERT INTRA USER", e, "", "Cant update exist intra user state, unknown failure.");
-
-        } catch (Exception e) {
-            // Failure unknown.
-            throw new CantCreateIntraWalletUserException("CAN'T INSERT INTRA USER", FermatException.wrapException(e), "", "Cant create new intra user, unknown failure.");
         }
 
-
-    */
+    }
 
 
     public void updateConnectionState(final String          intraUserLoggedInPublicKey,
@@ -231,27 +208,60 @@ public class IntraWalletUserActorDao {
              */
             final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
 
-            if (table == null)
-                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user actor list, table not found.", "Intra User Actor", "");
-
             // 2) set filter by keys.
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
 
-
-            /**
-             * Get actual date
-             */
-            Date d = new Date();
-            long milliseconds = d.getTime();
+            long milliseconds = System.currentTimeMillis();
 
             // 3) Get a record to set data
             DatabaseTableRecord record =  table.getEmptyRecord();
 
             record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode());
-             record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
-             table.updateRecord(record);
+            record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
+            record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
 
+            table.updateRecord(record);
+
+        }  catch (CantUpdateRecordException e) {
+
+            throw new CantUpdateConnectionException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
+
+        } catch (Exception e) {
+
+            throw new CantUpdateConnectionException(e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant get developer identity list, unknown failure.");
+        }
+    }
+
+
+    public void updateConnectionStateAndData(final DatabaseTable table,
+                                             final String          intraUserToAddPublicKey   ,
+                                             String intraUserToAddName,
+                                             byte[] profileImage,
+                                             final ConnectionState contactState,
+                                             String phrase,
+                                             String city,
+                                             String country) throws CantUpdateConnectionException {
+
+        try {
+
+            long milliseconds = System.currentTimeMillis();
+
+            // 3) Get a record to set data
+            DatabaseTableRecord record =  table.getEmptyRecord();
+
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode());
+            record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
+            record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME, intraUserToAddName);
+
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME, phrase);
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CITY_COLUMN_NAME, city);
+            record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_COUNTRY_COLUMN_NAME, country);
+
+            table.updateRecord(record);
+
+            if(profileImage!=null && profileImage.length > 0) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
 
         }  catch (CantUpdateRecordException e) {
 
@@ -275,9 +285,6 @@ public class IntraWalletUserActorDao {
              * 1) Get the table.
              */
             final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
-
-            if (table == null)
-                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
 
             // 2) Find all Intra Users.
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
@@ -317,9 +324,114 @@ public class IntraWalletUserActorDao {
         } catch (CantLoadTableToMemoryException e) {
 
             throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
-        //} catch (CantGetIntraWalletUserActorProfileImageException e) {
+            //} catch (CantGetIntraWalletUserActorProfileImageException e) {
+
             // Failure unknown.
-       //     throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
+            //     throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
+
+        } catch (Exception e) {
+
+            throw new CantGetIntraWalletUsersListException(e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant get Instra User Actor list, unknown failure.");
+        }
+
+
+    }
+
+    public List<IntraWalletUserActor> getAllConnectedIntraWalletUsersByLocation(String intraUserLoggedInPublicKey, int max, int offset, String country, String city) throws CantGetIntraWalletUsersListException {
+
+        // Get Intra Users identities list.
+        try {
+
+            final ConnectionState connectedState = ConnectionState.CONNECTED;
+
+            /**
+             * 1) Get the table.
+             */
+            final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
+
+            // 2) Find all Intra Users.
+
+            /* this case compare city selected agains city of actors,
+             */
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CITY_COLUMN_NAME, city, DatabaseFilterType.LIKE);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, connectedState.getCode(), DatabaseFilterType.EQUAL);
+
+            table.setFilterOffSet(String.valueOf(offset));
+            table.setFilterTop(String.valueOf(max));
+
+            /* this case compare city selected agains contry of actors,
+             *  because the error in which gps invert city and contry...
+             */
+            if(table.getCount() == 0){
+                table.clearAllFilters();
+                table.setFilterOffSet(String.valueOf(offset));
+                table.setFilterTop(String.valueOf(max));
+
+                table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_COUNTRY_COLUMN_NAME, city, DatabaseFilterType.LIKE);
+                table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+                table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, connectedState.getCode(), DatabaseFilterType.EQUAL);
+
+                  /* this case compare country selected agains contry of actors,
+                   */
+                if(table.getCount() == 0){
+                    table.clearAllFilters();
+                    table.setFilterOffSet(String.valueOf(offset));
+                    table.setFilterTop(String.valueOf(max));
+
+                    table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_COUNTRY_COLUMN_NAME, country, DatabaseFilterType.LIKE);
+                    table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+                    table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, connectedState.getCode(), DatabaseFilterType.EQUAL);
+
+                    /* this case compare contry selected agains city of actors,
+                     *  because the error in which gps invert city and contry...
+                     */
+                    if(table.getCount() == 0){
+                        table.clearAllFilters();
+                        table.setFilterOffSet(String.valueOf(offset));
+                        table.setFilterTop(String.valueOf(max));
+
+                        table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CITY_COLUMN_NAME, country, DatabaseFilterType.LIKE);
+                        table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+                        table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, connectedState.getCode(), DatabaseFilterType.EQUAL);
+                    }
+                }
+            }
+
+            table.loadToMemory();
+
+            List<IntraWalletUserActor> list = new ArrayList<>(); // Intra User Actor list.
+
+            // 3) Get Intra Users Recorod.
+            for (DatabaseTableRecord record : table.getRecords()) {
+
+                byte[] image;
+                try {
+                    image = getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME));
+                } catch(FileNotFoundException e) {
+                    image = new  byte[0];
+                }
+
+                // Add records to list.
+                list.add(new com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserActor(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME),
+                        record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
+                        image,
+                        record.getLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME),
+                        ConnectionState.getByCode(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME)),
+                        record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME),
+                        record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CITY_COLUMN_NAME),
+                        record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_COUNTRY_COLUMN_NAME)));
+            }
+
+            // Return the list values.
+            return list;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
+            //} catch (CantGetIntraWalletUserActorProfileImageException e) {
+            // Failure unknown.
+            //     throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
 
         } catch (Exception e) {
 
@@ -343,12 +455,8 @@ public class IntraWalletUserActorDao {
              */
             final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
 
-            if (table == null)
-                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
-
             // 2) Find all Intra Users.
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserConnectedPublicKey, DatabaseFilterType.EQUAL);
-
 
             table.loadToMemory();
 
@@ -392,15 +500,10 @@ public class IntraWalletUserActorDao {
 
         try {
 
-            IntraWalletUserActor intraWalletUserActor = null;
-
-            /**
-             * 1) Get the table.
-             */
             final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
 
-            if (table == null)
-                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
+            IntraWalletUserActor intraWalletUserActor = null;
+
 
             // 2) Find all Intra Users.
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserConnectedPublicKey, DatabaseFilterType.EQUAL);
@@ -447,18 +550,11 @@ public class IntraWalletUserActorDao {
     public Actor getIntraUserActorByPublicKey(String          walletPublicKey,
                                               String          intraUserPublicKey ) throws CantGetIntraWalletUserActorException {
 
-        // Get Intra Users identities list.
         try {
 
-
             Actor intraWalletUserActor = null;
-            /**
-             * 1) Get the table.
-             */
-            final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
 
-            if (table == null)
-                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user actor, table not found.", "Plugin Intra User Actor", "Cant get Intra User actor, table not found.");
+            final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
 
             // 2) Find all Intra Users.
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
@@ -466,8 +562,6 @@ public class IntraWalletUserActorDao {
 
 
             table.loadToMemory();
-
-            List<IntraWalletUserActor> list = new ArrayList<>(); // Intra User Actor list.
 
             // 3) Get Intra Users Record.
             for (DatabaseTableRecord record : table.getRecords()) {
@@ -501,26 +595,18 @@ public class IntraWalletUserActorDao {
 
 
     public List<IntraWalletUserActor> getAllConnectedIntraWalletUsers(final String intraActorSelectedPublicKey,
-                                                                 final ConnectionState contactState,
-                                                                 final int max,
-                                                                 final int offset) throws CantGetIntraWalletUsersListException {
+                                                                      final ConnectionState contactState,
+                                                                      final int max,
+                                                                      final int offset) throws CantGetIntraWalletUsersListException {
 
 
         // Setup method.
         List<IntraWalletUserActor> list = new ArrayList<>(); // Intra User Actor list.
-        DatabaseTable table;
 
         // Get Intra Users identities list.
         try {
 
-            /**
-             * 1) Get the table.
-             */
-            table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
-
-            if (table == null)
-                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
-
+            DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
 
             // 2) Find  Intra Users by state.
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraActorSelectedPublicKey, DatabaseFilterType.EQUAL);
@@ -556,9 +642,9 @@ public class IntraWalletUserActorDao {
         } catch (CantLoadTableToMemoryException e) {
 
             throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
-       //} catch (CantGetIntraWalletUserActorProfileImageException e) {
+            //} catch (CantGetIntraWalletUserActorProfileImageException e) {
             // Failure unknown.
-         //   throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
+            //   throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
 
         } catch (Exception e) {
 
@@ -570,13 +656,31 @@ public class IntraWalletUserActorDao {
         return list;
     }
 
-
-
-
-
     /**
      * Private Methods
      */
+
+    private void deleteUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException,FileNotFoundException {
+
+        try {
+
+            this.pluginFileSystem.deleteBinaryFile(pluginId,
+                    PROFILE_IMAGE_DIRECTORY_NAME,
+                    buildProfileImageFileName(publicKey),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+        }catch (FileNotFoundException e){
+            throw new FileNotFoundException("File not found",e);
+        } catch (CantCreateFileException e) {
+
+            throw new CantPersistProfileImageException(e, "Error Delete file.", null);
+        } catch (Exception e) {
+
+            throw new CantPersistProfileImageException(FermatException.wrapException(e), "", "");
+        }
+    }
 
 
     private void persistNewUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
@@ -641,24 +745,24 @@ public class IntraWalletUserActorDao {
      *
      * @param intraUserToAddPublicKey
      * @return boolean exists
-     * @throws CantCreateNewDeveloperException
+     * @throws CantGetIntraWalletUserActorException
      */
     public boolean intraUserRequestExists(final String intraUserToAddPublicKey, ConnectionState connectionState) throws CantGetIntraWalletUserActorException {
+
+        if (intraUserToAddPublicKey == null) {
+            throw new CantGetIntraWalletUserActorException("intraUserToAddPublicKey null", "intraUserToAddPublicKey must not be null.");
+        }
 
         try {
 
             final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
 
-            if (intraUserToAddPublicKey == null) {
-                throw new CantGetUserDeveloperIdentitiesException("intraUserToAddPublicKey null", "intraUserToAddPublicKey must not be null.");
-            }
+
 
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, connectionState.getCode(), DatabaseFilterType.EQUAL);
 
-            table.loadToMemory();
-
-            return table.getRecords().size() > 0;
+            return table.getCount() > 0;
 
         } catch (CantLoadTableToMemoryException em) {
             throw new CantGetIntraWalletUserActorException(em.getMessage(), em, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
@@ -669,22 +773,20 @@ public class IntraWalletUserActorDao {
         }
     }
 
-
     public boolean intraUserRequestExists(final String intraUserToAddPublicKey) throws CantGetIntraWalletUserActorException {
+
+        if (intraUserToAddPublicKey == null) {
+            throw new CantGetIntraWalletUserActorException("intraUserToAddPublicKey null", "intraUserToAddPublicKey must not be null.");
+        }
 
         try {
 
             final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
 
-            if (intraUserToAddPublicKey == null) {
-                throw new CantGetUserDeveloperIdentitiesException("intraUserToAddPublicKey null", "intraUserToAddPublicKey must not be null.");
-            }
 
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
 
-            table.loadToMemory();
-
-            return table.getRecords().size() > 0;
+            return table.getCount() > 0;
 
         } catch (CantLoadTableToMemoryException em) {
             throw new CantGetIntraWalletUserActorException(em.getMessage(), em, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");

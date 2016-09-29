@@ -748,7 +748,9 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         importedSeed.setBlockchainNetworkType(blockchainNetworkType);
         try {
             this.dao.addNewImportedSeed(importedSeed);
+            System.err.println("--- Crypto Vault -- addNewImportedSeed  ---");
         } catch (CantExecuteDatabaseOperationException e) {
+            System.err.println("--- sendImportedSeedFundsToWallet ERROR ---");
             e.printStackTrace();
         }
     }

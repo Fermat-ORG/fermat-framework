@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    tools:showIn="@layout/fragment_connections_notifications">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_border_shadow"
+            android:paddingLeft="20dp"
+            android:layout_marginLeft="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_below="@+id/img_layout"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignBottom="@+id/img_layout"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:paddingLeft="4dp"
+                    android:singleLine="true"
+                    android:text="@string/username"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText,RtlHardcoded"
+                    android:paddingTop="5dp" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1"
+                    android:layout_marginBottom="5dp">
+
+                    <ImageView
+                        tools:ignore="ContentDescription"
+                        android:id="@+id/imageView"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ccp_geolacation_light_icon"
+                        android:layout_gravity="center"
+                        android:paddingBottom="5dp" />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:id="@+id/notification_location"
+                        android:layout_gravity="center"
+                        android:text="@string/no_location"
+                        android:textSize="12dp"
+                        android:textColor="#aaaaab"
+                        android:layout_weight="0.70"
+                        android:paddingTop="4dp"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/reception_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/ic_profile_connect"
+                android:ellipsize="end"
+                android:gravity="center_vertical|right"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="@string/few_moments"
+                android:textSize="12sp"
+                tools:ignore="HardcodedText,RtlHardcoded"
+                android:textColor="#aaeae5"
+                android:layout_gravity="center"
+                android:editable="false"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="10dp"
+                />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:background="@drawable/circleuser_icon"
+            android:id="@+id/img_layout"
+            android:backgroundTint="@color/color_black_light"
+            >
+
+            <ImageView
+                android:id="@+id/imageView_avatar"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                tools:ignore="ContentDescription"
+                android:background="@drawable/photocontact_icon" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="3dp"
+        android:background="#ffffff" />
+
+</LinearLayout>

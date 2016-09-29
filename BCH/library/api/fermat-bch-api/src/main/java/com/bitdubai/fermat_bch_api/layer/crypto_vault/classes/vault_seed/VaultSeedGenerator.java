@@ -245,7 +245,11 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         importedSeed = new DeterministicSeed(mnemonicCode, null, "", seedCreationTimeSeconds);
 
         if (!isSeedValid(importedSeed))
+        {
+            System.out.println("--- Import Seed ERROR --- Importing new seed from incorrect seed format");
             throw new CantImportSeedException(null, "Importing new seed from " + mnemonicCode, "incorrect seed format");
+        }
+
 
 
         /**
@@ -262,6 +266,7 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
             String newSeedFileName = this.fileName + "_" + this.getNextSeedFileOrder();
             storeSeedInFile(newSeedFileName);
         } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
+            System.err.println("--- CantCreateAssetVaultSeed ERROR ---");
             throw new CantImportSeedException(cantCreateAssetVaultSeed, "unable to save new seed into disk.", "IO Error");
         }
     }

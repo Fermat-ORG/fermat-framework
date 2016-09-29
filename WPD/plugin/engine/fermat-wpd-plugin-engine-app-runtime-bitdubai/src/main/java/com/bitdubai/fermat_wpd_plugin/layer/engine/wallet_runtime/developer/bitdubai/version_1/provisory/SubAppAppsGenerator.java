@@ -4852,11 +4852,11 @@ public class SubAppAppsGenerator {
         optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
-        optionMenuItemBrowser = new OptionMenuItem(2);
+       /* optionMenuItemBrowser = new OptionMenuItem(2);
         optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(2, "geolocalitation_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Geolocalitation");
         optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
+        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);*/
 
         optionMenuItemBrowser = new OptionMenuItem(3);
         optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
@@ -4929,6 +4929,7 @@ public class SubAppAppsGenerator {
         //Tabs Notifications
         runtimeTab = new Tab();
         runtimeTab.setLabel("NOTIFICATIONS");
+        runtimeTab.setTabTextSize(8);
 
         runtimeTab.setFragment(new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();
@@ -4944,7 +4945,7 @@ public class SubAppAppsGenerator {
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenuNot.addMenuItem(optionMenuItemNot);
 
-        OptionMenuItem optionMenuItemNot = new OptionMenuItem(2);
+        /*OptionMenuItem optionMenuItemNot = new OptionMenuItem(2);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(2, "geolocalitation_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Geolocalitation");
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);

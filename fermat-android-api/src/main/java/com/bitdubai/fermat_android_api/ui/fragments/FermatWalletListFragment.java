@@ -48,6 +48,7 @@ public abstract class FermatWalletListFragment<M, S extends FermatSession, RP ex
     protected FermatAdapter adapter;
     protected RecyclerView.LayoutManager layoutManager;
     protected SwipeRefreshLayout swipeRefreshLayout;
+    protected RecyclerView.OnScrollListener scrollListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,11 @@ public abstract class FermatWalletListFragment<M, S extends FermatSession, RP ex
         if (_executor != null) {
             _executor.shutdown();
             _executor = null;
+        }
+
+        if (scrollListener != null && recyclerView != null) {
+            recyclerView.removeOnScrollListener(scrollListener);
+            scrollListener = null;
         }
     }
 
@@ -116,6 +122,10 @@ public abstract class FermatWalletListFragment<M, S extends FermatSession, RP ex
             if (adapter != null) {
                 recyclerView.setAdapter(adapter);
             }
+            scrollListener = getScrollListener();
+            if (scrollListener != null) {
+                recyclerView.addOnScrollListener(scrollListener);
+            }
             swipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(getSwipeRefreshLayoutId());
             if (swipeRefreshLayout != null) {
                 isRefreshing = false;
@@ -158,5 +168,17 @@ public abstract class FermatWalletListFragment<M, S extends FermatSession, RP ex
             if (getExecutor() != null)
                 getExecutor().execute(worker);
         }
+    }
+
+
+    /**
+     * Override this method if yo want to implement infinite scrolling or pagination.
+     * Return a {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.
+     *
+     * @return the {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.
+     * This return <code>null</code> by default
+     */
+    public RecyclerView.OnScrollListener getScrollListener() {
+        return null;
     }
 }

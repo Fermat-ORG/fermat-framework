@@ -355,7 +355,7 @@ public class CryptoWalletBasicWalletDao {
         try{
 //            if(!isTransactionInTable(transactionRecord.getTransactionId(), TransactionType.CREDIT, balanceType)) {
 
-            if(isTransactionInTable(transactionRecord.getTransactionId(), TransactionType.CREDIT, balanceType))
+          if(isTransactionInTable(transactionRecord.getTransactionId(), TransactionType.CREDIT, balanceType))
                 throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
 

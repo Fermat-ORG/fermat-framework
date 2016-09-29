@@ -4,8 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -81,11 +85,11 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
             positiveBtn.setOnClickListener(this);
             negativeBtn.setOnClickListener(this);
 
-            title.setText("CONNECTION REQUEST");
+            title.setText(this.activity.getResources().getString(R.string.confirmation_notification_dialog_title));
             title.setTextColor(Color.BLACK);
-            description.setText("New Connection");
+            description.setText( this.activity.getResources().getString(R.string.confirmation_notification_dialog_description));
             description.setTextColor(Color.parseColor("#5ddad1"));
-            userName.setText(intraUserInformation.getName() + " wants to connect with you");
+            userName.setText(intraUserInformation.getName() + " "+ this.activity.getResources().getString(R.string.confirmation_notification_dialog_message));
             userName.setTextColor(Color.parseColor("#3f3f3f"));
             userName.setVisibility(View.VISIBLE);
             userName.setTextSize(14);
@@ -121,10 +125,26 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
                     getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(), intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
                     getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED, Boolean.TRUE);
 
+
                     //Toast.makeText(getContext(), intraUserInformation.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
                     //Crear un nuevo intent
-                 //   Intent intent = new Intent(AccpetMessage);
-                 //   startActivity(intent);
+                    //Intent intent = new Intent(AccpetMessage);
+                    //startActivity(intent);
+                    Toast CustomToast = new Toast(getContext());
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    View layout = inflater.inflate(R.layout.ccp_connection_accepted,
+                            (ViewGroup) findViewById(R.id.layout_connection_success));
+
+
+                    TextView txtMsg = (TextView)layout.findViewById(R.id.text_connection_success);
+                    txtMsg.setText("\n"+getContext().getResources().getString(R.string.connected)+" "+intraUserInformation.getName()+"\n");
+                    int offsetX = 0;
+                    int offsetY = 0;
+                    CustomToast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, offsetX, offsetY);
+                    CustomToast.setDuration(Toast.LENGTH_SHORT);
+                    CustomToast.setView(layout);
+                    CustomToast.show();
 
                     result = true;
                 } else {

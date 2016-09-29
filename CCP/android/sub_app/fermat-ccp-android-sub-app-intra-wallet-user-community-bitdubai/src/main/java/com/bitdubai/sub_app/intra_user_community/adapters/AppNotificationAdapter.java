@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.intra_user_community.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
@@ -22,6 +23,7 @@ import java.util.List;
 public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, AppNotificationsHolder> {
 
     private Context context;
+
     public AppNotificationAdapter(Context context, List<IntraUserInformation> lst) {
         super(context, lst);
 
@@ -41,8 +43,9 @@ public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, 
     @Override
     protected void bindHolder(AppNotificationsHolder holder, IntraUserInformation data, int position) {
 
-        if (data.getCity()!=null||data.getCountry()!=null)
-            holder.notification_location.setText(data.getCountry()+", "+data.getCity());
+        if (data.getCity()!=null||data.getCountry()!=null || !data.getCity().equals("----") || !data.getCountry().equals("----"))
+            //holder.notification_location.setText(data.getCountry()+", "+data.getCity());
+            holder.notification_location.setText(data.getCity());
         else holder.notification_location.setText("No Location");
 
         if (data.getPublicKey() != null) {
@@ -51,6 +54,12 @@ public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, 
             // holder.userLocation.setText(data.getCountry()+" - "+data.getCity());
             if (data.getProfileImage() != null && data.getProfileImage().length > 0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
+                holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+            }
+            else
+            {
+                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_profile_male);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
                 holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
             }
@@ -75,35 +84,35 @@ public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, 
                         }else{
                             diff = Actualdate.getMinutes() - date.getMinutes();
                             if (diff >1)
-                                ago = diff+ context.getResources().getString(R.string.notification_time_2); //2 or more minutes
+                                ago = diff+ " " +  context.getResources().getString(R.string.notification_time_2); //2 or more minutes
                             else
-                                ago = diff+ context.getResources().getString(R.string.notification_time_2);  //1 minute
+                                ago = diff+ " " + context.getResources().getString(R.string.notification_time_2);  //1 minute
                         }
                     }else{
                         if(Actualdate.getHours() > date.getHours()) {
                             diff = Actualdate.getHours() - date.getHours();
                             if (diff > 1)
-                                ago = diff + context.getResources().getString(R.string.notification_time_3); //2 or more hours
+                                ago = diff + " " + context.getResources().getString(R.string.notification_time_3); //2 or more hours
                             else
-                                ago = diff + context.getResources().getString(R.string.notification_time_3);  //1 hour
+                                ago = diff + " " + context.getResources().getString(R.string.notification_time_3);  //1 hour
                         }
                     }
                 }else{
                     if(Actualdate.getDay() > date.getDay()) {
                         diff = Actualdate.getDay() - date.getDay();
                         if (diff > 1)
-                            ago = diff + context.getResources().getString(R.string.notification_time_4); //2 or more days
+                            ago = diff + " " + context.getResources().getString(R.string.notification_time_4); //2 or more days
                         else
-                            ago = diff + context.getResources().getString(R.string.notification_time_4);  //1 day
+                            ago = diff + " " + context.getResources().getString(R.string.notification_time_4);  //1 day
                     }
                 }
             }else{
                 if(Actualdate.getMonth() > date.getMonth()) {
                     diff = Actualdate.getMonth() - date.getMonth();
                     if (diff > 1)
-                        ago = diff + context.getResources().getString(R.string.notification_time_3); //2 or more Month
+                        ago = diff + " " + context.getResources().getString(R.string.notification_time_3); //2 or more Month
                     else
-                        ago = diff + context.getResources().getString(R.string.notification_time_3);  //1 Month
+                        ago = diff + " " + context.getResources().getString(R.string.notification_time_3);  //1 Month
                 }
             }
         }
@@ -111,9 +120,9 @@ public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, 
             if(Actualdate.getYear() > date.getYear()){
                 diff = Actualdate.getYear() - date.getYear();
                 if (diff > 1)
-                    ago = diff + context.getResources().getString(R.string.notification_time_5); //2 or more years
+                    ago = diff + " " + context.getResources().getString(R.string.notification_time_5); //2 or more years
                 else
-                    ago = diff + context.getResources().getString(R.string.notification_time_5);  //1 year
+                    ago = diff + " " + context.getResources().getString(R.string.notification_time_5);  //1 year
             }
         }
         return  ago;    //sdf.format(date);

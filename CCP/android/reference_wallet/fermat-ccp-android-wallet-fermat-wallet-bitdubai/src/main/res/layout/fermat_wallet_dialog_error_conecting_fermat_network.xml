@@ -55,7 +55,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingStart="8dp"
-            android:text=""
+            android:text="@string/second_description_text"
             android:textColor="#ffffff"
             android:textSize="15sp"
             tools:ignore="HardcodedText" />

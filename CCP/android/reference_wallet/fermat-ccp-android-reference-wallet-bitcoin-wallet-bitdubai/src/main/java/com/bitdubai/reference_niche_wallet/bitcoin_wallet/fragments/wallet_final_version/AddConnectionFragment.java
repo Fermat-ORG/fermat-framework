@@ -34,7 +34,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
@@ -56,6 +55,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     private static final Integer MAX_USER_SHOW = 20;
     private int offset = 0;
     private CryptoWallet moduleManager;
+    private String PublicKey;
     private ErrorManager errorManager;
     private ArrayList<CryptoWalletIntraUserActor> intraUserInformationList;
 
@@ -80,6 +80,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             // setting up  module
 
             moduleManager = appSession.getModuleManager();
+            PublicKey = moduleManager.getSelectedActorIdentity().getPublicKey();
             errorManager = appSession.getErrorManager();
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
             isMenuVisible=false;
@@ -216,8 +217,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                intraUserInformationList = (ArrayList) result[0];
                 clean(intraUserInformationList);
+                intraUserInformationList = (ArrayList) result[0];
+
                 if (adapter != null)
                     adapter.changeDataSet(intraUserInformationList);
                 if(intraUserInformationList.isEmpty()){
@@ -289,7 +291,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                                     cryptoWalletIntraUserActor.getPublicKey(),
                                     cryptoWalletIntraUserActor.getProfileImage(),
                                     Actors.INTRA_USER,
-                                    moduleManager.getSelectedActorIdentity().getPublicKey()
+                                    PublicKey
                                     , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     blockchainNetworkType);
@@ -323,7 +325,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             if (moduleManager == null) {
                 Toast.makeText(getActivity(),getResources().getString(R.string.error_std_message),Toast.LENGTH_SHORT).show();
             } else {
-                data = moduleManager.listAllIntraUserConnections(moduleManager.getSelectedActorIdentity().getPublicKey(),
+                data = moduleManager.listAllIntraUserConnections(PublicKey,
                         appSession.getAppPublicKey(),
                         MAX_USER_SHOW,
                         offset);

@@ -116,6 +116,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
             if(!existRequest(requestId))
             {
+                long receivedTimeStamp = System.currentTimeMillis();
                 DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
                 DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
@@ -129,7 +130,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
                         description      ,
                         cryptoAddress    ,
                         amount           ,
-                        startTimeStamp   ,
+                        receivedTimeStamp,
                         type             ,
                         action           ,
                         protocolState    ,
@@ -178,7 +179,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
     }
 
     public CryptoPaymentRequest getRequestById(final UUID requestId) throws CantGetRequestException  ,
-                                                                      RequestNotFoundException {
+            RequestNotFoundException {
 
         if (requestId == null)
             throw new CantGetRequestException("", "requestId, can not be null");
@@ -218,14 +219,12 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
             cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            cryptoPaymentRequestTable.loadToMemory();
+            if(cryptoPaymentRequestTable.numRecords()== 0)
+                return false;
+            else
+                return true;
 
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
-
-
-            return !records.isEmpty();
-
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (Exception exception) {
 
             throw new CantGetRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
@@ -235,7 +234,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
     public void takeAction(final UUID                       requestId    ,
                            final RequestAction              action       ,
                            final RequestProtocolState       protocolState) throws CantTakeActionException  ,
-                                                                            RequestNotFoundException {
+            RequestNotFoundException {
 
         if (requestId == null)
             throw new CantTakeActionException("requestId null "   , "The requestId is required, can not be null"    );
@@ -252,12 +251,12 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
             cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-           DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
+            DatabaseTableRecord record = cryptoPaymentRequestTable.getEmptyRecord();
 
             record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
-                record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME        , action       .getCode());
+            record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME        , action       .getCode());
 
-                cryptoPaymentRequestTable.updateRecord(record);
+            cryptoPaymentRequestTable.updateRecord(record);
 
 
 
@@ -269,7 +268,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
     public void changeProtocolState(final UUID                 requestId    ,
                                     final RequestProtocolState protocolState) throws CantChangeRequestProtocolStateException,
-                                                                               RequestNotFoundException                            {
+            RequestNotFoundException                            {
 
         if (requestId == null)
             throw new CantChangeRequestProtocolStateException("requestId null "   , "The requestId is required, can not be null"    );
@@ -287,7 +286,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
             record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
 
-                cryptoPaymentRequestTable.updateRecord(record);
+            cryptoPaymentRequestTable.updateRecord(record);
 
 
         }catch (CantUpdateRecordException exception) {
@@ -385,8 +384,8 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
 
     public void changeSentNumber(final UUID                 requestId    ,
-                                    final int sentNumber) throws CantChangeRequestSentCountException,
-                                                                 RequestNotFoundException
+                                 final int sentNumber) throws CantChangeRequestSentCountException,
+            RequestNotFoundException
     {
 
 
@@ -410,7 +409,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
 
     public void delete(final UUID requestId) throws CantDeletePaymentRequestException,
-                                                    RequestNotFoundException
+            RequestNotFoundException
     {
 
 

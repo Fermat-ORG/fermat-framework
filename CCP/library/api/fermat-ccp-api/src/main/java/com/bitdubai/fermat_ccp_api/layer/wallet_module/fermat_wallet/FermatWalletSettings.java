@@ -18,6 +18,7 @@ public class FermatWalletSettings implements WalletSettings,Serializable {
     private IntraUserLoginIdentity lastSelectedIdentity;
     private boolean isPresentationHelpEnabled;
     private boolean isContactsHelpEnabled;
+    private boolean isPaymentHelpEnabled;
     private Map<Long, Long>  runningDailyBalance ;
     private BlockchainNetworkType blockchainNetworkType;
     private boolean notificationEnabled;
@@ -118,4 +119,12 @@ public class FermatWalletSettings implements WalletSettings,Serializable {
     public String getFiatCurrency(){return this.fiatCurrency;}
 
     public void setFiatCurrency(String fiatCurrency){this.fiatCurrency = fiatCurrency;}
+
+    public boolean getPaymentHelpEnabled() {
+        return this.isPaymentHelpEnabled;
+    }
+
+    public void setIsPaymentHelpEnabled(boolean isPaymentHelpEnabled) {
+        this.isPaymentHelpEnabled = isPaymentHelpEnabled;
+    }
 }

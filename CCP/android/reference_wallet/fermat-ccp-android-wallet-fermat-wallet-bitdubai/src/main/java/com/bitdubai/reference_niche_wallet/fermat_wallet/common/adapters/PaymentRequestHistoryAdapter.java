@@ -39,7 +39,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 
     ReferenceAppFermatSession<FermatWallet> referenceWalletSession;
     private FermatWalletSettings fermatWalletSettings = null;
-    private String feeLevel = "NORMAL";
+    private String feeLevel = "SLOW";
     Typeface tf;
     BlockchainNetworkType blockchainNetworkType;
 
@@ -145,37 +145,37 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         String state = "";
         switch (data.getState()){
             case WAITING_RECEPTION_CONFIRMATION:
-                state = "Waiting for response";
+                state = this.context.getResources().getString(R.string.pr_status_1); //"Waiting for response";
                 break;
             case APPROVED:
-                state = "Accepted";
+                state = this.context.getResources().getString(R.string.pr_status_2); //"Accepted";
                 break;
             case PAID:
-                state = "Paid";
+                state = this.context.getResources().getString(R.string.pr_status_3); //"Paid";
                 break;
             case PENDING_RESPONSE:
-                state = "Pending response";
+                state = this.context.getResources().getString(R.string.pr_status_4); //"Pending response";
                 break;
             case ERROR:
-                state = "Error";
+                state = this.context.getResources().getString(R.string.pr_status_5); //"Error";
                 break;
             case NOT_SENT_YET:
-                state = "Not sent yet";
+                state = this.context.getResources().getString(R.string.pr_status_6); //"Not sent yet";
                 break;
             case PAYMENT_PROCESS_STARTED:
-                state = "Payment process started";
+                state = this.context.getResources().getString(R.string.pr_status_7); //"Payment process started";
                 break;
             case DENIED_BY_INCOMPATIBILITY:
-                state = "Denied by incompatibility";
+                state = this.context.getResources().getString(R.string.pr_status_8); //"Denied by incompatibility";
                 break;
             case IN_APPROVING_PROCESS:
-                state = "In approving process";
+                state = this.context.getResources().getString(R.string.pr_status_9); //"In approving process";
                 break;
             case REFUSED:
-                state = "Denied";
+                state = this.context.getResources().getString(R.string.pr_status_10); //"Denied";
                 break;
             default:
-                state = "Error, contact with support";
+                state = this.context.getResources().getString(R.string.pr_status_11); //"Error, contact with support";
                 break;
 
         }

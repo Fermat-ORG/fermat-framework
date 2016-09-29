@@ -117,7 +117,7 @@
                 android:fontFamily="ROBOTO"
                 android:textSize="16sp"
                 android:textColor="#fff"
-                android:text="Total earnings and lost:"
+                android:text="@string/Total_earnings_lost"
                 android:focusable="false"
                 android:focusableInTouchMode="false"/>
         </LinearLayout>
@@ -142,7 +142,7 @@
                     android:fontFamily="Roboto"
                     android:textSize="16sp"
                     android:textColor="#fff"
-                    android:text="Today: "
+                    android:text="@string/Today_text"
                     android:focusable="false"
                     android:focusableInTouchMode="false"/>
                 <TextView
@@ -218,7 +218,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="No Data"
+                    android:text="@string/No_data"
                     android:textColor="#fff"
                     android:visibility="gone"
                     android:id="@+id/noDataInChart"

@@ -3,7 +3,9 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -198,8 +200,49 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
     private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
+        // bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+
+        Bitmap imageBitmap = getResizedBitmap(bitmap,dpToPx(), dpToPx());
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         return stream.toByteArray();
+    }
+
+    public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        int limitSize = 400;
+
+        if (newHeight > limitSize || newWidth > limitSize) {
+            if (height > width) {
+                if (height > limitSize) {
+                    newHeight = limitSize;
+                    newWidth = width * limitSize / height;
+                }
+            } else {
+                if (width > limitSize) {
+                    newWidth = limitSize;
+                    newHeight = height * limitSize / width;
+                }
+            }
+        }
+
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+        // RECREATE THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
+                matrix, false);
+        return resizedBitmap;
+    }
+
+
+    public int dpToPx() {
+        int dp = 150;
+        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
     }
 
     @Override

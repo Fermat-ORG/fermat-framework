@@ -115,8 +115,8 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         WalletManagerModule,
         WalletManager {
 
-//    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
-//    private CryptoWalletManager cryptoWalletManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
+   private CryptoWalletManager cryptoWalletManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -133,24 +133,24 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     @NeededPluginReference(platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     private WalletManagerManager walletMiddlewareManager;
 
-//    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
-//    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
+   private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
-//    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.LOSS_PROTECTED_WALLET)
-//    private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.LOSS_PROTECTED_WALLET)
+    private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
 
-//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
-//    private CryptoVaultManager cryptoVaultManager;
+   @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
+    private CryptoVaultManager cryptoVaultManager;
 
-//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
-//    private CryptoAddressBookManager cryptoAddressBookManager;
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
+    private CryptoAddressBookManager cryptoAddressBookManager;
 
-//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
-//    private BlockchainManager blockchainManager;
+   // @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
+   // private BlockchainManager blockchainManager;
 
 
-//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK   , plugin = Plugins.BITCOIN_NETWORK)
-//    private BitcoinNetworkManager bitcoinNetworkManager;
+   // @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK   , plugin = Plugins.BITCOIN_NETWORK)
+   // private BitcoinNetworkManager bitcoinNetworkManager;
 
 
     /**
@@ -188,101 +188,100 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
          *
          */
         //TODO: Verificar si este bloque de codigo es necesario que quede aca
-        boolean existWallet = false;
+       boolean existWallet = false;
         boolean existWalletLoss = false;
         boolean existFermatWallet = false;
         try {
 
-//            //load user's wallets ids
-//            this.loadUserWallets(deviceUserPublicKey);
-//
-//            Iterator iterator = walletIds.entrySet().iterator();
-//
-//            while (iterator.hasNext()) {
-//                Map.Entry mapEntry = (Map.Entry) iterator.next();
-//                if (mapEntry.getValue().toString().equals(walletPublicKey))
-//                    existWallet = true;
-//                if (mapEntry.getValue().toString().equals(lossProtectedwalletPublicKey))
-//                    existWalletLoss = true;
-//                if (mapEntry.getValue().toString().equals(fermatWalletPublicKey))
-//                    existFermatWallet = true;
-//            }
+
+            //load user's wallets ids
+            this.loadUserWallets(deviceUserPublicKey);
+
+            Iterator iterator = walletIds.entrySet().iterator();
+
+            while (iterator.hasNext()) {
+                Map.Entry mapEntry = (Map.Entry) iterator.next();
+                if (mapEntry.getValue().toString().equals(walletPublicKey))
+                    existWallet = true;
+                if (mapEntry.getValue().toString().equals(lossProtectedwalletPublicKey))
+                    existWalletLoss = true;
+                if (mapEntry.getValue().toString().equals(fermatWalletPublicKey))
+                    existFermatWallet = true;
+            }
 
 
-//            if (!existWallet) {
-//                //Create new Bitcoin Wallet
-//
-//                try {
-//
-//                    cryptoWalletManager.createWallet(walletPublicKey);
-//                    walletIds.put(UUID.randomUUID().toString(), walletPublicKey);
-//
-//
-//                    //Save wallet id on file
-//
-//                    try {
-//                        this.persistWallet(walletPublicKey);
-//                    } catch (CantPersistWalletException cantPersistWalletException) {
-//                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
-//
-//                    }
-//
-//                } catch (CantCreateWalletException cantCreateWalletException) {
-//                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
-//
-//                }
-//            }
+            if (!existWallet) {
+                //Create new Bitcoin Wallet
 
-//            if (!existFermatWallet) {
-//                //Create new Fermat Wallet
-//
-//                try {
-//
-//                    cryptoWalletManager.createWallet(fermatWalletPublicKey);
-//                    walletIds.put(UUID.randomUUID().toString(), fermatWalletPublicKey);
-//
-//
-//                    //Save wallet id on file
-//
-//                    try {
-//                        this.persistWallet(fermatWalletPublicKey);
-//                    } catch (CantPersistWalletException cantPersistWalletException) {
-//                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
-//
-//                    }
-//
-//                } catch (CantCreateWalletException cantCreateWalletException) {
-//                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
-//
-//                }
-//            }
+                try {
+
+                    cryptoWalletManager.createWallet(walletPublicKey);
+                    walletIds.put(UUID.randomUUID().toString(), walletPublicKey);
+
+
+                    //Save wallet id on file
+
+                    try {
+                        this.persistWallet(walletPublicKey);
+                    } catch (CantPersistWalletException cantPersistWalletException) {
+                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                    }
+
+                } catch (CantCreateWalletException cantCreateWalletException) {
+                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                }
+            }
+
+            if (!existFermatWallet) {
+                //Create new Fermat Wallet
+
+                try {
+
+                    cryptoWalletManager.createWallet(fermatWalletPublicKey);
+                    walletIds.put(UUID.randomUUID().toString(), fermatWalletPublicKey);
+
+
+                    //Save wallet id on file
+
+                    try {
+                        this.persistWallet(fermatWalletPublicKey);
+                    } catch (CantPersistWalletException cantPersistWalletException) {
+                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                    }
+
+                } catch (CantCreateWalletException cantCreateWalletException) {
+                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                }
+            }
 
             //create loss protected wallet
 
 
-//            if (!existWalletLoss) {
-//                try {
-//
-//
-//                    bitcoinLossProtectedWalletManager.createWallet(lossProtectedwalletPublicKey);
-//                    walletIds.put(UUID.randomUUID().toString(), lossProtectedwalletPublicKey);
-//                    //Save wallet id on file
-//
-//                    try {
-//                        this.persistWallet(lossProtectedwalletPublicKey);
-//                    } catch (CantPersistWalletException cantPersistWalletException) {
-//                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
-//
-//                    }
-//
-//                } catch (CantCreateWalletException cantCreateWalletException) {
-//                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
-//
-//                }
-//            }
+            if (!existWalletLoss) {
+                try {
 
 
-            this.serviceStatus = ServiceStatus.STARTED;
+                    bitcoinLossProtectedWalletManager.createWallet(lossProtectedwalletPublicKey);
+                    walletIds.put(UUID.randomUUID().toString(), lossProtectedwalletPublicKey);
+                    //Save wallet id on file
+
+                    try {
+                        this.persistWallet(lossProtectedwalletPublicKey);
+                    } catch (CantPersistWalletException cantPersistWalletException) {
+                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                    }
+
+                } catch (CantCreateWalletException cantCreateWalletException) {
+                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                }
+            }
+
 
 
         } catch (Exception cantLoadWalletsException) {
@@ -414,46 +413,47 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
     @Override
     public List<String> getMnemonicCode() throws Exception {
-//        try {
-//            List<String> textToShow = new ArrayList<>();
-//            textToShow.add("mNemonic code: " + cryptoVaultManager.exportCryptoVaultSeed().getMnemonicPhrase());
-//            textToShow.add("Date: " + cryptoVaultManager.exportCryptoVaultSeed().getCreationTimeSeconds());
-//
-//            return textToShow;
-//        } catch (Exception cantLoadExistingVaultSeed) {
-//            throw new Exception(cantLoadExistingVaultSeed);
-//        }
-        return null;
+        try {
+            List<String> textToShow = new ArrayList<>();
+            textToShow.add("mNemonic code: " + cryptoVaultManager.exportCryptoVaultSeed().getMnemonicPhrase());
+            textToShow.add("Date: " + cryptoVaultManager.exportCryptoVaultSeed().getCreationTimeSeconds());
+
+            return textToShow;
+        } catch (Exception cantLoadExistingVaultSeed) {
+            throw new Exception(cantLoadExistingVaultSeed);
+        }
     }
 
     @Override
     public String getMnemonicPhrase() throws Exception {
-//        try {
-//            return cryptoVaultManager.exportCryptoVaultSeed().getMnemonicPhrase();
-//        } catch (Exception cantLoadExistingVaultSeed) {
-//            throw new Exception(cantLoadExistingVaultSeed);
-//        }
-        return null;
+        try {
+            return cryptoVaultManager.exportCryptoVaultSeed().getMnemonicPhrase();
+        } catch (Exception cantLoadExistingVaultSeed) {
+            throw new Exception(cantLoadExistingVaultSeed);
+        }
     }
 
     @Override
     public long getCreationTimeSeconds() throws Exception {
-//        try {
-//            return cryptoVaultManager.exportCryptoVaultSeed().getCreationTimeSeconds();
-//        } catch (Exception cantLoadExistingVaultSeed) {
-//            throw new Exception(cantLoadExistingVaultSeed);
-//        }
-        return 0;
+        try {
+            return cryptoVaultManager.exportCryptoVaultSeed().getCreationTimeSeconds();
+        } catch (Exception cantLoadExistingVaultSeed) {
+            throw new Exception(cantLoadExistingVaultSeed);
+        }
     }
 
     @Override
     public void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType blockchainNetworkType) throws Exception {
+        try {
+            CryptoAddress cryptoAddress = cryptoVaultManager.getCryptoAddress(blockchainNetworkType);
+            cryptoAddressBookManager.registerCryptoAddress(cryptoAddress, "", Actors.EXTRA_USER, "", Actors.EXTRA_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, VaultType.CRYPTO_CURRENCY_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
-//        CryptoAddress cryptoAddress = cryptoVaultManager.getCryptoAddress(blockchainNetworkType);
-//        cryptoAddressBookManager.registerCryptoAddress(cryptoAddress, "", Actors.EXTRA_USER, "", Actors.EXTRA_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, VaultType.CRYPTO_CURRENCY_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
-//
-//        cryptoVaultManager.importSeedFromMnemonicCode(cryptoAddress, blockchainNetworkType, mnemonicCode, date);
-
+            cryptoVaultManager.importSeedFromMnemonicCode(cryptoAddress, blockchainNetworkType, mnemonicCode, date);
+        } catch (Exception e) {
+            System.out.println("ERROR importMnemonicCode : " + e.getMessage());
+            e.printStackTrace();
+            throw new Exception(e);
+        }
     }
 
     /**

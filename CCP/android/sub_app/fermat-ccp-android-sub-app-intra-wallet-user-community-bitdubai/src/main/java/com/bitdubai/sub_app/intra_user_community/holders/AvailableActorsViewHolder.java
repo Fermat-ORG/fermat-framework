@@ -1,28 +1,22 @@
 package com.bitdubai.sub_app.intra_user_community.holders;
 
-import android.content.DialogInterface;
+
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 
 /**
  * Created by natalia on 13/07/16.
@@ -50,29 +44,40 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
         res = itemView.getResources();
         response = (TextView) itemView.findViewById(R.id.response);
         button_add = (TextView) itemView.findViewById(R.id.button_add);
-        connectionState = (ImageView) itemView.findViewById(R.id.connection_state);
+        //connectionState = (ImageView) itemView.findViewById(R.id.connection_state);
         row_connection_state = (FermatTextView) itemView.findViewById(R.id.connection_state_user);
         thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
         name = (FermatTextView) itemView.findViewById(R.id.community_name);
         location =(FermatTextView) itemView.findViewById(R.id.location);
 
-       // progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
+        // progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
 
 
     }
 
     public void bind(IntraUserInformation data) {
 
-        if (data.getCity()!=null||data.getCountry()!=null)
-            location.setText(data.getCountry()+", "+data.getCity());
+
+        String city = data.getCity();
+        String country = data.getCountry();
+
+        if (city!=null && country!=null)
+            if (!city.equals("----") && !country.equals("----"))
+                if (country!=null &&(city==null || city=="----" || city==""))
+                    location.setText(country);
+                else if (city!=null &&(country==null || country=="----" || country==""))
+                    location.setText(city);
+                else location.setText(country+", "+city);
+            else location.setText("No Location");
         else location.setText("No Location");
 
-        row_connection_state.setText((data.getState().equals(ProfileStatus.ONLINE)) ? "Online" : "offline");
+        row_connection_state.setText((data.getState().equals(ProfileStatus.ONLINE)) ?
+                res.getString(R.string.connectionState_online) : res.getString(R.string.connectionState_offline) );
         if(data.getState().equals(ProfileStatus.OFFLINE))
         {
             //button_add.setBackgroundColor(Color.RED);
             button_add.setVisibility(View.GONE);
-            response.setText("OFFLINE");
+            response.setText(res.getString(R.string.connectionState_offline) );
             response.setTextColor(Color.RED);
             response.setVisibility(View.VISIBLE);
         }
@@ -83,13 +88,12 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
 
         if (data.getConnectionState() != null)
         {
-
             switch (data.getConnectionState()) {
                 case CONNECTED:
-                        response.setVisibility(View.VISIBLE);
-                        response.setText("IS A CONTACT");
-                        response.setTextColor(Color.parseColor("#21386D"));
-                        button_add.setVisibility(View.GONE);
+                    response.setVisibility(View.VISIBLE);
+                    response.setText(res.getString(R.string.connectionState_connected));
+                    response.setTextColor(Color.parseColor("#21386D"));
+                    button_add.setVisibility(View.GONE);
                     break;
                 case BLOCKED_LOCALLY:
                     break;
@@ -98,11 +102,11 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                 case CANCELLED_LOCALLY:
                     break;
                 case CANCELLED_REMOTELY:
-                       //connectionState.setImageResource(R.drawable.icon_contact_no_conect);
-                        response.setText("REQUEST CANCELLED");
-                        response.setVisibility(View.VISIBLE);
-                        response.setTextColor(Color.parseColor("#21386D"));
-                        button_add.setVisibility(View.GONE);
+                    //connectionState.setImageResource(R.drawable.icon_contact_no_conect);
+                    response.setText(res.getString(R.string.connectionState_request_canceled));
+                    response.setVisibility(View.VISIBLE);
+                    response.setTextColor(Color.parseColor("#21386D"));
+                    button_add.setVisibility(View.GONE);
 
                     break;
                 case NO_CONNECTED:
@@ -110,7 +114,7 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                     {
                         //button_add.setBackgroundColor(Color.RED);
                         button_add.setVisibility(View.GONE);
-                        response.setText("OFFLINE");
+                        response.setText(res.getString(R.string.connectionState_offline));
                         response.setTextColor(Color.RED);
                         response.setVisibility(View.VISIBLE);
                     }else
@@ -123,24 +127,45 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
 
                     break;
                 case DENIED_LOCALLY:
+                    if(data.getState().equals(ProfileStatus.OFFLINE))
+                    {
+                        //button_add.setBackgroundColor(Color.RED);
+                        button_add.setVisibility(View.GONE);
+                        response.setText(res.getString(R.string.connectionState_offline));
+                        response.setTextColor(Color.RED);
+                        response.setVisibility(View.VISIBLE);
+                    }else
+                    {
+                        response.setText("");
+                        response.setVisibility(View.GONE);
+                        button_add.setVisibility(View.VISIBLE);
+                    }
+
                     break;
                 case DENIED_REMOTELY:
 
-                        response.setText("DENIED BY CONTACT");
+                    response.setText(res.getString(R.string.connectionState_denied_remotely));
                     response.setTextColor(Color.parseColor("#21386D"));
-                        response.setVisibility(View.VISIBLE);
-                        button_add.setVisibility(View.GONE);
+                    response.setVisibility(View.VISIBLE);
+                    button_add.setVisibility(View.GONE);
 
                     break;
                 case DISCONNECTED_LOCALLY:
                     break;
                 case DISCONNECTED_REMOTELY:
-
-                        response.setText("IS NOT CONNECTED");
-                    response.setTextColor(Color.parseColor("#21386D"));
-                        //connectionState.setImageResource(R.drawable.icon_contact_no_conect);
-                        response.setVisibility(View.VISIBLE);
+                    if(data.getState().equals(ProfileStatus.OFFLINE))
+                    {
+                        //button_add.setBackgroundColor(Color.RED);
                         button_add.setVisibility(View.GONE);
+                        response.setText(res.getString(R.string.connectionState_offline));
+                        response.setTextColor(Color.RED);
+                        response.setVisibility(View.VISIBLE);
+                    }else
+                    {
+                        response.setText("");
+                        response.setVisibility(View.GONE);
+                        button_add.setVisibility(View.VISIBLE);
+                    }
 
                     break;
                 case ERROR:
@@ -148,38 +173,44 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                 case INTRA_USER_NOT_FOUND:
                     break;
                 case PENDING_LOCALLY_ACCEPTANCE:
+                    response.setText(res.getString(R.string.connectionState_request_received));
+                    response.setTextColor(Color.parseColor("#21386D"));
+                    //connectionState.setImageResource(R.drawable.icon_contact_standby);
+                    response.setVisibility(View.VISIBLE);
+                    button_add.setVisibility(View.GONE);
                     break;
                 case PENDING_REMOTELY_ACCEPTANCE:
 
-                        response.setText("REQUEST SENT");
+                    response.setText(res.getString(R.string.connectionState_request_sent));
                     response.setTextColor(Color.parseColor("#21386D"));
-                        //connectionState.setImageResource(R.drawable.icon_contact_standby);
-                        response.setVisibility(View.VISIBLE);
-                        button_add.setVisibility(View.GONE);
+                    //connectionState.setImageResource(R.drawable.icon_contact_standby);
+                    response.setVisibility(View.VISIBLE);
+                    button_add.setVisibility(View.GONE);
 
                     break;
                 default:
                     if (response.getVisibility() == View.VISIBLE)
                         response.setVisibility(View.GONE);
-                        button_add.setVisibility(View.VISIBLE);
+                    button_add.setVisibility(View.VISIBLE);
                     break;
             }
 
 
-          name.setText(data.getName());
+            name.setText(data.getName());
             byte[] profileImage = data.getProfileImage();
             if (profileImage != null && profileImage.length > 0) {
                 //Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
                 //bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
-               thumbnail.setImageDrawable(  getImgDrawable(profileImage));
+                thumbnail.setImageDrawable(  getImgDrawable(profileImage));
             }else{
                 thumbnail.setVisibility(View.GONE);
 
             }
-        } else {
-            connectionState.setVisibility(View.INVISIBLE);
+        }// else {
+           // connectionState.setVisibility(View.INVISIBLE);
 
-        }
+       // }
+
 
 
     }

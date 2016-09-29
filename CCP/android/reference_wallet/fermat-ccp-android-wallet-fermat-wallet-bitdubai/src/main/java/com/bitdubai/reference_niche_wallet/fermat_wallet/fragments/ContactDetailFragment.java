@@ -412,20 +412,23 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
         {
             if(!code.equals("BlockchainDownloadComplete"))
             {
-                //update contact address
-                cryptoWalletWalletContact = cryptoWallet.findWalletContactById(UUID.fromString(code), cryptoWallet.getSelectedActorIdentity().getPublicKey());
+                //check contact to show is de same to update
+                if (cryptoWalletWalletContact.getContactId().equals(UUID.fromString(code))) {
+                    //update contact address
+                    FermatWalletWalletContact fermatWalletContactUpdate = cryptoWallet.findWalletContactById(UUID.fromString(code), cryptoWallet.getSelectedActorIdentity().getPublicKey());
+
+                    if(fermatWalletContactUpdate.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+                    {    cryptoWalletWalletContact = fermatWalletContactUpdate;
+                        text_view_address.setText(fermatWalletContactUpdate.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
+                        img_update.setVisibility(View.GONE);
+                        receive_button.setVisibility(View.VISIBLE);
+                        send_button.setVisibility(View.VISIBLE);
+
+                    }
 
 
-                if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
-                {
-                    text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
-                    img_update.setVisibility(View.GONE);
-                    receive_button.setVisibility(View.VISIBLE);
-                    send_button.setVisibility(View.VISIBLE);
-
+                    fermatWalletSessionReferenceApp.setData(SessionConstant.LAST_SELECTED_CONTACT, cryptoWalletWalletContact);
                 }
-
-                fermatWalletSessionReferenceApp.setData(SessionConstant.LAST_SELECTED_CONTACT, cryptoWalletWalletContact);
 
             }
 

@@ -5,7 +5,7 @@
     <string name="touch_to_change_text">Touch to change</string>
     <!-- ccp_grouper_list_item.xml -->
     <string name="txt_total_balance_15_btc_text">15 FTMS</string>
-    <!-- ccp_transaction_list_item.xml -->
+    <!-- ccp_transaction_list_item.xmll -->
     <string name="txt_amount_btc_text">1.4 FTMS</string>
     <string name="txt_conference_ticket_text">Conference ticket</string>
     <string name="txt_time_date_text">03 Feb 2014</string>
@@ -38,7 +38,7 @@
     <string name="save_text">Save</string>
     <!-- fermat_wallet_dialog_error_conecting_fermat_network.xmlat_network.xml -->
     <string name="fermat_network_offline_text">Fermat Network Offline</string>
-    <string name="description_text">You are not connected to</string>
+    <string name="description_text">You are not connected to </string>
     <string name="second_description_text">the fermat network.</string>
     <string name="connect_text">Connect</string>
     <!-- donut_header.xml -->
@@ -82,7 +82,7 @@
     <string name="refuse_text">Refuse</string>
     <!-- fermat_wallet_presentation_bitcoin_wallet_without_identities.xmlidentities.xml -->
     <string name="welcome_text">Welcome!</string>
-    <string name="this_is_a_simple_bitcoint_only_wallet_text">This is a simple bitcoin only wallet. It\'s main features are:</string>
+    <string name="this_is_a_simple_bitcoint_only_wallet_text">This is a simple Fermats only wallet. It\'s main features are:</string>
 
     <string name="close_text">Close</string>
     <!-- fermat_wallet_presentation_wallet.xmlion_wallet.xml -->
@@ -240,7 +240,7 @@
     <string name="clear_text_button">Clear</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="see_your_balance_text">* Checking your balance.\n* Sending/receiving bitcoins.\n* Requesting bitcoins.\n* Browsing your transaction history.</string>
+    <string name="see_your_balance_text">* Checking your balance.\n* Sending/receiving Fermats.\n* Requesting Fermats.\n* Browsing your transaction history.</string>
     <!-- Custom Dialog Fragment -->
     <string name="title_label">Network Settings</string>
     <string name="ok_label">OK</string>
@@ -288,6 +288,28 @@
     <string name="fee_amount_text">Fee amount</string>
     <string name="fee_low">Slow</string>
     <string name="fee_option_text">Fee option</string>
+
+    <string name="pr_status_1">Waiting for response</string>
+    <string name="pr_status_2">Accepted</string>
+    <string name="pr_status_3">Paid</string>
+    <string name="pr_status_4">Pending response</string>
+    <string name="pr_status_5">Error</string>
+    <string name="pr_status_6">Not sent yet</string>
+    <string name="pr_status_7">Payment process started</string>
+    <string name="pr_status_8">Denied by incompatibility</string>
+    <string name="pr_status_9">In approving process</string>
+    <string name="pr_status_10">Denied</string>
+    <string name="pr_status_11">Error, contact with support</string>
+
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_select_network">Select a Network</string>
+    <string name="settings_fee_level">Fee Level</string>
+    <string name="settings_send_error_report">Send Error Report</string>
+    <string name="title_Fee">Title Fee</string>
+    <string name="this_is_a_simple_bitcoin_only_wallet_text">This is a simple Fermats only wallet. It\'s main features are:</string>
+    <string name="the_process_of_downloading_text">The process of downloading the blocks of the blockchain is happening.\n While this happen , the upper bar will be red</string>
+    <string name="success_msg_address_copied_clipboard">Copied to clipboard</string>
+    <string name="success_msg_address_sent_wait">Address send , please wait 2 minutes</string>
 
 </resources>
 

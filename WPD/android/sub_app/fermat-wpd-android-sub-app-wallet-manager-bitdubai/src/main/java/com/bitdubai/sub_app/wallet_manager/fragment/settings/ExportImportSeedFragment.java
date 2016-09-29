@@ -131,7 +131,7 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
                                         @Override
                                         public void run() {
                                             if (dialog != null) dialog.dismiss();
-                                            Toast.makeText(getActivity(), "Import completed, the money will be confirmed in a few minutes :)", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "Import Error.", Toast.LENGTH_SHORT).show();
                                         }
                                     });
 

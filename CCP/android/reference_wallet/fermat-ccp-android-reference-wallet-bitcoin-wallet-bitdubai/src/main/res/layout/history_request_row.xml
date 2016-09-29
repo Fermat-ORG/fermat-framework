@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
-    android:background="@null">
+    android:layout_height="130dp"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,12 +12,13 @@
         android:orientation="horizontal"
         android:paddingBottom="10dp"
         android:paddingTop="15dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:baselineAligned="false">
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
             >
@@ -43,58 +44,74 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_contactName"
                 tools:text="Matias Furszyfer"
-                android:textColor="#ffffff"
-                android:paddingTop="3dp"
+                android:textColor="#FFF"
+                android:textSize="14sp"
                 android:fontFamily="roboto"
-                />
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="155dp"
-                android:layout_height="match_parent"
-                android:id="@+id/txt_notes"
-                tools:text="Conference ticket hghjghjghj jhjghjgjhghj jhghjghjgjh"
-                android:textSize="12sp"
-                android:textColor="#80ffffff"
-                android:fontFamily="roboto"
-                android:layout_gravity="left"
-                android:maxLines="1"
-                android:ellipsize="end"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="12dp"
-            android:paddingRight="20dp"
-            android:orientation="vertical"
-            android:gravity="end"
-            android:layout_weight="1"
-            >
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_amount"
-                tools:text="1.4 BTC"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
-                android:fontFamily="roboto"
-                android:textIsSelectable="false"
-               android:gravity="end"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_time"
-                tools:text="JUL 15 2014 9:30 pm"
+                tools:text="MON 00 0000 00:00 hh"
                 android:textSize="12sp"
                 android:textColor="#80ffffff"
                 android:fontFamily="roboto"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textIsSelectable="false"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_notes"
+                tools:text="Conference ticket"
+                android:textSize="12sp"
+                android:textColor="#80ffffff"
+                android:fontFamily="roboto"
+                android:layout_gravity="left"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:gravity="right" />
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical"
+            android:gravity="end"
+            >
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/txt_amount"
+                tools:text="0.000000"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:fontFamily="roboto"
+                android:textIsSelectable="false"
+                android:gravity="right"
+                android:paddingRight="0dp"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                />
+
         </LinearLayout>
     </LinearLayout>
 
@@ -121,12 +138,17 @@
             android:padding="5dp"
             android:paddingRight="7dp"
             android:paddingLeft="7dp"
-            android:textIsSelectable="true" />
+            android:textIsSelectable="true"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:layout_marginBottom="5dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         android:gravity="end"
         android:paddingRight="15dp"

@@ -21,6 +21,4 @@ public class ExtraUserActorDatabaseConstants {
     public static final String EXTRA_USER_NAME_COLUMN_NAME                  = "name";
     public static final String EXTRA_USER_TIME_STAMP_COLUMN_NAME            = "time_stamp";
 
-    public static final String EXTRA_USER_FIRST_KEY_COLUMN                  = "extra_user_public_key";
-
 }

@@ -126,7 +126,7 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="normal"
                     android:textColor="#4f4f4f"
                     android:textColorHint="#4f4f4f"
@@ -137,9 +137,9 @@
                     android:layout_gravity="end"
                     android:state_selected = "false"
                     android:text="@string/waiting_text"
+                    android:maxLines="1"
                     app:typeface="ROBOTO_REGULAR"
-                    android:layout_weight="1"
-                    android:background="@null"/>
+                    android:layout_weight="1"/>
 
                 <ImageView
                     android:layout_width="30dp"
@@ -184,6 +184,9 @@
                     android:gravity="center_vertical"
                     android:layout_marginLeft="7dp"
                     android:textColor="#12aca1"/>
+
+
+
 
             </LinearLayout>
 

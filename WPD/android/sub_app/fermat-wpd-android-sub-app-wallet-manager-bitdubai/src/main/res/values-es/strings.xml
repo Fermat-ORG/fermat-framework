@@ -112,7 +112,7 @@
 
     <string name="title_activity_dating_profile">Perfil\nde Citas</string>
     <string name="title_activity_profesional_profile">Perfil\nProfesional</string>
-    <string name="title_activity_alternative_profile">Perfil\nAlternativo</string>
+    <string name="title_activity_alternative_profile">Perfil\nAlternativo</string> 
     <string name="title_dont_show_button">No volver a mostrar</string>
     <string name="title_go_button">Entendido</string>
     <string name="title_activity_requests_received">Requerimientos Recibidos</string>

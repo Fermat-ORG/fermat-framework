@@ -28,10 +28,10 @@
     <!-- loss_contacts_tutorial_part1_v2.xml -->
     <string name="txt_title_text">Add Contact Help</string>
     <string name="no_id_In_this_wallet_text">This wallet allows two different types of contacts:</string>
-    <string name="no_id_Users_of_other_text_Fermat_wallets">Users of other Fermat wallets: you don\t need to manually exchange addresses with them</string>
+    <string name="no_id_Users_of_other_text_Fermat_wallets">Users of other Fermat wallets: you don\'t need to manually exchange addresses with them</string>
     <string name="no_id_Users_of_other_text_wallets_outside">Users of other wallets outside Fermat: You need to exchange addresses manually</string>
     <string name="no_id_Select_below_which_text">Select below which type of contact you want to add:</string>
-    <string name="no_id_dont_show_this_again_text">Don\t show this again</string>
+    <string name="no_id_dont_show_this_again_text">Don\'t show this again</string>
     <string name="add_fermat_user_text">Fermat Contact</string>
     <string name="add_extra_user_text">External Contact</string>
     <!-- loss_create_contact_dialog.xml -->
@@ -53,13 +53,13 @@
     <string name="receive_text">Receive</string>
     <string name="give_me_an_address_address_text">Give me an Address!</string>
     <!-- loss_fragment_transaction_main_receiveceive.xml -->
-    <string name="you_dont_have_transactions_received_text">You don\t have\n any received transactions</string>
+    <string name="you_dont_have_transactions_received_text">You don\'t have\n any received transactions</string>
     <!-- chunck_values_fragment_transaction_main.xml -->
-    <string name="you_dont_have_chunck_values">You don\t have\n any Chunck Values yet</string>
+    <string name="you_dont_have_chunck_values">You don\'t have\n any Chunck Values yet</string>
     <!-- chunck_detail_list_main.xml -->
-    <string name="you_dont_have_chunck_datail_values">You don\t have\n any spending of this Chunck yet</string>
+    <string name="you_dont_have_chunck_datail_values">You don\'t have\n any spending of this Chunck yet</string>
     <!-- fragment_transaction_main_send.xml -->
-    <string name="you_dont_have_transactions_sent_text">You don\t have\n any transaction sent</string>
+    <string name="you_dont_have_transactions_sent_text">You don\'t have\n any transaction sent</string>
     <string name="balance_amount_0_bits_text">0 bits</string>
     <string name="notes_text">Notes</string>
     <!-- loss_fragment_transaction_main_main.xml -->
@@ -73,6 +73,7 @@
     <!-- header.xml -->
     <string name="header_text">Header</string>
     <!-- loss_history_request_row.xml -->
+    <string name="waiting_receive_text">Waiting for response</string>
     <string name="accepted_text">Accepted</string>
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
@@ -93,9 +94,12 @@
     <string name="Today_text">Today: </string>
     <string name="Earned_text">earned</string>
     <string name="Lost_text">lost</string>
+
+    <string name="No_data">No Data</string>
+
     <!-- home_request_fragment_main.xml -->
     <string name="reason_text">Reason</string>
-    <string name="you_dont_have_requests_text">You don\t have\n requests</string>
+    <string name="you_dont_have_requests_text">You don\'t have\n requests</string>
     <string name="send_request_text">Send Request</string>
     <!-- loss_navigation_row.xmlw.xml -->
     <string name="home_text">Home</string>
@@ -110,12 +114,18 @@
     <string name="this_is_a_loss_protected_wallet_text">This is a wallet that will allow you to protect against loss of money. It\s main features are:</string>
     <string name="close_text">Close</string>
     <!-- loss_toast -->
-    <string name="Whooops_text">Whooops! recovering from system error</string>
-    <string name="Whooops_text2">Whooops, we have a problem here</string>
+
+    <string name="Whooops_text">Recovering from system error.</string>
+    <string name="Whooops_text2">We have a problem here.</string>
+    <string name="Whooops_text3">Whooops! recovering from system error In Graphic"</string>
+
+    <string name="Recovering">Recovering from system error.</string>
     <string name="Insufficient_funds">Insufficient funds.</string>
     <string name="Wait_a_minute">Wait a minute please, trying to reconnect...</string>
+
     <string name="Contact_without_net_address">Contact don\'t have an Address from red</string>
     <string name="Contact_without_address">Contact don\'t have an Address</string>
+
     <string name="Contact_not_found">Contact not found, please add it.</string>
     <string name="Sending_text">Sending...</string>
     <string name="Action_not_allowed_lpw">Action not allowed, you will lose money. Restricted by LossProtected Configuration.</string>
@@ -123,6 +133,36 @@
     <string name="Invalid_Amount_small">Invalid Amount, must be greater than</string>
     <string name="Invalid_Amount">Invalid Amount</string>
     <string name="Unexpected_error">Unexpected Error</string>
+
+    <string name="Request_accepted">Request accepted</string>
+    <string name="Request_denied">Request denied</string>
+    <string name="Action_not_allowed2">Action not allowed.Could not retrieve the dollar exchange rate.\nCheck your internet connection.. </string>
+    <string name="Cant_accept">Can\'t Accept or Denied Receive Payment Exception -</string>
+    <string name="Error_spending_chart">Error Get SpendingList for Chart</string>
+
+    <!-- loss_notification_painter.xml -->
+    <string name="lpw_notification_transaction_arrive_1">Received money</string>
+    <string name="lpw_notification_transaction_arrive_2">BTC Arrived</string>
+    <string name="lpw_notification_transaction_reverse_1">Sent Transaction reversed</string>
+    <string name="lpw_notification_transaction_reverse_2">Sending</string>
+    <string name="lpw_notification_transaction_reverse_3">BTC could not be completed.</string>
+    <string name="lpw_notification_request_arrive_1">Received new Payment Request</string>
+    <string name="lpw_notification_request_arrive_2">You have received a Payment Request, for</string>
+    <string name="lpw_notification_payment_denied_1">Payment Request deny</string>
+    <string name="lpw_notification_payment_denied_2">Your Payment Request, for </string>
+    <string name="lpw_notification_payment_denied_3">BTC was deny.</string>
+    <string name="lpw_notification_payment_error_1">Payment Request reverted</string>
+    <string name="lpw_notification_payment_error_2">Your Payment Request, for </string>
+    <string name="lpw_notification_payment_error_3">BTC was reverted.</string>
+
+    <!-- loss_presentation_settings.xml -->
+    <string name="Enabled_notificacions">Enabled Notifications</string>
+    <string name="Enabled_loss_protected">Enabled Loss Protected</string>
+    <string name="Select_network">Select Network</string>
+    <string name="Received_Testnet_Bitcoins">Received Testnet Bitcoins</string>
+    <string name="TestNet_download">"TestNet download Init"</string>
+    <string name="TestNet_bitcoin_arrived">TestNet bitcoin arrived</string>
+    <string name="TestNet_Request_Error">TestNet Request Error</string>
 
     <!-- loss_presentation_wallet.xml -->
     <string name="to_begin_choose_an_avatar_below_text">To begin, choose an avatar below. You might change it later with any picture and your own alias.</string>
@@ -191,7 +231,7 @@
     <string name="title_section15">Factory Projects</string>
     <string name="title_section16">Published Wallets</string>
     <string name="title_section17">Shops</string>
-    <string name="app_name">Fermat Bitcoin Wallet</string>
+    <string name="app_name">Fermat Loss Protected Wallet</string>
     <string name="button_send">Send</string>
     <string name="title_activity_main">Young Wallet</string>
     <string name="action_search">Buscar</string>
@@ -304,7 +344,7 @@
     </array>
 
     <string name="exchange_title_label">Exchange Rate Providers</string>
-    <string name="income_expense" >This is a wallet that will allow you to see your incomes and expenses in every transaction done</string>
+    <string name="income_expense" >On this screen you can see your income and expenses of all transactions sent and received</string>
     <string name="spending_details" >Spending Details</string>
 
     <string name="chunck_values_history_rate">Exchange Rate: 1 BTC = </string>
@@ -314,5 +354,8 @@
     <string name="chunck_values_btc_rate">Exchange Rate</string>
     <string name="chunck_values_btc_date">Date</string>
 
-    <!-- Custom Dialog Fragment -->
+    <!--Delete Wallet Contact Dialog-->
+    <string name="delete_title">Delete Contact</string>
+    <string name="delete_sub_title">Do you want delete this contact from your wallet?</string>
+    <string name="deleted_toast">Contact Deleted</string>
 </resources>

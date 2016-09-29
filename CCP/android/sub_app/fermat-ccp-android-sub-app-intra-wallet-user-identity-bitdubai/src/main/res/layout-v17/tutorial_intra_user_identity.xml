@@ -25,6 +25,9 @@
         android:paddingStart="1dp"
         android:paddingTop="20dp">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -87,131 +90,119 @@
             </RelativeLayout>
 
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:paddingBottom="5dp"
-                android:paddingEnd="30dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="30dp"
-                android:paddingStart="20dp"
-                android:paddingTop="7sp"
-                android:text="@string/intra_identity"
-                android:textColor="#1d1d26"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:paddingBottom="5dp"
+                        android:paddingEnd="30dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="30dp"
+                        android:paddingStart="20dp"
+                        android:paddingTop="7sp"
+                        android:text="@string/intra_identity"
+                        android:textColor="#1d1d26"
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/round_corner_line_dialog" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="7dp"
+                        android:paddingTop="12dp">
+
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="start"
+                            android:paddingBottom="5dp"
+                            android:paddingEnd="30dp"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="30dp"
+                            android:paddingStart="16dp"
+                            android:text="@string/Intra_identity_desc"
+                            android:textColor="#1d1d26"
+                            android:textSize="14sp"
+                            tools:ignore="HardcodedText" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/round_corner_line_dialog" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center_horizontal">
+
+
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="32dp"
+                            android:layout_marginRight="32dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/no_id_dont_show_this_again_text"
+                            android:textColor="#7c7c7c"
+                            android:textSize="12dp"
+                            tools:ignore="HardcodedText,RtlCompat,SpUsage" />
+                        <CheckBox
+                            android:id="@+id/checkbox_not_show"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:buttonTint="#66000000"
+                            tools:ignore="RtlCompat,UnusedAttribute" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="7dp"
-                android:paddingTop="12dp">
+                android:gravity="center">
 
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="start"
-                    android:paddingBottom="5dp"
-                    android:paddingEnd="30dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="30dp"
-                    android:paddingStart="16dp"
-                    android:text="@string/Intra_identity_desc"
-                    android:textColor="#1d1d26"
-                    android:textSize="14sp"
-                    tools:ignore="HardcodedText" />
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                    android:id="@+id/start_community"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#0072bb"
                     android:gravity="center"
-                    android:paddingBottom="5dp"
-                    android:paddingEnd="30dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="30dp"
-                    android:paddingStart="16dp"
-                    android:text="More..."
-                    android:textColor="#1d1d26"
-                    android:textSize="14sp"
+                    android:text="@string/start"
+                    android:textColor="#ffffff"
                     tools:ignore="HardcodedText" />
 
-
             </LinearLayout>
 
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal">
-
-
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginRight="32dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/no_id_dont_show_this_again_text"
-                    android:textColor="#7c7c7c"
-                    android:textSize="12dp"
-                    tools:ignore="HardcodedText,RtlCompat,SpUsage" />
-                <CheckBox
-                    android:id="@+id/checkbox_not_show"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:buttonTint="#66000000"
-                    tools:ignore="RtlCompat,UnusedAttribute" />
-
-            </LinearLayout>
-
-
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                android:id="@+id/start_community"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:background="#0072bb"
-                android:gravity="center"
-                android:text="@string/start"
-                android:textColor="#ffffff"
-                tools:ignore="HardcodedText" />
-
-        </LinearLayout>
-
+        </ScrollView>
     </LinearLayout>
 </RelativeLayout>

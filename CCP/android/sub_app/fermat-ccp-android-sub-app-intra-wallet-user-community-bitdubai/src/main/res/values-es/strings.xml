@@ -44,7 +44,7 @@
     <string name="credit">Recibido</string>
     <string name="debit">Enviar</string>
     <string name="deny_text">Denegar</string>
-    <string name="description_text">Ud. no esta conectado a la red Fermat.</string>
+    <string name="description_text">Ud. no esta conectado a </string>
     <string name="dummy_content"></string>
     <string name="empty_list_msg">No hay contactos</string>
     <string name="empty_transactions_text">No se encontraron Transacciones</string>
@@ -53,9 +53,9 @@
     <string name="fee_High">Rapido</string>
     <string name="fee_Medium">Normal</string>
     <string name="fee_advances_text">Configuracion avanzada</string>
-    <string name="fee_amount_text">Taza</string>
+    <string name="fee_amount_text">Tasa</string>
     <string name="fee_low">Lento</string>
-    <string name="fee_option_text">Restar taza al  monto</string>
+    <string name="fee_option_text">Restar tasa al  monto</string>
     <string name="fermat_network_offline_text">Red Fermat Offline</string>
     <string name="footer_message_text"></string>
     <string name="fragment_send_account_details_summary">Detalles de cuenta</string>
@@ -111,7 +111,7 @@
     <string name="swype_refresh">Deslice hacia abajo para refrescar</string>
     <string name="the_process_of_downloading_text">Se estan bajando los bloques de\nla  Blockchain.\n  Mientras esto ocurre, la barra superior se mostrara en rojo.</string>
     <string name="this_is_a_simple_bitcoin_only_wallet_text">Esta cartera maneja bitcoins\nCon ella se puede:</string>
-    <string name="title_Fee">Configuracion de Taza</string>
+    <string name="title_Fee">Configuracion de Tasa</string>
     <string name="title_activity_blank">Administrador de Carteras</string>
     <string name="title_activity_requests_received">Solicitudes recibidas</string>
     <string name="title_activity_pay_to_contact">Pagar a contacto</string>
@@ -150,7 +150,7 @@
     <string name="error_msg_mnemonic_text">Error al obtener el texto mnemonico</string>
     <string name="error_msg_no_address">No se tiene una direccion para enviar\nPor favor, espere un rato</string>
     <string name="error_msg_trying_to_reconnect">Por favor espere un momento, intentando reconectar...</string>
-    <string name="error_std_message">Ha habido un error. Por favor intente de nuevo</string>
+    <string name="error_std_message">Ocurrio un error. Por favor intente de nuevo</string>
     <string name="request_sent">Solicitud enviada</string>
     <string name="success_msg_address_copied_clipboard">Direccion copiada al portapapeles</string>
     <string name="success_msg_address_sent_wait">Direccion enviada, por favor espere 2 minutos</string>
@@ -173,20 +173,20 @@
     <string name="phone_notification">Notificationes al telefono</string>
     <string name="exchange_rate_error_connection">No se pueden obtener las tasas de cambio, por favor revisa tu coneccion a internet</string>
     <string name="this_is_a_loss_protected_wallet_text">Esta es una cartera que te permitira protegerte contra perdidas de dinero, sus principales caracteristicas son:</string>
-    <string name="income_expense">Esta es una cartera que te permite ver tus ingresos y gastos en todas las transacciones hechas</string>
+    <string name="income_expense">Esta es la pantalla que te permite ver tus ingresos y gastos de todas las transacciones hechas</string>
     <string name="see_your_loss_balance_text">* Ver su balance.\n* Envio/recepcion de bitcoins.\n* Pedir bitcoins.\n* Ver el historico de transacciones.</string>
     <string name="spending_details">Detalles de gastos</string>
     <string name="no_data">No existen datos disponibles</string>
     <string name="country">pais</string>
     <string name="state">Estado</string>
-    <string name="connected">Ahora estas conectado</string>
+    <string name="connected">Ahora estas conectado con</string>
     <string name="delete_all_contacts_title">Borrar todos los contactos</string>
     <string name="delete_all_contacts_info">Estas seguro que quieres borrar todas tus conecciones?</string>
     <string name="delete_connection_text">Borrar la conexion</string>
-    <string name="delete_contacts_info">Estas seguro que quieres borrar esta conexion?</string>
+    <string name="delete_contacts_info">Estas seguro que quieres borrar esta conexion?(Eliminar el contacto asociado)</string>
     <string name="description_search">Buscar</string>
     <string name="tittle">Titulo</string>
-    <string name="description">Descripcion</string>
+    <string name="description">descripcion</string>
     <string name="username">nombre de usuario</string>
     <string name="confirm_connection">CONFIRMAR CONEXION</string>
     <string name="gps_off">Tu GPS esta apagado</string>
@@ -200,6 +200,7 @@
     <string name="start">Empezar</string>
     <string name="community_desc">* Buscar usuarios cercanos. \n* Buscar usuarios en cualquier lugar. \n* Ver el perfil de otros usuarios. \n* Enviar solicitudes de conexion.</string>
 
+    <!--Notification Tab-->
     <string name="notification_time_1"> hace unos momentos</string>
     <string name="notification_time_2"> minutos</string>
     <string name="notification_time_3"> horas</string>
@@ -208,13 +209,47 @@
 
     <string name="system_error">Error del sistema</string>
     <!-- Browser Tab -->
+    <string name="connectionState_connected">Es un Contacto</string>
+    <string name="connectionState_request_sent">Solicitud enviada</string>
+    <string name="connectionState_request_received">Solicitud recibida</string>
+    <string name="connectionState_request_canceled">Solicitud cancelada</string>
+    <string name="connectionState_denied_remotely">Negada por el contacto</string>
+    <string name="connectionState_online">En linea</string>
+    <string name="connectionState_offline">Desconectado</string>
+
     <string name="turn_on_gps">Por favor, Enciende tu GPS</string>
     <string name="connectionState_connected_msg">Es un Contacto</string>
     <string name="connectionState_request_sent_msg">Solicitud ha sido enviada</string>
+    <string name="connectionState_request_received_msg">El contacto le ha enviado una solicitud de conexion</string>
+    <string name="connectionState_request_canceled_msg">El contacto a cancelado su solictud de conexion</string>
+    <string name="connectionState_denied_remotely_msg">Negada por el contacto</string>
+    <string name="connectionState_user_online_msg">Usuario en linea</string>
     <string name="connectionState_user_offline_msg">Usuario desconectado</string>
     <string name="btn_error_fermat_network_cancel">CANCELAR</string>
     <string name="btn_error_fermat_network_connect">CONECTAR</string>
     <string name="Request_user_list_time_out">Se agoto el tiempo de espera por la lista de usarios</string>
     <string name="loading_data_error_msg">Disculpe, ocurrio un problema al cargar los datos</string>
+
+
+    <!-- Community Notification-->
+    <string name="notification_connection_request">Nueva solicitud de conexión</string>
+    <string name="notification_connection_request2">Ud. Recibio una nueva solicitud de conexión de</string>
+    <string name="notification_connection_accept">Solicitud de conexión</string>
+
+    <string name="notification_connection_accept2">Tu solicitud de conexión fue aceptada de</string>
+    <string name="notification_connection_disconnet">Conexión Eliminada</string>
+    <string name="notification_connection_disconnet2">esta desconectado de ti. Se Eliminara el Contacto asociado.</string>
+
+    <string name="notification_connection_denied">Solicitud de conexión</string>
+    <string name="notification_connection_denied2">Tu solicitud de conexión fue rechazada</string>
+    <string name="notification_connection_Unknown">Desonocido</string>
+
+    <string name="no_users_for_location">No se encontranron conexiones cerca de la ubicacion escogida</string>
+    <string name="users_for_location">Estas son las conexiones cerca de la ubi escogida</string>
+
+    <!-- Community NotificationTAB confirmation dialog-->
+    <string name="confirmation_notification_dialog_title">SOLICITUD DE CONExIÓN</string>
+    <string name="confirmation_notification_dialog_description">Nueva Conexión</string>
+    <string name="confirmation_notification_dialog_message">quiere conectarse contigo</string>
 
 </resources>

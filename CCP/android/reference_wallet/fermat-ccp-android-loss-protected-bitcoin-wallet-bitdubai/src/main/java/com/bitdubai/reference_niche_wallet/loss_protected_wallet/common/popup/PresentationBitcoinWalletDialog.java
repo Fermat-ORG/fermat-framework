@@ -3,7 +3,9 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -45,12 +47,12 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
     /**
      * Members
      */
-    String title;
-    String subTitle;
-    String body;
-    String textFooter;
+   // String title;
+   // String subTitle;
+   // String body;
+   // String textFooter;
 
-    int resBannerimage;
+   // int resBannerimage;
 
     /**
      * UI
@@ -112,6 +114,11 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
                 btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
                 btn_dismiss.setOnClickListener(this);
                 break;
+
+            case TYPE_CHUNCK_HELP:
+                btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
+                btn_dismiss.setOnClickListener(this);
+                break;
         }
 
 
@@ -134,7 +141,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
                 return R.layout.loss_presentation_bitcoin_wallet_without_identities;
             case TYPE_CHUNCK_HELP:
-                return R.layout.loss_chunk_help_dialog;
+                return R.layout.loss_chunk_helper_dialog;
         }
         return 0;
     }
@@ -206,13 +213,52 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
             }
         }
     }
-
-    private byte[] convertImage(int resImage){
+    private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        //bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
+        // bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+
+        Bitmap imageBitmap = getResizedBitmap(bitmap,dpToPx(), dpToPx());
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 30, stream);
         return stream.toByteArray();
+    }
+
+    public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        int limitSize = 400;
+
+        if (newHeight > limitSize || newWidth > limitSize) {
+            if (height > width) {
+                if (height > limitSize) {
+                    newHeight = limitSize;
+                    newWidth = width * limitSize / height;
+                }
+            } else {
+                if (width > limitSize) {
+                    newWidth = limitSize;
+                    newHeight = height * limitSize / width;
+                }
+            }
+        }
+
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+        // RECREATE THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
+                matrix, false);
+        return resizedBitmap;
+    }
+
+
+    public int dpToPx() {
+        int dp = 150;
+        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
     }
 
     @Override

@@ -705,6 +705,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         }
                     });
                 }
+                navigationView.setVisibility(View.VISIBLE);
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+
             } else {
 //                mDrawerLayout.setEnabled(false);
                 navigationView.setVisibility(View.GONE);

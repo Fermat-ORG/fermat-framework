@@ -1,11 +1,7 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments;
 
-import android.content.ClipboardManager;
-
-
-import android.content.ClipData;
-
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -15,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -22,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -36,23 +32,23 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.DeleteWalletContactDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ReceiveFragmentDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
+
+//import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
+//import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
+//import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 
 /**
  * Contact Detail Fragment.
@@ -85,6 +81,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
      */
     private LossProtectedWallet lossProtectedWalletManager;
     private ErrorManager errorManager;
+    private String PublicKey;
 
 
     /**
@@ -134,7 +131,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
 
             lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
+            PublicKey = lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey();
             if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
                 blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
             else
@@ -193,7 +190,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                         lossProtectedWalletManager,
                         lossProtectedWalletSession.getErrorManager(),
                         lossProtectedWalletContact,
-                        lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey(),
+                        PublicKey,
                         lossProtectedWalletSession.getAppPublicKey(),
                         blockchainNetworkType);
                 receiveFragmentDialog.show();
@@ -244,7 +241,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                                     lossProtectedWalletContact.getActorPublicKey(),
                                     lossProtectedWalletContact.getProfilePicture(),
                                     Actors.INTRA_USER,
-                                    lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey()
+                                    PublicKey
                                     , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     blockchainNetworkType
@@ -254,7 +251,11 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                         }else{
                             Toast.makeText(getActivity(),"Address exchange sent, wait 2 minutes please",Toast.LENGTH_SHORT).show();
                         }
-                    } catch (CantGetSelectedActorIdentityException e) {
+                    } catch (Exception exc){
+                        exc.printStackTrace();
+                    }
+
+                   /* catch (CantGetSelectedActorIdentityException e) {
                         Toast.makeText(getActivity(),"CantGetSelectedActorIdentityException",Toast.LENGTH_SHORT).show();
 
                         e.printStackTrace();
@@ -263,7 +264,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
 
                         e.printStackTrace();
                     }
-
+*/
                 }
             });
 
@@ -293,10 +294,10 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
      *
      * @param
      */
-    private void copyFromClipboard() {
+   /* private void copyFromClipboard() {
         try {
             ClipboardManager clipboard = null;
-                clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 
             if (text_view_address.getText() != null){
                 ClipData clip = ClipData.newPlainText("copy",text_view_address.getText());
@@ -310,7 +311,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
         }
 
     }
-
+*/
 
     /**
      * Setting up wallet contact value
@@ -346,7 +347,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                                        lossProtectedWalletContact.getActorPublicKey(),
                                        lossProtectedWalletContact.getProfilePicture(),
                                        Actors.INTRA_USER,
-                                       lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey()
+                                       PublicKey
                                        , appSession.getAppPublicKey(),
                                        CryptoCurrency.BITCOIN,
                                        blockchainNetworkType
@@ -375,27 +376,36 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                                        lossProtectedWalletContact.getActorPublicKey(),
                                        lossProtectedWalletContact.getProfilePicture(),
                                        Actors.INTRA_USER,
-                                       lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey()
+                                       PublicKey
                                        , appSession.getAppPublicKey(),
                                        CryptoCurrency.BITCOIN,
                                        blockchainNetworkType
                                );
 
-                           } catch (CantGetSelectedActorIdentityException e1) {
+                           }
+                           catch (Exception ex) {
+                               ex.printStackTrace();
+                           }
+                           /*} catch (CantGetSelectedActorIdentityException e1) {
                                e1.printStackTrace();
                            } catch (ActorIdentityNotSelectedException e1) {
                                e1.printStackTrace();
-                           }
+                           }*/
 
                            img_update.setVisibility(View.VISIBLE);
                            receive_button.setVisibility(View.GONE);
                            send_button.setVisibility(View.GONE);
 
-                       } catch (CantGetSelectedActorIdentityException e) {
-                           e.printStackTrace();
-                       } catch (ActorIdentityNotSelectedException e) {
+                       }
+                    catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                       /*catch (CantGetSelectedActorIdentityException e) {
                            e.printStackTrace();
                        }
+                       catch (ActorIdentityNotSelectedException e) {
+                           e.printStackTrace();
+                       }*/
                 }else{
                     img_update.setVisibility(View.VISIBLE);
                     receive_button.setVisibility(View.GONE);
@@ -426,28 +436,58 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+            if (id == 2){
+                DeleteWalletContactDialog deleteWalletContactDialog = new DeleteWalletContactDialog(
+                        getActivity(),
+                        lossProtectedWalletSession,
+                        lossProtectedWalletContact.getContactId(),
+                        lossProtectedWalletContact.getActorName());
+                deleteWalletContactDialog.show();
+
+                deleteWalletContactDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if (appSession.getData(SessionConstant.CONTACT_DELETED) == true)
+                            changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_CONTACTS, appSession.getAppPublicKey());
+                    }
+                });
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onUpdateViewOnUIThread(String code){
-      try
-        {
-            //update contact address
-            lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
+      try {
+          if(!code.equals("BlockchainDownloadComplete"))
+          {
+              //check contact to show is de same to update
+              if (lossProtectedWalletContact.getContactId().equals(UUID.fromString(code))) {
+                  //update contact address
+                  LossProtectedWalletContact lossProtectedWalletContactUpdate = lossProtectedWalletManager.findWalletContactById(UUID.fromString(code), PublicKey);
 
-            lossProtectedWalletContact = lossProtectedWalletManager.findWalletContactById(UUID.fromString(code), lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey());
+                  if(lossProtectedWalletContactUpdate.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+                  {    lossProtectedWalletContact = lossProtectedWalletContactUpdate;
+                      text_view_address.setText(lossProtectedWalletContactUpdate.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
+                      img_update.setVisibility(View.GONE);
+                      receive_button.setVisibility(View.VISIBLE);
+                      send_button.setVisibility(View.VISIBLE);
 
+                  }
 
-            if(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
-            {
-                text_view_address.setText(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
-                img_update.setVisibility(View.GONE);
-                receive_button.setVisibility(View.VISIBLE);
-                send_button.setVisibility(View.VISIBLE);
-
-            }
-
-            lossProtectedWalletSession.setData(SessionConstant.LAST_SELECTED_CONTACT,lossProtectedWalletContact);
-
+                lossProtectedWalletSession.setData(SessionConstant.LAST_SELECTED_CONTACT,lossProtectedWalletContact);
+              }
+          }
         }
         catch(Exception e)
         {

@@ -3,7 +3,11 @@ package com.bitdubai.sub_app.intra_user_community.app_connection;
 import android.content.Context;
 
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
-import com.bitdubai.fermat_android_api.engine.*;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
+import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
+import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
+import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -19,8 +23,6 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleC
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.sub_app.intra_user_community.fragmentFactory.IntraUserFragmentFactory;
 import com.bitdubai.sub_app.intra_user_community.navigation_drawer.IntraUserCommunityNavigationViewPainter;
-
-import com.bitdubai.sub_app.intra_user_community.R;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
@@ -83,7 +85,7 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
 
             this.intraUserSubAppSession = this.getFullyLoadedSession();
             if(intraUserSubAppSession!=  null)
-            return CryptoWalletUserCommunityBuildNotification.getNotification(notificationID,involvedActor, Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
+            return CryptoWalletUserCommunityBuildNotification.getNotification(notificationID,involvedActor, Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode(), getContext());
         }
         catch(Exception e)
         {

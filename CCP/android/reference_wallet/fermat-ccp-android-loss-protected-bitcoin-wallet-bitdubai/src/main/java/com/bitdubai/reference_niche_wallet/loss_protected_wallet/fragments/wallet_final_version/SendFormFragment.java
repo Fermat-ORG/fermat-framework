@@ -248,7 +248,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             return rootView;
         } catch (Exception e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.Whooops_text), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
 
         }
@@ -271,7 +271,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 errorConnectingFermatNetworkDialog.dismiss();
                 try {
                     if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
-                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.Wait_a_minute), Toast.LENGTH_SHORT).show();
                         getActivity().onBackPressed();
                     }
                 } catch (CantGetCommunicationNetworkStatusException e) {
@@ -294,7 +294,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
 
         } catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), getResources().getString(R.string.Whooops_text), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
@@ -677,7 +677,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                             blockchainNetworkType
                                     );
 
-                                    Toast.makeText(getActivity(), "Contact don't have an Address from red " + blockchainNetworkType.getCode() + "\nplease wait 2 minutes.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(),  getResources().getString(R.string.Contact_without_net_address) + " " + blockchainNetworkType.getCode() + "\nplease wait 2 minutes.", Toast.LENGTH_LONG).show();
 
                                 } else {
 
@@ -786,7 +786,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 if (lossProtectedWalletContact != null) {
                     sendCrypto();
                 } else
-                    Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.Contact_not_found), Toast.LENGTH_LONG).show();
             } else if (id == R.id.imageView_contact) {
                 // if user press the profile image
             } else if (id == R.id.btn_expand_send_form) {
@@ -878,11 +878,12 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                                     blockchainNetworkType,
                                                     appSession);
                                             confirm_send_dialog.show();
+
                                             confirm_send_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
                                                 @Override
                                                 public void onDismiss(DialogInterface dialog) {
-                                                    Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getActivity(), getResources().getString(R.string.Sending_text), Toast.LENGTH_SHORT).show();
                                                     onBack(null);
                                                 }
                                             });
@@ -890,7 +891,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         else
                                         {
                                             //setting protected eneabled can't send
-                                            Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. ", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), getResources().getString(R.string.Action_not_allowed_lpw), Toast.LENGTH_LONG).show();
                                         }
                                     }
                                     else{
@@ -936,52 +937,35 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                                 });
                                             }
                                             else{
-                                                Toast.makeText(getActivity(), "Insufficient funds.", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(getActivity(), getResources().getString(R.string.Insufficient_funds), Toast.LENGTH_LONG).show();
                                             }
 
-                                            /*lossProtectedWalletManager.send(
-                                                    amountDecimal.longValueExact(),
-                                                    validAddress,
-                                                    notes,
-                                                    appSession.getAppPublicKey(),
-                                                    lossProtectedWalletManager.getActiveIdentities().get(0).getPublicKey(),
-                                                    Actors.INTRA_USER,
-                                                    lossProtectedWalletContact.getActorPublicKey(),
-                                                    lossProtectedWalletContact.getActorType(),
-                                                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-                                                    blockchainNetworkType,
-                                                    CryptoCurrency.BITCOIN,
-                                                    0,
-                                                    FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT
-                                            );
-                                            Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
-                                            onBack(null);*/
 
                                         } catch (Exception e) {
                                             e.printStackTrace();
-                                            Toast.makeText(getActivity(), "Send Error. " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), getResources().getString(R.string.Send_error_text) + " " + e.getMessage(), Toast.LENGTH_LONG).show();
                                         }
                                     }
 
                                 } else {
-                                    Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), getResources().getString(R.string.Invalid_Amount_small)+ " " + msg, Toast.LENGTH_LONG).show();
                                 }
 
 
                             } catch (Exception e) {
                                 appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                                Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), getResources().getString(R.string.Whooops_text2), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
 
                             }
                         } else {
-                            Toast.makeText(getActivity(), "Invalid Amount", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.Invalid_Amount), Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(getActivity(), "Contact don't have an valid Address", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.Contact_without_address), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Contact don't have an Address from red "+ blockchainNetworkType.getCode() + "\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.Contact_without_net_address)+" "+ blockchainNetworkType.getCode() + "\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -995,7 +979,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
 
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.Whooops_text2), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 

@@ -24,20 +24,17 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
+import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantCreateLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantFindLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
-import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
@@ -53,6 +50,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 
 /**
  * Created by mati on 2016.02.09..
+ * updated by Andres Abreu on 18/08/16
  */
 public class LossProtectedSettingsFragment extends FermatPreferenceFragment<ReferenceAppFermatSession<LossProtectedWallet>,WalletResourcesProviderManager> {
 
@@ -60,6 +58,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
     private ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
     private LossProtectedWallet lossProtectedWalletManager;
+    private String PublicKey;
     LossProtectedWalletSettings lossProtectedWalletSettings;
     private String previousSelectedItem = "MainNet";
     private String previousSelectedItemExchange = null;
@@ -78,6 +77,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
         lossProtectedWalletSession = appSession;
         try {
             lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
+            PublicKey = lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
             if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
@@ -107,9 +107,9 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
 
 
-            list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",(Boolean) appSession.getData(SessionConstant.NOTIFICATION_ENABLED)));
+            list.add(new PreferenceSettingsSwithItem(1,getResources().getString(R.string.Enabled_notificacions),(Boolean) appSession.getData(SessionConstant.NOTIFICATION_ENABLED)));
 
-            list.add(new PreferenceSettingsSwithItem(2,"Enabled Loss Protected",(Boolean) appSession.getData(SessionConstant.LOSS_PROTECTED_ENABLED)));
+            list.add(new PreferenceSettingsSwithItem(2,getResources().getString(R.string.Enabled_loss_protected),(Boolean) appSession.getData(SessionConstant.LOSS_PROTECTED_ENABLED)));
 
 
 
@@ -135,7 +135,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
             networkDialog.putString("title", getResources().getString(R.string.title_label));
             networkDialog.putString("mode", "single_option");
             networkDialog.putString("previous_selected_item", previousSelectedItem);
-            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", networkDialog));
+            list.add(new PreferenceSettingsOpenDialogText(5, getResources().getString(R.string.Select_network), networkDialog));
 
 
             // Exchange Rate Provider
@@ -153,12 +153,12 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
                         List<ExchangeRateProvider> providers = new ArrayList<>(lossProtectedWalletManager.getExchangeRateProviderManagers());
                         String itemsProviders[] = new String[providers.size()];
-                        for (int i=0; i<providers.size(); i++) {
+                        for (int i = 0; i < providers.size(); i++) {
                             ExchangeRateProvider provider = providers.get(i);
 
-                                itemsProviders[i] = provider.getProviderName();
+                            itemsProviders[i] = provider.getProviderName();
 
-                            if(provider.getProviderId().equals(exchangeProviderId2))
+                            if (provider.getProviderId().equals(exchangeProviderId2))
                                 previousSelectedItemExchange = provider.getProviderName();
                         }
 
@@ -173,7 +173,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
                         getActivity().runOnUiThread(new Runnable() {
                             public void run() {
-                                list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", providerDialog));
+                                list.add(new PreferenceSettingsOpenDialogText(10, getResources().getString(R.string.exchange_title_label), providerDialog));
 
                                 adapter.changeDataSet(list);
                                 adapter.notifyDataSetChanged();
@@ -183,13 +183,14 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                     }
+                    }
                 }
             });
 
 
 
-            list.add(new PreferenceSettingsLinkText(11, "Received Testnet Bitcoins", "", 15, Color.GRAY));
+           // list.add(new PreferenceSettingsLinkText(11, "Received Testnet Bitcoins", "", 15, Color.GRAY));
+           list.add(new PreferenceSettingsLinkText(11, getResources().getString(R.string.Received_Testnet_Bitcoins), "", 15, Color.GRAY));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -237,7 +238,8 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
                 Runnable _longPressed = new Runnable() {
                     public void run() {
                         Log.i("info", "LongPress");
-                        Toast.makeText(getActivity(), "TestNet download Init", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "TestNet download Init", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.TestNet_download), Toast.LENGTH_SHORT).show();
                         GETTestNet(getActivity());
                     }
                 };
@@ -387,7 +389,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
                     CryptoAddress cryptoAddress = new CryptoAddress("mtMFTiGfBpjL1GBki8zrk5UW8otD6Gt541", CryptoCurrency.BITCOIN);
 
                     try {
-                        walletContact = lossProtectedWalletManager.findWalletContactByName("Testnet_bitcoins", appSession.getAppPublicKey(), lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey());
+                        walletContact = lossProtectedWalletManager.findWalletContactByName("Testnet_bitcoins", appSession.getAppPublicKey(), PublicKey);
 
                         if(walletContact == null)
                         {
@@ -434,7 +436,8 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
                 if (result != null &&
                         result.length > 0) {
                     if (!result[0].toString().equals("transaccion fallida"))
-                        Toast.makeText(context, "TestNet bitcoin arrived", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "TestNet bitcoin arrived", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, getResources().getString(R.string.TestNet_bitcoin_arrived), Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -442,7 +445,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
             @Override
             public void onErrorOccurred(Exception ex) {
-                Toast.makeText(context, "TestNet Request Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getResources().getString(R.string.TestNet_Request_Error), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -457,7 +460,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
             CryptoAddress cryptoAddress = lossProtectedWalletManager.requestAddressToKnownUser(
-                    lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey(),
+                    PublicKey,
                     Actors.INTRA_USER,
                     actorPublicKey,
                     Actors.EXTRA_USER,
@@ -474,7 +477,12 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
             Toast.makeText(getActivity().getApplicationContext(), "CantRequestLossProtectedAddressException", Toast.LENGTH_SHORT).show();
 
 
-        } catch (CantGetSelectedActorIdentityException e) {
+        }
+        catch (Exception e) {
+         //   Toast.makeText(getActivity().getApplicationContext(), "ActorIdentityNotSelectedException", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+       /* catch (CantGetSelectedActorIdentityException e) {
             Toast.makeText(getActivity().getApplicationContext(), "CantGetSelectedActorIdentityException", Toast.LENGTH_SHORT).show();
 
             e.printStackTrace();
@@ -482,7 +490,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
             Toast.makeText(getActivity().getApplicationContext(), "ActorIdentityNotSelectedException", Toast.LENGTH_SHORT).show();
 
             e.printStackTrace();
-        }
+        }*/
         return walletAddres;
     }
 }

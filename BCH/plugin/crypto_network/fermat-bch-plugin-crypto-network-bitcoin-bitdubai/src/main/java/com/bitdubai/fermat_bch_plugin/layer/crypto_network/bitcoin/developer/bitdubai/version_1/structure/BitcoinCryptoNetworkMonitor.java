@@ -1124,7 +1124,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
                     try {
 
-                        blockChain.add(peer.getBlock(blockChain.getChainHead().getHeader().getPrevBlockHash()).get(1, TimeUnit.MINUTES));
+                        blockChain.add(peer.getBlock(blockChain.getChainHead().getHeader().getPrevBlockHash()).get(3, TimeUnit.MINUTES));
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();

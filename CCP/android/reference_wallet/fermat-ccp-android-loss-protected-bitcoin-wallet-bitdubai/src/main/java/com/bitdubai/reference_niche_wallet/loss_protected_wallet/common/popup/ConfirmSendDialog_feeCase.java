@@ -117,8 +117,9 @@ public class ConfirmSendDialog_feeCase extends Dialog implements
         getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
         String newAmount = bitcoinConverter.getBTC(String.valueOf(total));
-        confirmText.setText("You will sending " + newAmount +" btc. Confirm?");
-
+        String confirmationText = getContext().getResources().getString(R.string.confirmation_text);
+        confirmationText = confirmationText.replace("Amount", newAmount);
+        confirmText.setText(confirmationText);
 
     }
 
@@ -147,19 +148,19 @@ public class ConfirmSendDialog_feeCase extends Dialog implements
                         fee,
                         feeOrigin);
 
-                Toast.makeText(this.activity, "Sending...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.activity, getContext().getString(R.string.Sending_text), Toast.LENGTH_SHORT).show();
 
             } catch (CantSendLossProtectedCryptoException e) {
                 e.printStackTrace();
-                Toast.makeText(this.activity, "Unexpected error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.activity, getContext().getString(R.string.Unexpected_error), Toast.LENGTH_SHORT).show();
             } catch (LossProtectedInsufficientFundsException e) {
                 e.printStackTrace();
-                Toast.makeText(this.activity, "Not enough funds to perform action", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.activity, getContext().getString(R.string.Insufficient_funds), Toast.LENGTH_SHORT).show();
         /*    } catch (CantGetLossProtectedBalanceException e) {
                 Toast.makeText(this.activity, "Unexpected error", Toast.LENGTH_SHORT).show();
         */    }
              catch (Exception e) {
-                Toast.makeText(activity.getApplicationContext(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), getContext().getResources().getString(R.string.Whooops_text2), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 

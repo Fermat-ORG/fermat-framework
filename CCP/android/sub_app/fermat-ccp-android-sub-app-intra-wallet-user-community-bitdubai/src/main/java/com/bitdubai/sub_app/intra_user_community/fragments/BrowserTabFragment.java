@@ -25,11 +25,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
@@ -38,7 +35,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
+
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -46,31 +43,34 @@ import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_ccp_api.all_definition.util.CommunityBroadcasterConstants;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AvailableActorsListAdapter;
-
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
-
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
@@ -155,6 +155,9 @@ public class BrowserTabFragment
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
+            FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
+            registerReceiver(fermatIntentFilter, new CCPListBroadcastReceiver());
+
             intraUserSubAppSession = appSession;
             fermatApplicationCaller = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
 
@@ -211,18 +214,26 @@ public class BrowserTabFragment
                 }
             });
 
-            //getting location and setting device locacion
-            location = moduleManager.getLocationManager();
-
-            if(location==null){
-                //  showErrorGPS();
-                Toast.makeText(getActivity(), "Please, turn ON your GPS", Toast.LENGTH_SHORT);
-            }
 
             identity =  moduleManager.getActiveIntraUserIdentity();
 
             if(identity != null)
-              distance = identity.getAccuracy();
+                distance = identity.getAccuracy();
+
+            //getting location and setting device locacion
+            location = moduleManager.getLocationManager();
+
+            if(location!=null){
+                if(location.getLatitude() == 0)
+                //  showErrorGPS();
+                Toast.makeText(getActivity(), getResources().getString(R.string.turn_on_gps), Toast.LENGTH_SHORT);
+                else
+                //update profile to reresh location
+                if(!location.getLatitude().equals(identity.getLocation().getLatitude()) )
+                    moduleManager.updateIntraUserIdentity(identity.getPublicKey(),identity.getAlias(),"",
+                            identity.getProfileImage(), identity.getAccuracy(),identity.getFrequency(),location);
+            }
+
 
             // turnGPSOn();
 
@@ -243,11 +254,11 @@ public class BrowserTabFragment
         searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
 
 
-       // locationFilterBar = (RelativeLayout) rootView.findViewById(R.id.cbc_location_filter_footer_bar);
-       // locationFilterBarCountry = (FermatTextView) rootView.findViewById(R.id.cbc_location_filter_footer_bar_country);
-       // locationFilterBarPlace = (FermatTextView) rootView.findViewById(R.id.cbc_location_filter_footer_bar_place);
+        // locationFilterBar = (RelativeLayout) rootView.findViewById(R.id.cbc_location_filter_footer_bar);
+        // locationFilterBarCountry = (FermatTextView) rootView.findViewById(R.id.cbc_location_filter_footer_bar_country);
+        // locationFilterBarPlace = (FermatTextView) rootView.findViewById(R.id.cbc_location_filter_footer_bar_place);
 
-      //  final View locationFilterBarCloseButton = rootView.findViewById(R.id.cbc_location_filter_footer_bar_close_button);
+        //  final View locationFilterBarCloseButton = rootView.findViewById(R.id.cbc_location_filter_footer_bar_close_button);
        /* locationFilterBarCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -386,7 +397,7 @@ public class BrowserTabFragment
                 }
             });
         }else{
-            Log.e(TAG,"SearchView null, please check this");
+            Log.e(TAG, "SearchView null, please check this");
         }
     }
 
@@ -435,7 +446,7 @@ public class BrowserTabFragment
 
         }
 
-            return false;
+        return false;
 
     }
 
@@ -446,7 +457,13 @@ public class BrowserTabFragment
             ConnectionState connectionState = data.getConnectionState();
 
 
-            if ((data.getState().equals(ProfileStatus.ONLINE) || data.getState().equals(ProfileStatus.UNKNOWN)) && connectionState.equals(ConnectionState.NO_CONNECTED)) {
+            if ((data.getState().equals(ProfileStatus.ONLINE) ||
+                    data.getState().equals(ProfileStatus.UNKNOWN)) &&
+                    connectionState.equals(ConnectionState.NO_CONNECTED) ||
+                    connectionState.equals(ConnectionState.DENIED_LOCALLY) ||
+                    connectionState.equals(ConnectionState.DENIED_REMOTELY) ||
+                    connectionState.equals(ConnectionState.DISCONNECTED_LOCALLY) ||
+                    connectionState.equals(ConnectionState.DISCONNECTED_REMOTELY)) {
 
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
@@ -461,6 +478,8 @@ public class BrowserTabFragment
                     connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
+                            isRefreshing = false;
+                            offset = 0;
                             onRefresh();
                         }
                     });
@@ -468,24 +487,38 @@ public class BrowserTabFragment
                 }
             }else
             {   switch (connectionState)
-                {
-                    case CONNECTED:
-                        Toast.makeText(getActivity(),"IS A CONTACT",Toast.LENGTH_SHORT).show();
-                        break;
+            {
+                case CONNECTED:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_connected_msg),Toast.LENGTH_SHORT).show();
+                    break;
+                case NO_CONNECTED:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
+                    break;
+                case PENDING_REMOTELY_ACCEPTANCE:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_request_sent_msg),Toast.LENGTH_SHORT).show();
+                    break;
+                case PENDING_LOCALLY_ACCEPTANCE:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_request_received_msg),Toast.LENGTH_SHORT).show();
+                    break;
+                case DENIED_REMOTELY:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_denied_remotely_msg),Toast.LENGTH_SHORT).show();
+                    break;
+                case DISCONNECTED_REMOTELY:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
 
-                    case PENDING_REMOTELY_ACCEPTANCE:
-                        Toast.makeText(getActivity(),"REQUEST HAS BEEN SENT",Toast.LENGTH_SHORT).show();
-                        break;
 
-                    default:
-                        Toast.makeText(getActivity(),"USER OFFLINE",Toast.LENGTH_SHORT).show();
-                }
+                    break;
+
+                default:
+                    Toast.makeText(getActivity(),getResources().getString(R.string.connectionState_user_offline_msg),Toast.LENGTH_SHORT).show();
+            }
+
 
             }
 
-            } catch (CantGetActiveLoginIdentityException e) {
-                e.printStackTrace();
-            }
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -496,20 +529,20 @@ public class BrowserTabFragment
 
     public void showErrorFermatNetworkDialog() {
         final ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
-        errorConnectingFermatNetworkDialog.setLeftButton("CANCEL", new View.OnClickListener() {
+        errorConnectingFermatNetworkDialog.setLeftButton(getResources().getString(R.string.btn_error_fermat_network_cancel), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 errorConnectingFermatNetworkDialog.dismiss();
                 getActivity().onBackPressed();
             }
         });
-        errorConnectingFermatNetworkDialog.setRightButton("CONNECT", new View.OnClickListener() {
+        errorConnectingFermatNetworkDialog.setRightButton(getResources().getString(R.string.btn_error_fermat_network_connect), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 errorConnectingFermatNetworkDialog.dismiss();
                 try {
                     if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
-                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.error_msg_trying_to_reconnect), Toast.LENGTH_SHORT).show();
                         //getActivity().onBackPressed();
                     }
                 } catch (CantGetCommunicationNetworkStatusException e) {
@@ -523,7 +556,7 @@ public class BrowserTabFragment
         errorConnectingFermatNetworkDialog.show();
     }
 
-   // @Override
+    // @Override
     public void onLocationItemClicked(ExtendedCity city) {
         offset = 0;
 
@@ -549,23 +582,47 @@ public class BrowserTabFragment
     @Override
     public void onLoadMoreData(int page, final int totalItemsCount) {
         adapter.setLoadingData(true);
-        fermatWorker = new FermatWorker(getActivity(), this) {
-            @Override
-            protected Object doInBackground() throws Exception {
-                return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
-            }
-        };
+        // fermatWorker = new FermatWorker(getActivity(), this) {
+        //   @Override
+        //  protected Object doInBackground() throws Exception {
+        offset = totalItemsCount;
+        onRefresh();
+        //return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
+        // }
+        //};
 
-        fermatWorker.execute();
+        // fermatWorker.execute();
     }
 
     @Override
-    public List<IntraUserInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+    public void onRefresh() {
+        try {
+            if (!isRefreshing) {
+                isRefreshing = true;
+                if (identity != null) {
+                    moduleManager.getSuggestionsToContact(identity.getPublicKey(), location, distance, null, MAX, offset);
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+   /* @Override
+   public List<IntraUserInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
         try {
+            ActiveActorIdentityInformation intraUserLoginIdentity = null;
+            intraUserLoginIdentity = moduleManager.getSelectedActorIdentity();
+            String intraUserLoggedPublicKey = null;
+            if (intraUserLoginIdentity != null) {
+                intraUserLoggedPublicKey = intraUserLoginIdentity.getPublicKey();
+            }
+
             offset = pos;
-            List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance, null, MAX, offset);
+            List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(intraUserLoggedPublicKey,location, distance, null, MAX, offset);
             if(userList != null)
                 dataSet.addAll(userList);
             else {
@@ -573,7 +630,7 @@ public class BrowserTabFragment
                     dataSet.addAll(lstIntraUserInformations);
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.Request_user_list_time_out), Toast.LENGTH_LONG).show();
                         }
                     });
                 }else{
@@ -588,18 +645,21 @@ public class BrowserTabFragment
             e.printStackTrace();
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.Request_user_list_time_out), Toast.LENGTH_LONG).show();
                 }
             });
         }
         return dataSet;
-    }
+    }*/
+
+
 
     @Override
     @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
+
         isRefreshing = false;
-        if (isAttached) {
+       /* if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             adapter.setLoadingData(false);
             if (result != null && result.length > 0) {
@@ -619,7 +679,7 @@ public class BrowserTabFragment
             }
         }
 
-        showOrHideEmptyView();
+        showOrHideEmptyView();*/
     }
 
     @Override
@@ -630,7 +690,7 @@ public class BrowserTabFragment
             Log.e(TAG, ex.getMessage(), ex);
         }
 
-        Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),getResources().getString(R.string.loading_data_error_msg) , Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -638,6 +698,75 @@ public class BrowserTabFragment
         super.onFragmentFocus();
 
         onRefresh();
+    }
+
+    public void onActorReceived(final List<IntraUserInformation> result) {
+        try {
+            if (isAttached) {
+
+                if (result != null /*&& result.size() > 0*/) {
+                    if (result.size() > 0) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        adapter.setLoadingData(false);
+                        if (getActivity() != null && adapter != null) {
+                            if (offset == 0) {
+                                if (lstIntraUserInformations != null) {
+                                    lstIntraUserInformations.clear();
+                                    lstIntraUserInformations.addAll(result);
+                                } else {
+                                    lstIntraUserInformations = (ArrayList)result;
+                                }
+                                adapter.changeDataSet(lstIntraUserInformations);
+                                ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
+                                //adapter.refreshEvents(lstIntraUserInformations);
+                            } else {
+                                for (IntraUserInformation info : result) {
+                                    if (notInList(info)) {
+                                        lstIntraUserInformations.add(info);
+                                    }
+                                }
+                                adapter.notifyItemRangeInserted(offset, lstIntraUserInformations.size() - 1);
+                            }
+                            //offset = lstIntraUserInformations.size();
+                        }
+                    }
+
+                }
+
+                isRefreshing = false;
+                //offset = 0;
+                showOrHideEmptyView();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Receiver class implemented
+     */
+    private class CCPListBroadcastReceiver extends FermatBroadcastReceiver {
+
+        @Override
+        public void onReceive(FermatBundle fermatBundle) {
+            try {
+                if (isAttached) {
+                    String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+
+                    if (code.equals(CommunityBroadcasterConstants.USER_COMM_ACTOR_RECEIVED)) {
+                        List<IntraUserInformation> actorProfiles = (List<IntraUserInformation>) fermatBundle.get(CommunityBroadcasterConstants.USER_COMM_ACTOR_LIST);
+                        onActorReceived(actorProfiles);
+
+                    }
+                }
+            } catch (ClassCastException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_INTRA_USER_IDENTITY,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            } catch (IllegalAccessException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_INTRA_USER_IDENTITY,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }
     }
 
     private void loadSelectedActorIdentityInBackground(){
@@ -661,7 +790,7 @@ public class BrowserTabFragment
                         BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
                         toolbar.setLogo(bitmapDrawable);
                     } else {
-                        Log.e(TAG, "selectedActorIdentity null, Nelson fijate si esto queres que haga");
+                        Log.e(TAG, "selectedActorIdentity null");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -789,12 +918,17 @@ public class BrowserTabFragment
             noContacts.setAnimation(anim);
             noContacts.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.INVISIBLE);
+            //swipeRefreshLayout.setRefreshing(false);
 
         } else if (!show && noContacts.getVisibility() == View.VISIBLE) {
             noContacts.setAnimation(anim);
             noContacts.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+            //swipeRefreshLayout.setRefreshing(false);
+        }else {
+            // swipeRefreshLayout.setRefreshing(false);
         }
+
     }
 
 
@@ -812,7 +946,10 @@ public class BrowserTabFragment
 
     @Override
     public void onMethodCallback(ExtendedCity cityFromList) {
+        location.setLatitude(Double.parseDouble(Float.toString(cityFromList.getLatitude())));
+        location.setLongitude(Double.parseDouble(Float.toString(cityFromList.getLongitude())));
 
+        onRefresh();
     }
 
 
@@ -823,9 +960,18 @@ public class BrowserTabFragment
 
         if(_executor != null)
             _executor.shutdownNow();
-
         super.onStop();
     }
+
+
+    private boolean notInList(IntraUserInformation info) {
+        for (IntraUserInformation contact : lstIntraUserInformations) {
+            if (contact.getPublicKey().equals(info.getPublicKey()))
+                return false;
+        }
+        return true;
+    }
+
 
 }
 

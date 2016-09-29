@@ -44,7 +44,7 @@
     <string name="credit">Recibido</string>
     <string name="debit">Enviar</string>
     <string name="deny_text">Denegar</string>
-    <string name="description_text">Ud. no esta conectado a la red Fermat.</string>
+    <string name="description_text">Ud. no esta conectado a</string>
     <string name="dummy_content"></string>
     <string name="empty_list_msg">No hay contactos</string>
     <string name="empty_transactions_text">Transacciones vacias</string>
@@ -53,9 +53,9 @@
     <string name="fee_High">Rapido</string>
     <string name="fee_Medium">Normal</string>
     <string name="fee_advances_text">Configuracion avanzada</string>
-    <string name="fee_amount_text">Taza</string>
+    <string name="fee_amount_text">Tasa</string>
     <string name="fee_low">Lento</string>
-    <string name="fee_option_text">Restar taza al  monto</string>
+    <string name="fee_option_text">Restar tasa al  monto</string>
     <string name="fermat_network_offline_text">Red Fermat Offline</string>
     <string name="footer_message_text"></string>
     <string name="fragment_send_account_details_summary">Detalles de cuenta</string>
@@ -100,7 +100,7 @@
     <string name="search_hint">Nombre de Contacto</string>
     <string name="search_text">Buscar</string>
     <string name="second_description_text">la red fermat.</string>
-    <string name="see_your_balance_text">* Ver su balance.\n* Envio/recepcion de bitcoins.\n* Pedir bitcoins.\n* Ver el historico de transacciones.</string>
+    <string name="see_your_balance_text">* Ver su balance.\n* Envio/recepcion de Fermats.\n* Pedir Fermats.\n* Ver el historico de transacciones.</string>
     <string name="send_remittance_wallet">Enviar</string>
     <string name="send_request_text">Enviar Solicitud</string>
     <string name="send_text">Enviar</string>
@@ -110,8 +110,11 @@
     <string name="store_wallet">Tienda</string>
     <string name="swype_refresh">Deslice hacia abajo para refrescar</string>
     <string name="the_process_of_downloading_text">Se estan bajando los bloques de\nla  Blockchain.\n  Mientras esto ocurre, la barra superior se mostrara en rojo.</string>
-    <string name="this_is_a_simple_bitcoin_only_wallet_text">Esta cartera maneja bitcoins\nCon ella se puede:</string>
-    <string name="title_Fee">Configuracion de Taza</string>
+
+    <string name="this_is_a_simple_bitcoin_only_wallet_text">Esta cartera maneja Fermats\nCon ella se puede:</string>
+
+    <string name="title_Fee">Configuracion de Tasa</string>
+
     <string name="title_activity_blank">Administrador de Carteras</string>
     <string name="title_activity_requests_received">Solicitudes recibidas</string>
     <string name="title_activity_pay_to_contact">Pagar a contacto</string>
@@ -150,7 +153,7 @@
     <string name="error_msg_mnemonic_text">Error al obtener el texto mnemonico</string>
     <string name="error_msg_no_address">No se tiene una direccion para inviar\nPor favor, espere un rato</string>
     <string name="error_msg_trying_to_reconnect">Por favor espere un momento, intentando reconectar...</string>
-    <string name="error_std_message">Ha habido un error. Por favor intente de nuevo</string>
+    <string name="error_std_message">Ocurrio un error. Por favor intente de nuevo</string>
     <string name="request_sent">Solicitud enviada</string>
     <string name="success_msg_address_copied_clipboard">Direccion copiada al portapapeles</string>
     <string name="success_msg_address_sent_wait">Direccion enviada, por favor espere 2 minutos</string>
@@ -160,7 +163,7 @@
     <string name="settings_send_error_report">Enviar reporte de Error</string>
     <string name="wallet_type">Esta cartera permite dos tipos diferentes de usuarios:</string>
     <string name="btc_loss">Ingresa la cantidad de BTC que quieres enviar a Loss Protected Wallet</string>
-    <string name="this_is_a_simple_bitcoint_only_wallet_text">Esta es una cartera de solo bitcoin. sus principales caracteristicas son:</string>
+    <string name="this_is_a_simple_bitcoint_only_wallet_text">Esta es una cartera de solo Fermats. sus principales caracteristicas son:</string>
     <string name="fermat_address">Direccion Fermat</string>
     <string name="date">Fecha</string>
     <string name="to">Para:</string>
@@ -209,4 +212,17 @@
     <string name="title_section7">Voucher</string>
     <string name="title_section8">Tarjetas de regalo</string>
     <string name="title_section9">Clones</string>
+
+
+    <string name="pr_status_1">Enviado</string>
+    <string name="pr_status_2">Aceptado</string>
+    <string name="pr_status_3">Pagado</string>
+    <string name="pr_status_4">Pendiente de Respuesta</string>
+    <string name="pr_status_5">Error</string>
+    <string name="pr_status_6">No enviado</string>
+    <string name="pr_status_7">Proceso Iniciado</string>
+    <string name="pr_status_8">Denegado por Incompatibilidad</string>
+    <string name="pr_status_9">En Proceso</string>
+    <string name="pr_status_10">Denegado</string>
+    <string name="pr_status_11">Error, contacte a soporte</string>
 </resources>

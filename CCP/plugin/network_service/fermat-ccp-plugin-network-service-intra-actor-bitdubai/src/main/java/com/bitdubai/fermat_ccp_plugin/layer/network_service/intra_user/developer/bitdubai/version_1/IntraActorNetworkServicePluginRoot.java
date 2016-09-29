@@ -33,6 +33,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkListReceiveEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
@@ -46,6 +47,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingSuggestionsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IntraUserDeleteContactEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IncomingNotificationDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDataBaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDatabaseFactory;
@@ -286,8 +288,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
 
     }
 
-    @Override
-    public void onSentMessage(UUID messageSent) {
+          @Override
+        public final void onSentMessage(final UUID packageId) {
+            System.out.println("************ Mensaje supuestamente enviado intra actor network service: " + packageId);
+
        /* try {
             ActorNetworkServiceRecord actorNetworkServiceRecord = ActorNetworkServiceRecord.fronJson(messageSent.getContent());
 
@@ -307,6 +311,46 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
 
         }*/
     }
+
+    //receive actors list
+    @Override
+    public void handleNetworkClientActorListReceivedEvent(final UUID               queryId      ,
+                                                          final List<ActorProfile> actorProfiles) {
+
+        final List<IntraUserInformation> lstIntraUser = new ArrayList<>();
+
+        if( actorProfiles != null)
+        {
+            for (ActorProfile actorProfile : actorProfiles) {
+
+                String actorPhrase = "";
+           /* if(actorProfile.getExtraData() != null)
+            {
+                if(!actorProfile.getExtraData().equals("")) {
+                    try {
+                        JsonParser jParser = new JsonParser();
+                        JsonObject jsonObject = jParser.parse(actorProfile.getExtraData()).getAsJsonObject();
+
+                        actorPhrase = jsonObject.get("PHRASE").getAsString();
+                    } catch(Exception e){
+
+                    }
+                }
+            }*/
+
+                lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase,actorProfile.getStatus(),actorProfile.getLocation()));
+            }
+
+        }
+
+        System.out.println("IntraActorNs: onNetworkServiceActorListReceived");
+        ActorNetworkListReceiveEvent eventToRaise = eventManager.getNewEventMati(EventType.ACTOR_NETWORK_SERVICE_ACTOR_LIST_RECEIVED, ActorNetworkListReceiveEvent.class);
+        eventToRaise.setSource(eventSource);
+        eventToRaise.setActorProfileList(lstIntraUser);
+
+        System.out.println("INTRA USER ACTOR LIST FLOW -> RAISING EVENT -> -> init");
+        eventManager.raiseEvent(eventToRaise);
+}
 
 
     private void reprocessPendingMessage()
@@ -441,65 +485,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
 
     }
 
-    private void checkFailedDeliveryTime(String destinationPublicKey)
-    {
-        try{
-
-            List<ActorNetworkServiceRecord> actorNetworkServiceRecordList = outgoingNotificationDao.getNotificationByDestinationPublicKey(destinationPublicKey);
-
-            //if I try to send more than 5 times I put it on hold
-            for (ActorNetworkServiceRecord record : actorNetworkServiceRecordList) {
-
-                if(!record.getActorProtocolState().getCode().equals(ActorProtocolState.WAITING_RESPONSE.getCode()))
-                {
-                    if(record.getSentCount() > 10 )
-                    {
-
-                        record.setActorProtocolState(ActorProtocolState.WAITING_RESPONSE);
-                        record.setSentCount(1);
-                        //update state and process again later
-
-                        outgoingNotificationDao.update(record);
-                    }
-                    else
-                    {
-                        record.setSentCount(record.getSentCount() + 1);
-                        outgoingNotificationDao.update(record);
-                    }
-                }
-                else
-                {
-                    //I verify the number of days I'm around trying to send if it exceeds three days I delete record
-
-                    long sentDate = record.getSentDate();
-                    long currentTime = System.currentTimeMillis();
-                    long dif = currentTime - sentDate;
-
-                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
-
-                    if((int) dias > 3)
-                    {
-                        //notify the user does not exist to intra user actor plugin
-                        record.changeDescriptor(NotificationDescriptor.INTRA_USER_NOT_FOUND);
-                        incomingNotificationsDao.createNotification(record);
-
-                        outgoingNotificationDao.delete(record.getId());
-                    }
-
-                }
-
-            }
-
-
-        }
-        catch(Exception e)
-        {
-            System.out.println("INTRA USER NS EXCEPCION VERIFICANDO WAIT MESSAGE");
-            e.printStackTrace();
-        }
-
-    }
-
    /*
      * IntraUserManager Interface method implementation
      */
@@ -513,8 +498,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
         return intraUserList;
     }
 
-    @Override
-    public List<IntraUserInformation> getIntraUsersSuggestions(double distance, String alias,int max, int offset, Location location) throws ErrorSearchingSuggestionsException {
+
+    public List<IntraUserInformation> getIntraUsersSuggestionsOld(double distance, String alias,int max, int offset, Location location,String requesterPublicKey) throws ErrorSearchingSuggestionsException {
 
         final List<IntraUserInformation> lstIntraUser = new ArrayList<>();
 
@@ -553,7 +538,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     NetworkServiceType.INTRA_USER
             );    */              // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
-            final List<ActorProfile> list = new ArrayList<>();// getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            final List<ActorProfile> list = new ArrayList<>();
+
+            //getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
             for (ActorProfile actorProfile : list) {
 
@@ -584,6 +572,47 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
 
         return lstIntraUser;
     }
+
+    @Override
+    public void getIntraUsersSuggestions(double distance, String alias,int max, int offset, Location location,String requesterPublicKey) throws ErrorSearchingSuggestionsException {
+
+        final List<IntraUserInformation> lstIntraUser = new ArrayList<>();
+
+        try {
+
+            /* This is for test and example of how to use
+                    * Construct the filter
+            */
+
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    Actors.INTRA_USER.getCode(),
+                    null,
+                    alias,
+                    null,
+                    location,
+                    distance,
+                    true,
+                    null,
+                    max,
+                    offset,
+                    false);
+
+
+            discoveryActorProfiles(discoveryQueryParameters,requesterPublicKey);
+
+
+
+
+
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+
+        }
+
+    }
+
 
     @Override
     public List<IntraUserInformation> getCacheIntraUsersSuggestions(int max, int offset) throws ErrorSearchingCacheSuggestionsException {
@@ -776,6 +805,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     actorNetworkServiceRecord.toJson()
             );
 
+            System.out.println("IntraActorNs: onIntraUserWalletDeleteContact");
+            IntraUserDeleteContactEvent eventToRaise = eventManager.getNewEventMati(EventType.INTRA_USER_WALLET_DELETE_CONTACT,IntraUserDeleteContactEvent.class);
+            eventToRaise.setActorPublicKey(intraUserToDisconnectPublicKey);
+            eventToRaise.setSource(eventSource);
+            System.out.println("INSTRA USER ACTOR DELETE CONTACT -> RAISING EVENT -> -> init");
+            eventManager.raiseEvent(eventToRaise);
+
         } catch (Exception e) {
             throw new ErrorDisconnectingIntraUserException("ERROR DISCONNECTING INTRAUSER ", e, "", "Generic Exception");
         }
@@ -889,17 +925,17 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
         try {
 
 
-            Gson gson = new Gson();
+            /*Gson gson = new Gson();
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("PHRASE", gson.toJson(actor.getPhrase()));
 
-            String extraData = gson.toJson(jsonObject);
+            String extraData = gson.toJson(jsonObject);*/
 
             registerActor(actor.getActorPublicKey(),
                     actor.getName(),
                     actor.getName(),
-                    extraData,
+                    "",
                     location,
                     actor.getType(),
                     actor.getPhoto(),
@@ -952,18 +988,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     public void updateActor(Actor actor, Location location) {
 
         try {
-            Gson gson = new Gson();
+           /* Gson gson = new Gson();
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("PHRASE", gson.toJson(actor.getPhrase()));
 
-            String extraData = gson.toJson(jsonObject);
+            String extraData = gson.toJson(jsonObject);*/
 
             updateRegisteredActor(actor.getActorPublicKey(),
-            actor.getName()    ,
+                    actor.getName()    ,
                     actor.getName()    ,
                     location ,
-                    extraData,
-                    actor.getPhoto()   );
+                    "",
+                    actor.getPhoto());
 
         } catch (final CantUpdateRegisteredActorException e) {
             e.printStackTrace();
@@ -1023,29 +1059,38 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     public void sendMessage(final String senderPublicKey,
                             final String receiverPublicKey,
                             final String contentMessage) {
+        try {
+            if (getConnection() != null )
+            {
+                final ActorProfile sender = new ActorProfile();
+                sender.setActorType(Actors.INTRA_USER.getCode());
+                sender.setIdentityPublicKey(senderPublicKey);
 
-        final ActorProfile sender = new ActorProfile();
-        sender.setActorType(Actors.INTRA_USER.getCode());
-        sender.setIdentityPublicKey(senderPublicKey);
+                final ActorProfile receiver = new ActorProfile();
+                receiver.setActorType(Actors.INTRA_USER.getCode());
+                receiver.setIdentityPublicKey(receiverPublicKey);
 
-        final ActorProfile receiver = new ActorProfile();
-        receiver.setActorType(Actors.INTRA_USER.getCode());
-        receiver.setIdentityPublicKey(receiverPublicKey);
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    sender,
+                                    receiver,
+                                    contentMessage, true
+                            );
+                        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
+                            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        }
 
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    sendNewMessage(
-                            sender,
-                            receiver,
-                            contentMessage, true
-                    );
-                } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
-                    reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-            }
-        });
+                    }
+                });
+             }
+        }
+        catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+
     }
 
 }

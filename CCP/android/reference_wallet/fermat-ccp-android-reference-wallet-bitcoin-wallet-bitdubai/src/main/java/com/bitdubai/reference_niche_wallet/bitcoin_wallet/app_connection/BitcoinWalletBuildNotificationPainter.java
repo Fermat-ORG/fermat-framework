@@ -25,7 +25,7 @@ public class BitcoinWalletBuildNotificationPainter {
             //find last transaction
             switch (code){
                 case CCPBroadcasterConstants.TRANSACTION_ARRIVE:
-                    notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_receive_btc_1),  WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode(),4,6) + " " + context.getResources().getString(R.string.notification_receive_btc_2),"","",true, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_receive_btc_1),  WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode(),4,7) + " " + context.getResources().getString(R.string.notification_receive_btc_2),"","",true, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
 
                     break;
                 case CCPBroadcasterConstants.TRANSACTION_REVERSE:

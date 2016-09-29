@@ -113,6 +113,7 @@ public class WalletUtils {
                 stringBalance = BTCFormat1 + " BTC";
                 break;
         }*/
+
         return stringBalance;
     }
 

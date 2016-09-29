@@ -18,7 +18,7 @@
     <string name="add_fermat_user_text">Contacto fermat</string>
     <string name="add_user_in_your_contact_list_text">Anadir usuario a la lista de contactos o\nbuscarlo en la comunidad</string>
     <string name="address_text">Direccion</string>
-    <string name="advertisement_text">Advertencia!</string>
+    <string name="advertisement_text">Noticia!</string>
     <string name="alias_text">Sufijo de alias</string>
     <string name="amount_text">Cantidad</string>
     <string name="available_balance">Balance actual</string>
@@ -53,9 +53,9 @@
     <string name="fee_High">Rapido</string>
     <string name="fee_Medium">Normal</string>
     <string name="fee_advances_text">Configuracion avanzada</string>
-    <string name="fee_amount_text">Taza</string>
+    <string name="fee_amount_text">Tasa</string>
     <string name="fee_low">Lento</string>
-    <string name="fee_option_text">Restar taza al  monto</string>
+    <string name="fee_option_text">Restar tasa al  monto</string>
     <string name="fermat_network_offline_text">Red Fermat Offline</string>
     <string name="footer_message_text"></string>
     <string name="fragment_send_account_details_summary">Detalles de cuenta</string>
@@ -111,7 +111,7 @@
     <string name="swype_refresh">Deslice hacia abajo para refrescar</string>
     <string name="the_process_of_downloading_text">Se estan bajando los bloques de\nla  Blockchain.\n  Mientras esto ocurre, la barra superior se mostrara en rojo.</string>
     <string name="this_is_a_simple_bitcoin_only_wallet_text">Esta cartera maneja bitcoins\nCon ella se puede:</string>
-    <string name="title_Fee">Configuracion de Taza</string>
+    <string name="title_Fee">Configuracion de Tasa</string>
     <string name="title_activity_blank">Administrador de Carteras</string>
     <string name="title_activity_requests_received">Solicitudes recibidas</string>
     <string name="title_activity_pay_to_contact">Pagar a contacto</string>
@@ -150,7 +150,7 @@
     <string name="error_msg_mnemonic_text">Error al obtener el texto mnemonico</string>
     <string name="error_msg_no_address">No se tiene una direccion para enviar\nPor favor, espere un rato</string>
     <string name="error_msg_trying_to_reconnect">Por favor espere un momento, intentando reconectar...</string>
-    <string name="error_std_message">Ha habido un error. Por favor intente de nuevo</string>
+    <string name="error_std_message">Ocurrio un error. Por favor intente de nuevo</string>
     <string name="request_sent">Solicitud enviada</string>
     <string name="success_msg_address_copied_clipboard">Direccion copiada al portapapeles</string>
     <string name="success_msg_address_sent_wait">Direccion enviada, por favor espere 2 minutos</string>
@@ -179,12 +179,30 @@
     <string name="frecuency">FRECUENCIA</string>
     <string name="low">BAJO</string>
     <string name="Intra_user_dialog">Esta parte te ayuda a configurar tu identidad de localizacion en la red Fermat</string>
-    <string name="intra_user_desc">*Colocar la presicion en Kms: Este es el rango de presicion que mostrara donde estas localizado en la red Fermat. \n *Seleccionar Frecuencia: Esto es para seleccionar que tan seguido se actualizara la localizacion.</string>
+    <string name="intra_user_desc">*Colocar la presicion en Kms: Este es el rango de presicion que mostrara donde estas localizado en la red Fermat. \n*Seleccionar Frecuencia: Esto es para seleccionar que tan seguido se actualizara la localizacion.</string>
     <string name="start">Empezar</string>
-    <string name="Intra_identity_desc">* Gestiona tu identidad. \n * Configura tu propia frase y compartela con todos los usuarios de la red Fermat.</string>
+    <string name="Intra_identity_desc">* Gestiona tu identidad. \n* Configura tu propia imagen y compartela con todos los usuarios de la red Fermat.</string>
+
     <string name="intra_identity">Esta aplicacion te ayuda a crear tu identidad en la red Fermat. sus principales caracteristicas son:</string>
     <string name="broker_name">Nombre del broker</string>
     <string name="create">Crear</string>
     <string name="hello_blank_fragment"></string>
     <string name="identity_img"></string>
+    <string name="system_error">Oooops! Error en el sistema</string>
+
+    <!-- Fragments strings -->
+    <string name="indentity_created_msg">Identidad creada</string>
+    <string name="changes_saved_msg">Cambios guardados</string>
+    <string name="identity_create_error">Error al crear la identidad</string>
+    <string name="invalid_data">Datos invalidos</string>
+    <string name="module_manager_error">Error con el gestor de modulos</string>
+    <string name="upload_image_error">Error al subir la imagen</string>
+    <string name="loading_image_error">Error al descargar la imagen</string>
+    <string name="size_image_error">La imagen seleccionada es muy pequeña. Por favor seleccione una imagen con un tamaño minimo de 192x192</string>
+    <string name="error_occurred">Ha ocurrido un error</string>
+    <string name="empty_accuracy">La caja de texto para el la precision esta vacia, por favor ingrese un valor</string>
+    <string name="geolocation_identity_updated">la geolocalización del usuario esta actualizada</string>
+    <string name="geolocation_identity_not_updated">la geolocalización del usuario no esta actualizada</string>
+    <string name="cant_get_intra_user_list">No se puede obtener la lista de usuarios de fermat</string>
+    <string name="more">Mas...</string>
 </resources>

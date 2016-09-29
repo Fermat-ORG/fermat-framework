@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -121,11 +123,11 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<Reference
         int id = v.getId();
         SharedPreferences pref = getContext().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit;
-
+        Bitmap imageBitmap;
 
         if (id == R.id.btn_left) {
             try {
-                moduleManager.createIntraUser("Jhon Doe", "Available", convertImage(R.drawable.ic_profile_male),moduleManager.getLocation());
+                moduleManager.createIntraUser("Jhon Doe", "Available", convertImage(R.drawable.profile_image_male),moduleManager.getLocation());
                 if (recreateView != null)
                     recreateView.recreate();
                 if (dontShowAgainCheckBox.isChecked()) {
@@ -141,7 +143,8 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<Reference
             }
         } else if (id == R.id.btn_right) {
             try {
-                moduleManager.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female),moduleManager.getLocation());
+
+                moduleManager.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.profile_image_female),moduleManager.getLocation());
                 if (recreateView != null) {
                     recreateView.recreate();
                 }
@@ -188,14 +191,55 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<Reference
     }
 
     private byte[] convertImage(int resImage) {
-        Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
+        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-       // bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 30, stream);
+        Bitmap imageBitmap = getResizedBitmap(bitmap,dpToPx(), dpToPx());
+
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG,30,stream);
+        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
+    public int dpToPx() {
+        int dp = 150;
+        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
+    }
+
+
     public void setRecreateView(RecreateView recreateView) {
         this.recreateView = recreateView;
+    }
+
+
+    public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        int limitSize = 400;
+
+        if (newHeight > limitSize || newWidth > limitSize) {
+            if (height > width) {
+                if (height > limitSize) {
+                    newHeight = limitSize;
+                    newWidth = width * limitSize / height;
+                }
+            } else {
+                if (width > limitSize) {
+                    newWidth = limitSize;
+                    newHeight = height * limitSize / width;
+                }
+            }
+        }
+
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+        // RECREATE THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
+                matrix, false);
+        return resizedBitmap;
     }
 }

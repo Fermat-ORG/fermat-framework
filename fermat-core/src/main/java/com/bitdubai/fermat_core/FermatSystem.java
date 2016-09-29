@@ -106,12 +106,12 @@ public final class FermatSystem {
 
             //if(isPlatformStart) {
                 // fermatSystemContext.registerPlatform(new ARTPlatform());
-//                fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
+                fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
 //                fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
 //                fermatSystemContext.registerPlatform(new CBPPlatform());
-//                fermatSystemContext.registerPlatform(new CCPPlatform());
-//                fermatSystemContext.registerPlatform(new CERPlatform());
-                fermatSystemContext.registerPlatform(new CHTPlatform());
+               fermatSystemContext.registerPlatform(new CCPPlatform());
+                fermatSystemContext.registerPlatform(new CERPlatform());
+                //fermatSystemContext.registerPlatform(new CHTPlatform());
 //                fermatSystemContext.registerPlatform(new CSHPlatform());
                 //fermatSystemContext.registerPlatform(new DAPPlatform());
                 fermatSystemContext.registerPlatform(new P2PPlatform());
@@ -121,7 +121,7 @@ public final class FermatSystem {
          /*   }else{
 //                fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
 //                fermatSystemContext.registerPlatform(new CBPPlatform());
-//                fermatSystemContext.registerPlatform(new CCPPlatform());
+                fermatSystemContext.registerPlatform(new CCPPlatform());
 //                fermatSystemContext.registerPlatform(new CHTPlatform());
 //                fermatSystemContext.registerPlatform(new CSHPlatform());
                 fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));

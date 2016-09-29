@@ -299,12 +299,15 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     public void importSeedFromMnemonicCode(CryptoAddress destinationAddress, BlockchainNetworkType blockchainNetworkType, List<String> mnemonicCode, long date) throws CantImportSeedException {
         // forces the import of the seed which creates a new file with the seed information
         bitcoinCurrencyCryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode, date);
+        System.out.println("importSeedFromMnemonicCode PASO" );
         // creates a new hierarchy from the imported seed, calls the maintainer to derive keys and sends them
         // to the crypto network.
         bitcoinCurrencyCryptoVaultManager.forceImportedSeedToCryptoNetwork();
+        System.out.println("forceImportedSeedToCryptoNetwork PASO");
 
         // add a registry in the database so that the monitoring agent will control this.
         bitcoinCurrencyCryptoVaultManager.sendImportedSeedFundsToWallet(date, destinationAddress, blockchainNetworkType);
+        System.out.println("sendImportedSeedFundsToWallet PASO");
     }
 
     /**

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Fermat Bitcoin Wallet</string>
+    <string name="app_name">Fermat Loss Protected Wallet</string>
     <string name="accept_text">Aceptar</string>
     <string name="accepted_text">Aceptado</string>
     <string name="action_contact">Carteras</string>
@@ -36,7 +36,7 @@
     <string name="click_me_to_search_text">Pulsar aqui \npara buscar contactos</string>
     <string name="close_text">Cerrar</string>
     <string name="confirm_request_text">Confirmar request</string>
-    <string name="confirm_text">Ud. envia</string>
+    <string name="confirm_text">Accion no permitida, Ud. Perdera dinero.\nRealmente desea continuar?</string>
     <string name="connect_text">Conectar</string>
     <string name="corporate_wallet">Corporativo</string>
     <string name="create_external_contact_text">Crear contacto Externo</string>
@@ -53,9 +53,9 @@
     <string name="fee_High">Rapido</string>
     <string name="fee_Medium">Normal</string>
     <string name="fee_advances_text">Configuracion avanzada</string>
-    <string name="fee_amount_text">Taza</string>
+    <string name="fee_amount_text">Tasa</string>
     <string name="fee_low">Lento</string>
-    <string name="fee_option_text">Restar taza al  monto</string>
+    <string name="fee_option_text">Restar tasa al  monto</string>
     <string name="fermat_network_offline_text">Red Fermat Offline</string>
     <string name="footer_message_text"></string>
     <string name="fragment_send_account_details_summary">Detalles de cuenta</string>
@@ -111,7 +111,7 @@
     <string name="swype_refresh">Deslice hacia abajo para refrescar</string>
     <string name="the_process_of_downloading_text">Se estan bajando los bloques de\nla  Blockchain.\n  Mientras esto ocurre, la barra superior se mostrara en rojo.</string>
     <string name="this_is_a_simple_bitcoin_only_wallet_text">Esta cartera maneja bitcoins\nCon ella se puede:</string>
-    <string name="title_Fee">Configuracion de Taza</string>
+    <string name="title_Fee">Configuracion de Tasa</string>
     <string name="title_activity_blank">Administrador de Carteras</string>
     <string name="title_activity_requests_received">Solicitudes recibidas</string>
     <string name="title_activity_pay_to_contact">Pagar a contacto</string>
@@ -150,7 +150,7 @@
     <string name="error_msg_mnemonic_text">Error al obtener el texto mnemonico</string>
     <string name="error_msg_no_address">No se tiene una direccion para inviar\nPor favor, espere un rato</string>
     <string name="error_msg_trying_to_reconnect">Por favor espere un momento, intentando reconectar...</string>
-    <string name="error_std_message">Ha habido un error. Por favor intente de nuevo</string>
+    <string name="error_std_message">Ocurrio un error. Por favor intente de nuevo</string>
     <string name="request_sent">Solicitud enviada</string>
     <string name="success_msg_address_copied_clipboard">Direccion copiada al portapapeles</string>
     <string name="success_msg_address_sent_wait">Direccion enviada, por favor espere 2 minutos</string>
@@ -173,7 +173,7 @@
     <string name="phone_notification">Notificationes al telefono</string>
     <string name="exchange_rate_error_connection">No se pueden obtener las tasas de cambio, por favor revisa tu conexion a internet</string>
     <string name="this_is_a_loss_protected_wallet_text">Esta es una cartera que te permitira protegerte contra perdidas de dinero, sus principales caracteristicas son:</string>
-    <string name="income_expense">Esta es una cartera que te permite ver tus ingresos y gastos en todas las transacciones hechas</string>
+    <string name="income_expense">Esta es la pantalla que te permite ver tus ingresos y gastos de todas las transacciones hechas</string>
     <string name="see_your_loss_balance_text">* Ver su balance.\n* Envio/recepcion de bitcoins.\n* Pedir bitcoins.\n* Ver el historico de transacciones.</string>
     <string name="spending_details">Detalles de gastos</string>
     <string name="accept_btn">Aceptar</string>
@@ -222,4 +222,88 @@
     <string name="title_section9">Clones</string>
     <string name="you_dont_have_chunck_datail_values">No tienes ningun \n gasto.</string>
     <string name="you_dont_have_chunck_values">No tienes \n ningun ingreso de fondos.</string>
+
+
+    <string name="Waiting_for_response">Esperando Respuesta</string>
+    <string name="Paid_text">Pagado</string>
+    <string name="Pending_response">Respuesta pendiente</string>
+    <string name="Error">Error</string>
+    <string name="Error_contact_with_support">Error, contactar a soporte</string>
+    <string name="Not_sent_yet">No enviado aún</string>
+    <string name="Payment_process_started">Proceso de pago iniciado</string>
+    <string name="Denied_by_incompatibility">Denegado por incompatibilidad</string>
+    <string name="In_approving_process">En proceso de aprobación</string>
+    <string name="Total_earnings_lost">Ganancias y Perdidas Totales:</string>
+    <string name="Today_text">Hoy: </string>
+    <string name="Earned_text">ganados</string>
+    <string name="Lost_text">perdidos</string>
+
+    <string name="Date_text">Fecha: </string>
+    <string name="Note_text">Nota: </string>
+    <string name="To_text">Para: </string>
+    <string name="From_text">De: </string>
+    <string name="confirmation_text">"Ud. Enviara Amount btc. Confirmar?</string>
+
+    <!-- loss_toast -->
+    <string name="Whooops_text">uuuups! recuperandose de un error de sistema.</string>
+    <string name="Whooops_text2">uuuups, tenemos un problema aquí.</string>
+    <string name="Recovering">recuperandose de un error de sistema.</string>
+    <string name="Whooops_text3">uuuups! recuperandose de un error de sistema en gráfico.</string>
+
+    <string name="Insufficient_funds">Fondos insuficientes.</string>
+    <string name="Wait_a_minute">Espere un minuto por favor , intentando reconectarse...</string>
+    <string name="Contact_without_net_address">El contacto no posee una una dirección de la red.</string>
+    <string name="Contact_without_address">El contacto no posee una una dirección.</string>
+    <string name="Contact_not_found">Contacto no encontrado, añadalo por favor.</string>
+    <string name="Sending_text">Enviando...</string>
+    <string name="Action_not_allowed_lpw">Accion no permitida, ud. perdera dinero. Restringido por la Configuración LossProtected.</string>
+    <string name="Send_error_text">Error de envio.</string>
+    <string name="Invalid_Amount_small">Monto invalido, debe ser mayor a</string>
+    <string name="Invalid_Amount">Monto invalido</string>
+    <string name="Unexpected_error">Error Inesperado</string>
+    <string name="Request_accepted">Solicitud Aceptada</string>
+    <string name="Request_denied">Solicitud rechazada</string>
+    <string name="Action_not_allowed2">Acción no permitida. No se pudo recuperar la cotización del dólar.\nCompruebe su conexión a Internet..</string>
+    <string name="Cant_accept">No se puede aceptar o rechazar. Excepción al recibir pago -</string>
+    <string name="Error_spending_chart">Error boteniendo lista de gastos para gráfico</string>
+
+    <!-- loss_notification_painter.xml -->
+    <string name="lpw_notification_transaction_arrive_1">Dinero recibido</string>
+    <string name="lpw_notification_transaction_arrive_2">BTC Llegaron</string>
+    <string name="lpw_notification_transaction_reverse_1">Transacción enviada devuelta</string>
+    <string name="lpw_notification_transaction_reverse_2">Enviando</string>
+    <string name="lpw_notification_transaction_reverse_3">BTC no se pudo completar.</string>
+    <string name="lpw_notification_request_arrive_1">Nueva solicitud de pago recibida</string>
+    <string name="lpw_notification_request_arrive_2">Ud. ha recibido una solicitud de pago, por</string>
+    <string name="lpw_notification_payment_denied_1">Solicitud de pago rechazada</string>
+    <string name="lpw_notification_payment_denied_2">Su solicitud de pago, por</string>
+    <string name="lpw_notification_payment_denied_3">BTC fue rechazada.</string>
+    <string name="lpw_notification_payment_error_1">Solicitud de pago devuelta</string>
+    <string name="lpw_notification_payment_error_2">Su solicitud de pago, por</string>
+    <string name="lpw_notification_payment_error_3">BTC fue devuelta.</string>
+
+    <!-- loss_main_chart.xml -->
+    <string name="No_data">No hay Datos</string>
+
+    <!-- loss_presentation_settings.xml -->
+    <string name="Enabled_notificacions">Notificaciones Habilitadas</string>
+    <string name="Enabled_loss_protected">Loss Protected Habilitado</string>
+    <string name="Select_network">Selecionar Red</string>
+    <string name="Received_Testnet_Bitcoins">Recibir Bitcoins Testnet</string>
+    <string name="TestNet_download">Iniciando Descarga TestNet</string>
+    <string name="TestNet_bitcoin_arrived">Llego Bitcoin TestNet</string>
+    <string name="TestNet_Request_Error">Error de solicitud a TestNet</string>
+
+
+    <string name="chunck_values_history_rate">Cotizacion: 1 BTC = </string>
+    <string name="chunck_values_history_spend">Gastado</string>
+
+    <string name="chunck_values_btc_spent">BTC Gastado</string>
+    <string name="chunck_values_btc_rate">Cotizacion</string>
+    <string name="chunck_values_btc_date">Fecha</string>
+
+    <!--Delete Wallet Contact Dialog-->
+    <string name="delete_title">Borrar Contacto</string>
+    <string name="delete_sub_title">Quieres eliminar este contacto de tu cartera?</string>
+    <string name="deleted_toast">Contacto Borrado</string>
 </resources>

@@ -3,8 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="180dp"
-    android:layout_height="156dp"
-    android:orientation="vertical">
+    android:layout_height="180dp"
+    android:layout_margin="1dp"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
 
     <RelativeLayout
         android:id="@+id/imgprofile"
@@ -33,7 +37,7 @@
         android:layout_marginTop="12dp"
         android:ellipsize="end"
         android:gravity="center"
-        android:maxLines="2"
+        android:maxLines="1"
         android:textColor="#424242"
         android:textSize="16sp"
         tools:text="User Name"/>
@@ -48,16 +52,18 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
             android:src="@drawable/geolocalitationblue_icon" />
+
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-
-            android:maxLines="3"
+            android:maxLines="1"
             android:textColor="#7DD5CA"
             android:textSize="14sp"
+            android:gravity="center_vertical"
             tools:text="No location"/>
     </LinearLayout>
 

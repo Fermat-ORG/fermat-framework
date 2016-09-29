@@ -14,7 +14,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+
 //import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -38,7 +40,8 @@ public abstract class Fermat_Market_Statistics_Fragment extends AbstractFermatFr
     private final String TAG = "MarketRateStatistics";
 
     private String buy, sell, currencyPair, providerName;
-//    private IndexInfoSummary indexInfo;
+   // private IndexInfoSummary indexInfo;
+
     private Activity activity;
     Collection<ExchangeRate> collection;
 
@@ -72,6 +75,7 @@ public abstract class Fermat_Market_Statistics_Fragment extends AbstractFermatFr
         if (this.setData() != null)
             fermat_market_data = this.setData();
 
+
         if (fermat_market_data != null) {
 //            this.indexInfo = fermat_market_data.getIndexInfo();
             this.activity = fermat_market_data.getActivity();
@@ -81,6 +85,7 @@ public abstract class Fermat_Market_Statistics_Fragment extends AbstractFermatFr
 //            buy = indexInfo.getPurchasePriceAndCurrency();
 //            providerName = indexInfo.getProviderName();
         }
+
 
     }
 

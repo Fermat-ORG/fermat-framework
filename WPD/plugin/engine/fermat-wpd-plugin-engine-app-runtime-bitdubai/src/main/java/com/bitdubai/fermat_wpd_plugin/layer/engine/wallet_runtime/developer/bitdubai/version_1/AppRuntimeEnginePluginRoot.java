@@ -4950,6 +4950,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         //action bar menu
 
+
         optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(6, "send_request", owner, SourceLocation.DEVELOPER_RESOURCES));
@@ -5183,6 +5184,20 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
+        //menu
+        optionsMenu = new OptionsMenu();
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
+
+        //Help optionMenu
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_delete_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Delete");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor("#05CFC2");
 
@@ -5352,6 +5367,20 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
+
+        //menu
+        optionsMenu = new OptionsMenu();
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
+
+        //Help optionMenu
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_delete_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Delete");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor("#05CFC2");
@@ -5655,7 +5684,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setLabel("Send");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS); //show always icon
         optionsMenu.addMenuItem(optionMenuItem);
-        runtimeActivity.setOptionsMenu(optionsMenu);
+
 
         optionMenuItem = new OptionMenuItem(2);
 
@@ -5663,6 +5692,8 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 //
 //        /**
 //         *  Fin de menu
@@ -5672,13 +5703,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          * Wizard
          */
          /* Adding WizardTypes */
-        Wizard runtimeWizard = new Wizard();
+     /*   Wizard runtimeWizard = new Wizard();
         // step 1 wizard create from scratch
         WizardPage runtimeWizardPage = new WizardPage();
         runtimeWizardPage.setFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_NO_IDENTITY_FRAGMENT.getKey());
-        runtimeWizard.addPage(runtimeWizardPage);
+        runtimeWizard.addPage(runtimeWizardPage);*/
             /* Adding wizard */
-        runtimeActivity.addWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(), runtimeWizard);
+       // runtimeActivity.addWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(), runtimeWizard);
 
         /**
          * Transaction Activity
@@ -5744,9 +5775,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
 
         optionsMenu = new OptionsMenu();
-
-        owner = new Owner();
-        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
 
         optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(4, "loss_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
@@ -5826,22 +5854,23 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setFragmentCode(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED_HISTORY.getKey());
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED_HISTORY.getKey(), runtimeFragment);
 
-        optionsMenu = new OptionsMenu();
+
+
+        OptionsMenu optionsMenuRequest = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(2);
-        owner = new Owner();
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        optionsMenu.addMenuItem(optionMenuItem);
+        optionsMenuRequest.addMenuItem(optionMenuItem);
 
-        optionMenuItem = new OptionMenuItem(3);
+        optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(3, "loss_request_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("send");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenu.addMenuItem(optionMenuItem);
+        optionsMenuRequest.addMenuItem(optionMenuItem);
 
-        runtimeActivity.setOptionsMenu(optionsMenu);
+        runtimeActivity.setOptionsMenu(optionsMenuRequest);
 
         //Navigation
 
@@ -5868,16 +5897,15 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          * Menu
          *
          * */
-        optionsMenu = new OptionsMenu();
+        OptionsMenu optionsMenuC = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(2);
-        owner = new Owner();
-        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
+
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        optionsMenu.addMenuItem(optionMenuItem);
+        optionsMenuC.addMenuItem(optionMenuItem);
 
-        runtimeActivity.setOptionsMenu(optionsMenu);
+        runtimeActivity.setOptionsMenu(optionsMenuC);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Contacts");
@@ -6005,6 +6033,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
+        //menu
+        optionsMenu = new OptionsMenu();
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
+
 
         /**
          * Menu
@@ -6013,16 +6046,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         owner = new Owner();
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
-
+        optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(4, "loss_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Send");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS); //show always icon
         optionsMenu.addMenuItem(optionMenuItem);
 
-        optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(2);
-
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -6174,51 +6205,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setFragmentCode(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_NO_IDENTITY_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_NO_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
 
-        /**
-         * Contact detail Activity
-         */
 
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CONTACT_DETAIL_ACTIVITY);
-        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CONTACT_DETAIL_ACTIVITY.getCode());
-        runtimeActivity.setColor("#073487");
-        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_CONTACTS);
-        runtimeActivity.setBackPublicKey(publicKey);
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Contact detail");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setIconName("back");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#12aca1");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        //runtimeActivity.setColor("#d07b62");
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#073487");
-
-        runtimeTabStrip = new TabStrip();
-
-        runtimeTabStrip.setTabsColor("#1173aa");
-
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
-
-        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
-
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
-
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_DETAIL_CONTACTS.getKey(), runtimeFragment);
-
-        /**
-         * Contacts Activity
-         */
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_ACTIVITY);
@@ -6261,86 +6248,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         //Side Menu
         runtimeActivity.setSideMenu(loadSideMenuLossProtectedWallet(publicKey));
 
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK);
-        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK.getCode());
-        runtimeActivity.setColor("#073487");
-        runtimeActivity.setBackActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_ACTIVITY);
-        runtimeActivity.setBackPublicKey(publicKey);
-
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Network");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#073487");
-        runtimeTitleBar.setIconName("back");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#073487");
 
 
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#073487");
 
-        runtimeTabStrip = new TabStrip();
-
-        runtimeTabStrip.setTabsColor("#1173aa");
-
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
-
-        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
-
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey());
-
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey(), runtimeFragment);
-
-
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS);
-        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS.getCode());
-        runtimeActivity.setColor("#073487");
-        runtimeActivity.setBackActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_ACTIVITY);
-        runtimeActivity.setBackPublicKey(publicKey);
-
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Notifications");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#073487");
-        runtimeTitleBar.setIconName("back");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#073487");
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#073487");
-
-        runtimeTabStrip = new TabStrip();
-
-
-        runtimeTabStrip.setTabsColor("#1173aa");
-
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
-
-        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
-
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey());
-
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey(), runtimeFragment);
-
-        //fin navigation
 
         //fin navigation
         /**
@@ -6379,6 +6289,16 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        //delete optionMenu
+        optionsMenu = new OptionsMenu();
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_delete_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Delete");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
 
@@ -7491,6 +7411,16 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTabStrip.setTabsIndicateColor("#2481BA");
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
+        //delete optionMenu
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode());
+        optionsMenu = new OptionsMenu();
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_delete_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Delete");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -7541,130 +7471,8 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         //Side Menu
         runtimeActivity.setSideMenu(loadSideMenuFermatWallet(publicKey));
 
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK);
-        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK.getCode());
-        runtimeActivity.setColor("#12aca1");
-        runtimeActivity.setBackActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY);
-        runtimeActivity.setBackPublicKey(publicKey);
-
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Network");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#009CD4");
-        runtimeTitleBar.setIconName("back");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#ffffff");
-
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#009CD4");
-
-        runtimeTabStrip = new TabStrip();
-
-        runtimeTabStrip.setTabsColor("#B3D100");
-
-        runtimeTabStrip.setTabsTextColor("#F9F9F9");
-
-        runtimeTabStrip.setTabsIndicateColor("#2481BA");
-
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey());
-
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey(), runtimeFragment);
-
-
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS);
-        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS.getCode());
-        runtimeActivity.setColor("#009CD4");
-        runtimeActivity.setBackActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY);
-        runtimeActivity.setBackPublicKey(publicKey);
-
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Notifications");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#009CD4");
-        runtimeTitleBar.setIconName("back");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#ffffff");
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#009CD4");
-
-        runtimeTabStrip = new TabStrip();
-
-
-        runtimeTabStrip.setTabsColor("#B3D100");
-
-        runtimeTabStrip.setTabsTextColor("#F9F9F9");
-
-        runtimeTabStrip.setTabsIndicateColor("#2481BA");
-
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey());
-
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey(), runtimeFragment);
 
         //fin navigation
-
-        //fin navigation
-        /**
-         * Contact detail Activity
-         */
-
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY);
-        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY.getCode());
-        runtimeActivity.setColor("#009CD4");
-        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_CONTACTS);
-        runtimeActivity.setBackPublicKey(publicKey);
-
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Contact detail");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setIconName("back");
-        runtimeTitleBar.setColor("#009CD4");
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#ffffff");
-        //runtimeActivity.setColor("#d07b62");
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#009CD4");
-
-        runtimeTabStrip = new TabStrip();
-
-        runtimeTabStrip.setTabsColor("#B3D100");
-
-        runtimeTabStrip.setTabsTextColor("#F9F9F9");
-
-        runtimeTabStrip.setTabsIndicateColor("#2481BA");
-
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
-
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_DETAIL_CONTACTS.getKey(), runtimeFragment);
 
         /**
          * Add connection Activity

@@ -121,7 +121,7 @@ public class CreateContactFragmentDialog extends FermatDialog<ReferenceAppFermat
         try {
         setUpScreenComponents();
         if( getSession().getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
-            blockchainNetworkType = (BlockchainNetworkType)appFermatSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            blockchainNetworkType = (BlockchainNetworkType)getSession().getData(SessionConstant.BLOCKCHANIN_TYPE);
         else
             blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
@@ -134,20 +134,17 @@ public class CreateContactFragmentDialog extends FermatDialog<ReferenceAppFermat
 
     @Override
     protected int setLayoutId() {
-        return 0;
+        return R.layout.fermat_wallet_create_contact_dialog;
     }
 
     @Override
     protected int setWindowFeature() {
-        return 0;
+         return Window.FEATURE_NO_TITLE;
     }
 
     private void setUpScreenComponents(){
 
         try {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.fermat_wallet_create_contact_dialog);
-
 
             save_contact_btn = (Button) findViewById(R.id.save_contact_btn);
             cancel_btn = (Button) findViewById(R.id.cancel_btn);
