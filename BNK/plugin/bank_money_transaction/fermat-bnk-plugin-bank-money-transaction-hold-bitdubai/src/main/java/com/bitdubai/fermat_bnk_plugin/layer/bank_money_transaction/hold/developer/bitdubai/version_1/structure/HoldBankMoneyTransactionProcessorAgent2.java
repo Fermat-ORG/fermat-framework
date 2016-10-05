@@ -25,6 +25,11 @@ public class HoldBankMoneyTransactionProcessorAgent2 extends AbstractAgent {
     private final HoldBankMoneyTransactionManager holdTransactionManager;
     private final BankMoneyWalletManager bankMoneyWalletManager;
 
+
+
+
+
+
     /**
      * Default constructor with parameters.
      * @param sleepTime
@@ -58,6 +63,7 @@ public class HoldBankMoneyTransactionProcessorAgent2 extends AbstractAgent {
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("HoldBankMoneyTransactionProcessorAgent2 Error"));
     }
+
 
     /**
      * This method is the same that we can find in HoldBankMoneyTransactionProcessorAgent created by "Memo"

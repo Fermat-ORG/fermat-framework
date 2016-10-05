@@ -232,6 +232,7 @@ public class BitcoinCryptoNetworkEventsAgent extends AbstractAgent{
         }
 
 
+
     @Override
     protected void agentJob() {
         doTheMainTask();
@@ -241,4 +242,5 @@ public class BitcoinCryptoNetworkEventsAgent extends AbstractAgent{
     protected void onErrorOccur(Exception e) {
 
     }
+
 }

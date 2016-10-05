@@ -654,6 +654,8 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                     String notes = "";
                     if (txt_notes.getText().toString().length() != 0){
                         notes = txt_notes.getText().toString();
+                        notes =notes.replace("'"," ");
+                        notes =notes.replace(","," ");
                     }
                     if (txtType.equals("[btc]")) {
                         newAmount = bitcoinConverter.getSathoshisFromBTC(amount);

@@ -773,6 +773,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             String notes = "";
                             if (txt_notes.getText().toString().length() != 0) {
                                 notes = txt_notes.getText().toString();
+                                notes =notes.replace("'"," ");
+                                notes =notes.replace(","," ");
                             }
 
                             String txtType = txt_type.getText().toString();
