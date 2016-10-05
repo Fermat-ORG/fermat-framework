@@ -52,7 +52,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
     private ReferenceAppFermatSession<CryptoWallet> referenceWalletSession;
     private BitcoinWalletSettings bitcoinWalletSettings = null;
     private String previousSelectedItem = "RegTest";
-    private String previousSelectedFee = "NORMAL";
+    private String previousSelectedFee = "SLOW";
     private CryptoWallet moduleManager;
 
 
@@ -119,7 +119,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
 
 
             final Bundle networkDialog = new Bundle();
-            String items[] = new String[]{"MainNet", "TestNet"};
+            String items[] = new String[]{"MainNet", "TestNet", "RegTest"};
             networkDialog.putStringArray("items_array", items);
             networkDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
             networkDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
@@ -140,7 +140,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
             dataDialogFeed.putStringArray("items_array", feedLevel);
             dataDialogFeed.putString("positive_button_text", getResources().getString(R.string.ok_label));
             dataDialogFeed.putString("negative_button_text", getResources().getString(R.string.cancel_label));
-            dataDialogFeed.putString("title", getResources().getString(R.string.title_Fee));
+            dataDialogFeed.putString("title", getResources().getString(R.string.title_Feed));
             dataDialogFeed.putString("mode", "single_option");
             dataDialogFeed.putString("previous_selected_item", previousSelectedFee);
             list.add(new PreferenceSettingsOpenDialogText(13, getResources().getString(R.string.settings_fee_level), dataDialogFeed));

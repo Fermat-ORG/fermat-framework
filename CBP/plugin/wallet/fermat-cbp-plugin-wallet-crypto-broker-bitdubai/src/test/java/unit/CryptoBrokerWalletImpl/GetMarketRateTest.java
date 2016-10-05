@@ -68,16 +68,10 @@ public class GetMarketRateTest {
             }
 
             @Override
-            public float getPriceVolatility() {
-                return 0;
-            }
-
-            @Override
             public FiatCurrency getFiatCurrency() {
                 return null;
             }
         }).thenCallRealMethod();
-
         assertThat(cryptoBrokerWallet.getMarketRate(Mockito.any(Currency.class), Mockito.any(FiatCurrency.class), Mockito.any(MoneyType.class))).isNotNull();
     }
 

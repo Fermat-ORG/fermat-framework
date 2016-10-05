@@ -114,7 +114,7 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapter<ClauseInformati
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView);
                 footerViewHolder.setListener(footerListener);
 
-                if (negotiationInformation.getStatus() == NegotiationStatus.SENT_TO_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_CLOSING) {
+                if(negotiationInformation.getStatus() == NegotiationStatus.SENT_TO_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_BROKER  || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_CLOSING){
                     footerViewHolder.HideButtons();
                 }
 
@@ -208,7 +208,7 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapter<ClauseInformati
         clauseViewHolder.getConfirmButton().setVisibility(View.VISIBLE);
         clauseViewHolder.setListener(clauseListener);
 
-        if (negotiationInformation.getStatus() == NegotiationStatus.SENT_TO_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_CLOSING) {
+        if(negotiationInformation.getStatus() == NegotiationStatus.SENT_TO_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_BROKER  || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_CLOSING){
             clauseViewHolder.getConfirmButton().setVisibility(View.INVISIBLE);
         }
 

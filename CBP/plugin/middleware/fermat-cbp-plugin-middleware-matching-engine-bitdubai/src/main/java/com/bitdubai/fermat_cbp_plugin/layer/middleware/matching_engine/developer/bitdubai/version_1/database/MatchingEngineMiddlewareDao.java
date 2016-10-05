@@ -835,7 +835,7 @@ public class MatchingEngineMiddlewareDao implements Serializable {
                 earningsTransactionTable.setFilterTop(max.toString());
             if (offset != null)
                 earningsTransactionTable.setFilterOffSet(offset.toString());
-            if (state != null)
+            if(state != null)
                 earningsTransactionTable.addFermatEnumFilter(EARNING_TRANSACTION_STATE_COLUMN_NAME, state, DatabaseFilterType.EQUAL);
 
             earningsTransactionTable.addUUIDFilter(EARNING_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME, earningsPairId, DatabaseFilterType.EQUAL);

@@ -1,6 +1,7 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTable;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -19,6 +20,8 @@ import org.robolectric.annotation.Config;
 
 import java.util.UUID;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.robolectric.Shadows.shadowOf;
 import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
 /**
@@ -27,8 +30,7 @@ import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.develope
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = CustomBuildConfig.class, sdk = 21)
-public class SetFilterTest {
-    private Activity mockActivity;
+public class SetFilterTest {private Activity mockActivity;
     private String mockContext;
 
     private AndroidDatabase testDatabase;
@@ -41,7 +43,7 @@ public class SetFilterTest {
     private DatabaseTableFactory testTableFactory;
 
     @Before
-    public void setUpDatabase() throws Exception {
+    public  void setUpDatabase() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
         testOwnerId = UUID.randomUUID();
@@ -50,10 +52,11 @@ public class SetFilterTest {
         testDatabaseTable = testDatabase.getTable(testTableName);
 
 
+
     }
 
     @Before
-    public void setUpTableFactory() {
+    public void setUpTableFactory(){
         testTableFactory = new AndroidDatabaseTableFactory(testTableName);
         testTableFactory.addColumn("testColumn1", DatabaseDataType.INTEGER, 0, false);
         testTableFactory.addColumn("testColumn2", DatabaseDataType.STRING, 10, false);
@@ -62,21 +65,21 @@ public class SetFilterTest {
 
 
     @Test
-    public void setFilterString_Succefuly() throws Exception {
+    public void setFilterString_Succefuly() throws Exception{
         testDatabaseTable.addStringFilter("testColumn2", "nn", DatabaseFilterType.EQUAL);
 
     }
 
     @Test
-    public void setFilterUUID_Succefuly() throws Exception {
+    public void setFilterUUID_Succefuly() throws Exception{
         testDatabaseTable.addUUIDFilter("testColumn2", UUID.randomUUID(), DatabaseFilterType.EQUAL);
 
     }
 
 
     @Test
-    public void constructorTest_Succefuly() throws Exception {
-        testDatabaseTable = new AndroidDatabaseTable(testDatabase, "tableName");
+    public void constructorTest_Succefuly() throws Exception{
+        testDatabaseTable = new AndroidDatabaseTable(testDatabase,"tableName");
 
     }
 }

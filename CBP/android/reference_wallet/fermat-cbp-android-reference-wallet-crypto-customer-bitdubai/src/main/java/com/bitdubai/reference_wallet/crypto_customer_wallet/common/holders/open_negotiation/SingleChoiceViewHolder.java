@@ -15,23 +15,19 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 /**
- * Created by Yordin Alayn on 22.01.16.
+ *Created by Yordin Alayn on 22.01.16.
  * Based in SingleChoiceViewHolder of Star_negotiation by nelson
  */
 public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
     private Button buttonValue;
     private TextView descriptionTextView;
-    private View separatorLineUp;
-    private View separatorLineDown;
 
     public SingleChoiceViewHolder(View itemView) {
         super(itemView);
 
         descriptionTextView = (TextView) itemView.findViewById(R.id.ccw_description_text);
         buttonValue = (Button) itemView.findViewById(R.id.ccw_single_choice_value);
-        separatorLineDown = itemView.findViewById(R.id.ccw_line_down);
-        separatorLineUp = itemView.findViewById(R.id.ccw_line_up);
         buttonValue.setOnClickListener(this);
     }
 
@@ -76,13 +72,9 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
 
         switch (clauseStatus) {
             case ACCEPTED:
-                separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
-                separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
                 descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
                 break;
             case CHANGED:
-                separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_changed));
-                separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_changed));
                 descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
                 break;
             case CONFIRM:

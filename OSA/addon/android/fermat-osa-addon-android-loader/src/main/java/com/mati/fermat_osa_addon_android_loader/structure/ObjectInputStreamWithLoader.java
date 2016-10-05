@@ -11,7 +11,8 @@ import java.io.StreamCorruptedException;
  * an existing ClassLoader.
  */
 
-class ObjectInputStreamWithLoader extends ObjectInputStream {
+class ObjectInputStreamWithLoader extends ObjectInputStream
+{
     private ClassLoader loader;
 
     /**
@@ -33,7 +34,7 @@ class ObjectInputStreamWithLoader extends ObjectInputStream {
      */
     @SuppressWarnings("rawtypes")
     protected Class resolveClass(ObjectStreamClass classDesc)
-            throws IOException, ClassNotFoundException {
+        throws IOException, ClassNotFoundException {
 
         String cname = classDesc.getName();
         return loader.loadClass(cname);

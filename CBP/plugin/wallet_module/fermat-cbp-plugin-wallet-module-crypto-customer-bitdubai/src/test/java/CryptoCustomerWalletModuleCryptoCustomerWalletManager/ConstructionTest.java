@@ -3,6 +3,8 @@ package CryptoCustomerWalletModuleCryptoCustomerWalletManager;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
 /**
  * Created by roy on 7/02/16.
  */

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.widget.TextView;
 
+
 import com.bitdubai.sub_app.crypto_broker_community.BuildConfig;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.MainFragment;
@@ -14,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+
 
 import unit.com.bitdubai.sub_app.crypto_broker_community.TestActivity;
 

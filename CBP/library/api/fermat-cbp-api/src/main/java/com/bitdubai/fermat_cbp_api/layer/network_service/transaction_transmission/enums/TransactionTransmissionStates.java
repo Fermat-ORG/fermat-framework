@@ -42,7 +42,7 @@ public enum TransactionTransmissionStates {
         throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "cryptoTransmissionStates: " + transactionTransmissionStates, "This cryptoTransmissionStates is not valid for the transactionTransmissionStates enum.");
     }
 
-    public String getCode() {
+    public String getCode(){
         return this.code;
     }
 

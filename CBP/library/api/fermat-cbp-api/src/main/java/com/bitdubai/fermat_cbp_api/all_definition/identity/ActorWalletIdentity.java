@@ -9,6 +9,5 @@ import java.util.UUID;
 public interface ActorWalletIdentity {
 
     ActorIdentity getIdentity();
-
     List<UUID> getListWallets();
 }

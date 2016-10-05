@@ -8,7 +8,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum WatchOnlyVault implements FermatVaultEnum {
 
-    WATCH_ONLY_VAULT("WOV", CryptoCurrency.BITCOIN),;
+    WATCH_ONLY_VAULT("WOV", CryptoCurrency.BITCOIN),
+
+    ;
 
     private String code;
 

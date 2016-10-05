@@ -11,11 +11,12 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum TimeFrequency implements FermatEnum {
 
-    DAILY("DY", "Daily"),
-    MONTHLY("MN", "Monthly"),
-    NONE("NN", "None"),
-    WEEKLY("WK", "Weekly"),
-    YEARLY("YR", "Yearly"),;
+    DAILY   ("DY", "Daily"),
+    MONTHLY ("MN", "Monthly"),
+    NONE    ("NN", "None"),
+    WEEKLY  ("WK", "Weekly"),
+    YEARLY  ("YR", "Yearly"),
+    ;
 
     private final String code, friendlyName;
 
@@ -28,16 +29,11 @@ public enum TimeFrequency implements FermatEnum {
 
         switch (code) {
 
-            case "DY":
-                return DAILY;
-            case "MN":
-                return MONTHLY;
-            case "NN":
-                return NONE;
-            case "WK":
-                return WEEKLY;
-            case "YR":
-                return YEARLY;
+            case "DY": return DAILY  ;
+            case "MN": return MONTHLY;
+            case "NN": return NONE   ;
+            case "WK": return WEEKLY ;
+            case "YR": return YEARLY ;
 
             default:
                 throw new InvalidParameterException(

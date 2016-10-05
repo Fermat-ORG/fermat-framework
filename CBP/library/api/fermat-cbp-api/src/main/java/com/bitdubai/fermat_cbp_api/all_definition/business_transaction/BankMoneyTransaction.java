@@ -19,7 +19,6 @@ public interface BankMoneyTransaction {
      * @return the UUID
      */
     UUID getTransactionId();
-
     void setTransactionId(UUID transactionId);
 
     /**
@@ -28,7 +27,6 @@ public interface BankMoneyTransaction {
      * @return the Sting
      */
     String getActorPublicKey();
-
     void setActorPublicKey(String actorPublicKey);
 
     /**
@@ -37,7 +35,6 @@ public interface BankMoneyTransaction {
      * @return the FiatCurrency
      */
     FiatCurrency getFiatCurrency();
-
     void setFiatCurrency(FiatCurrency fiatCurrency);
 
     /**
@@ -46,7 +43,6 @@ public interface BankMoneyTransaction {
      * @return the Sting
      */
     String getCbpWalletPublicKey();
-
     void setCbpWalletPublicKey(String cbpWalletPublicKey);
 
     /**
@@ -55,7 +51,6 @@ public interface BankMoneyTransaction {
      * @return the Sting
      */
     String getBnkWalletPublicKey();
-
     void setBnkWalletPublicKey(String bnkWalletPublicKey);
 
     /**
@@ -64,7 +59,6 @@ public interface BankMoneyTransaction {
      * @return the Sting
      */
     String getBankAccount();
-
     void setBankAccount(String bankAccount);
 
     /**
@@ -73,7 +67,6 @@ public interface BankMoneyTransaction {
      * @return the Sting
      */
     String getConcept();
-
     void setConcept(String concept);
 
     /**
@@ -82,7 +75,6 @@ public interface BankMoneyTransaction {
      * @return BigDecimal
      */
     BigDecimal getAmount();
-
     void setAmount(BigDecimal amount);
 
     /**
@@ -91,7 +83,6 @@ public interface BankMoneyTransaction {
      * @return the Timestamp
      */
     Timestamp getTimeStamp();
-
     void setTimeStamp(Timestamp timeStamp);
 
     /**
@@ -100,7 +91,6 @@ public interface BankMoneyTransaction {
      * @return the Sting
      */
     String getMemo();
-
     void setMemo(String memo);
 
     /**
@@ -109,16 +99,13 @@ public interface BankMoneyTransaction {
      * @return the Sting
      */
     TransactionStatusRestockDestock getTransactionStatus();
-
     void setTransactionStatus(TransactionStatusRestockDestock transactionStatus);
 
     /**
      * The property <code>PriceReference</code>  represented the Price Reference
-     *
      * @return BigDecimal
      */
     BigDecimal getPriceReference();
-
     void setPriceReference(BigDecimal priceReference);
 
     /**
@@ -127,7 +114,6 @@ public interface BankMoneyTransaction {
      * @return the OriginTransaction
      */
     OriginTransaction getOriginTransaction();
-
     void setOriginTransaction(OriginTransaction originTransaction);
 
     /**
@@ -136,7 +122,6 @@ public interface BankMoneyTransaction {
      * @return the String
      */
     String getOriginTransactionId();
-
     void setOriginTransactionId(String originTransactionId);
 
 }

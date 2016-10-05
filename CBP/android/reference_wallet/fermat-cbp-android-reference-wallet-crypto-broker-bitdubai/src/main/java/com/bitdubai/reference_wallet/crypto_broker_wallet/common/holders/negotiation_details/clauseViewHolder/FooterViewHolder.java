@@ -9,8 +9,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 /**
- * Created by Nelson Ramirez
- *
+ *Created by Nelson Ramirez
  * @since 17-02-2016.
  */
 
@@ -18,8 +17,6 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
     OnFooterButtonsClickListener listener;
     CardView addNoteButton;
     TextView sendButton;
-    CardView addWarningWalletUser;
-
     public FooterViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
 
@@ -28,8 +25,6 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
 
         sendButton = (FermatTextView) itemView.findViewById(R.id.send_button);
         sendButton.setOnClickListener(this);
-
-        addWarningWalletUser = (CardView) itemView.findViewById(R.id.warning_wallet_user);
     }
 
     @Override
@@ -41,12 +36,7 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
             listener.onSendButtonClicked();
         }
     }
-
-    public void HideButtons() {
-        addNoteButton.setVisibility(View.GONE);
-        sendButton.setVisibility(View.GONE);
-    }
-
+    public void HideButtons(){ addNoteButton.setVisibility(View.GONE); sendButton.setVisibility(View.GONE); }
     public void setListener(OnFooterButtonsClickListener listener) {
         this.listener = listener;
     }
@@ -55,11 +45,5 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
         void onAddNoteButtonClicked();
 
         void onSendButtonClicked();
-    }
-
-    public void HideButtonsWalletUser() {
-        addNoteButton.setVisibility(View.GONE);
-        sendButton.setVisibility(View.GONE);
-        addWarningWalletUser.setVisibility(View.VISIBLE);
     }
 }

@@ -14,7 +14,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -35,8 +34,10 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsWizardAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleCheckableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsWizardData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,8 +51,8 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetEarningsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager>
-        implements FermatListItemListeners<EarningsWizardData> {
+public class WizardPageSetEarningsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>,ResourceProviderManager>
+        implements SingleCheckableItemAdapter.OnCheckboxClickedListener<EarningsWizardData> {
 
     // Constants
     private static final String TAG = "WizardPageSetEarning";
@@ -104,7 +105,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
             currencyEarningWallet = new HashMap<>();
 
             for (EarningsWizardData EP : _earningDataList) {
-                tempS = new StringBuilder().append(EP.getEarningCurrency().getCode()).append(" - ").append(EP.getLinkedCurrency().getCode()).toString();
+                tempS = EP.getEarningCurrency().getCode() + " - " + EP.getLinkedCurrency().getCode();
                 if (!temp.contains(tempS)) {
                     temp.add(tempS);
                     earningDataList.add(EP);
@@ -139,7 +140,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
             recyclerView.setVisibility(View.GONE);
         } else {
             adapter = new EarningsWizardAdapter(getActivity(), earningDataList);
-            adapter.setFermatListEventListener(this);
+            adapter.setCheckboxListener(this);
             recyclerView.setAdapter(adapter);
         }
 
@@ -181,7 +182,6 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
                     .setSubTitle(R.string.cbw_wizard_earnings_dialog_sub_title)
                     .setBody(R.string.cbw_wizard_earnings_dialog_body)
                     .setCheckboxText(R.string.cbw_wizard_not_show_text)
-                    .setVIewColor(R.color.cbw_wizard_merchandises_wallet_button_color)
                     .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
@@ -190,29 +190,19 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
         return layout;
     }
 
-
     @Override
-    public void onItemClickListener(EarningsWizardData data, int position) {
-        earningsWalletClicked(data, position);
-    }
-
-    @Override
-    public void onLongItemClickListener(EarningsWizardData data, int position) {
-        earningsWalletClicked(data, position);
-    }
-
-    private void earningsWalletClicked(EarningsWizardData data, int position) {
-
-        //If there's an assigned wallet already. clear it
-        if (data.isChecked())
-            data.clearWalletInfo();
-
-            //Otherwise show dialog and assign a wallet
-        else
+    public void checkedChanged(boolean isChecked, EarningsWizardData data, final int position) {
+        System.out.println("checkedChanged(): position=" +  position + " isChecked=" + isChecked);
+        if (isChecked && !data.isChecked()) {
             showWalletsDialog(data, position);
+        }
 
-        //In any case, refresh the adapter
-        adapter.notifyDataSetChanged();
+        if (!isChecked && data.isChecked()) {
+            data.clearWalletInfo();
+            System.out.println("checkedChanged(): notifyItemChanged");
+
+            adapter.notifyItemChanged(position);
+        }
     }
 
     private void showWalletsDialog(final EarningsWizardData data, final int position) {
@@ -339,7 +329,8 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
                         Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                         ex);
-            } else
+            }
+            else
                 Log.e(TAG, ex.getMessage(), ex);
         }
 

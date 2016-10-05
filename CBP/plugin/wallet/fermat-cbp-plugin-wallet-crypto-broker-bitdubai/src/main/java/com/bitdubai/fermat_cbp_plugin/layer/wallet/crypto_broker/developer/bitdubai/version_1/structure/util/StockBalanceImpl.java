@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -23,6 +23,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddCreditException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddDebitException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -52,7 +54,7 @@ public class StockBalanceImpl implements StockBalance {
         this.plugin = plugin;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginRoot = pluginRoot;
-        this.broadcaster = broadcaster;
+        this.broadcaster=broadcaster;
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database, pluginRoot);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.plugin);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
@@ -65,10 +67,11 @@ public class StockBalanceImpl implements StockBalance {
     public float getBookedBalance(Currency merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException, CantStartPluginException {
         try {
             return cryptoBrokerWalletDatabaseDao.getBookedBalance(merchandise);
-        } catch (CantGetBookedBalanceCryptoBrokerWalletException e) {
+        }catch (CantGetBookedBalanceCryptoBrokerWalletException e){
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetBookedBalanceCryptoBrokerWalletException(CantGetBookedBalanceCryptoBrokerWalletException.DEFAULT_MESSAGE, e, null, null);
-        } catch (Exception e) {
+        throw new CantGetBookedBalanceCryptoBrokerWalletException(CantGetBookedBalanceCryptoBrokerWalletException.DEFAULT_MESSAGE, e, null, null);
+        }
+        catch(Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
         }
@@ -79,15 +82,16 @@ public class StockBalanceImpl implements StockBalance {
      */
     @Override
     public float getAvailableBalance(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException, CantStartPluginException {
-        try {
-            return cryptoBrokerWalletDatabaseDao.geAvailableBalance(merchandise);
-        } catch (CantGetAvailableBalanceCryptoBrokerWalletException e) {
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetAvailableBalanceCryptoBrokerWalletException(CantGetAvailableBalanceCryptoBrokerWalletException.DEFAULT_MESSAGE, e, null, null);
-        } catch (Exception e) {
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
-        }
+       try{
+        return cryptoBrokerWalletDatabaseDao.geAvailableBalance(merchandise);
+       }catch(CantGetAvailableBalanceCryptoBrokerWalletException e) {
+           pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+           throw new CantGetAvailableBalanceCryptoBrokerWalletException(CantGetAvailableBalanceCryptoBrokerWalletException.DEFAULT_MESSAGE, e, null, null);
+       }
+       catch(Exception e) {
+           pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+           throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
+       }
     }
 
     /**
@@ -95,12 +99,13 @@ public class StockBalanceImpl implements StockBalance {
      */
     @Override
     public float getAvailableBalanceFrozen(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException, CantStartPluginException {
-        try {
-            return cryptoBrokerWalletDatabaseDao.getAvailableBalanceFrozen(merchandise);
-        } catch (CantGetAvailableBalanceCryptoBrokerWalletException e) {
+        try{
+        return cryptoBrokerWalletDatabaseDao.getAvailableBalanceFrozen(merchandise);
+        }catch(CantGetAvailableBalanceCryptoBrokerWalletException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAvailableBalanceCryptoBrokerWalletException(CantGetAvailableBalanceCryptoBrokerWalletException.DEFAULT_MESSAGE, e, null, null);
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
         }
@@ -117,7 +122,8 @@ public class StockBalanceImpl implements StockBalance {
         } catch (CantCalculateBalanceException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
-        } catch (CantGetBalanceRecordException e) {
+        }
+        catch (CantGetBalanceRecordException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
 
@@ -139,7 +145,8 @@ public class StockBalanceImpl implements StockBalance {
         } catch (CantCalculateBalanceException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
-        } catch (CantGetBalanceRecordException e) {
+        }
+        catch (CantGetBalanceRecordException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
 
@@ -162,7 +169,9 @@ public class StockBalanceImpl implements StockBalance {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCalculateBalanceException("Cant Calculate Balance Exception.", FermatException.wrapException(e), null, null);
 
-        } catch (Exception exception) {
+        }
+
+        catch (Exception exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
@@ -181,7 +190,9 @@ public class StockBalanceImpl implements StockBalance {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCalculateBalanceException("CAnt Calculate Balance Exception.", FermatException.wrapException(e), null, null);
 
-        } catch (Exception exception) {
+        }
+
+        catch (Exception exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
@@ -199,7 +210,8 @@ public class StockBalanceImpl implements StockBalance {
         } catch (CantAddDebitException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
@@ -212,7 +224,7 @@ public class StockBalanceImpl implements StockBalance {
     public void credit(CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecord, BalanceType balanceType) throws CantAddCreditCryptoBrokerWalletException, CantStartPluginException {
         try {
             cryptoBrokerWalletDatabaseDao.addCredit(cryptoBrokerStockTransactionRecord, balanceType);
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_OPERATION_DEBIT_OR_CREDIT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW,CBPBroadcasterConstants.CBW_OPERATION_DEBIT_OR_CREDIT_UPDATE_VIEW);
         } catch (CantAddCreditException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);

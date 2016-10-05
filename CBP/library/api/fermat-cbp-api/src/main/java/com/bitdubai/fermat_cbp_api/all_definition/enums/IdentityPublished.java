@@ -16,19 +16,14 @@ public enum IdentityPublished implements FermatEnum {
     }
 
     @Override
-    public String getCode() {
-        return this.code;
-    }
+    public String getCode()   { return this.code ; }
 
     public static IdentityPublished getByCode(String code) {
 
         switch (code) {
-            case "1":
-                return PUBLISHED;
-            case "0":
-                return UNPUBLISHED;
-            default:
-                return UNPUBLISHED;
+            case "1":      return PUBLISHED;
+            case "0": return UNPUBLISHED;
+            default:          return UNPUBLISHED;
         }
     }
 }

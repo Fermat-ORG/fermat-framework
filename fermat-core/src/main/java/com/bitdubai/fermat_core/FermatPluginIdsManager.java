@@ -1,5 +1,9 @@
 package com.bitdubai.fermat_core;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantGetPluginIdException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterNewPluginException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPluginIdsManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -10,9 +14,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantGetPluginIdException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterNewPluginException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPluginIdsManagerException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,7 @@ import java.util.regex.Pattern;
 /**
  * The class <code>com.bitdubai.fermat_core.FermatPluginIdsManager</code> contains all the main functionality
  * to manage fermat plugins ids.
- * <p/>
+ *
  * Created by Leon Acosta (laion.cj01@gmail.com) on 20/10/2015.
  */
 public final class FermatPluginIdsManager {
@@ -32,7 +33,7 @@ public final class FermatPluginIdsManager {
     private final String PLUGIN_IDS_FILE_NAME = "plugin_ids";
 
 
-    private final String PAIR_SEPARATOR = ";";
+    private final String PAIR_SEPARATOR   = ";";
     private final String PLUGIN_SEPARATOR = "|";
 
     private final PlatformFileSystem platformFileSystem;
@@ -42,7 +43,7 @@ public final class FermatPluginIdsManager {
     protected FermatPluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantStartPluginIdsManagerException {
 
         this.platformFileSystem = platformFileSystem;
-        this.pluginIdsMap = new HashMap<>();
+        this.pluginIdsMap       = new HashMap<>();
 
         chargeOrCreateSavedIds();
     }
@@ -75,8 +76,8 @@ public final class FermatPluginIdsManager {
                 if (changed)
                     savePluginIdsFile(getPluginIdsFile());
 
-            } catch (final CantCreateFileException |
-                    CantPersistFileException e) {
+            } catch(final CantCreateFileException  |
+                          CantPersistFileException e) {
 
                 throw new CantStartPluginIdsManagerException(e, "", "Problem with plugins id file.");
             }
@@ -87,8 +88,8 @@ public final class FermatPluginIdsManager {
 
                 savePluginIdsFile(platformTextFile);
 
-            } catch (final CantCreateFileException |
-                    CantPersistFileException e) {
+            } catch (final CantCreateFileException  |
+                           CantPersistFileException e) {
 
                 throw new CantStartPluginIdsManagerException(e, "", "Problem with plugins id file.");
             }
@@ -101,7 +102,9 @@ public final class FermatPluginIdsManager {
      * if it doesn't exists, creates a new one and saves it in the plugins id file.
      *
      * @param plugin reference of the plugin of which you want to have the id.
+     *
      * @return the id of the plugin
+     *
      * @throws CantGetPluginIdException if something goes wrong.
      */
     public final UUID getPluginId(final PluginVersionReference plugin) throws CantGetPluginIdException {
@@ -137,9 +140,9 @@ public final class FermatPluginIdsManager {
 
                 return newId;
 
-            } catch (final CantPersistFileException |
-                    CantCreateFileException |
-                    FileNotFoundException e) {
+            } catch(final CantPersistFileException |
+                          CantCreateFileException  |
+                          FileNotFoundException    e) {
 
                 throw new CantRegisterNewPluginException(
                         e,
@@ -170,18 +173,18 @@ public final class FermatPluginIdsManager {
     }
 
     private PlatformTextFile getPluginIdsFile() throws CantCreateFileException,
-            FileNotFoundException {
+                                                       FileNotFoundException  {
 
         return platformFileSystem.getFile(
                 PLUGIN_IDS_DIRECTORY_NAME,
-                PLUGIN_IDS_FILE_NAME,
-                FilePrivacy.PRIVATE,
+                PLUGIN_IDS_FILE_NAME     ,
+                FilePrivacy.PRIVATE      ,
                 FileLifeSpan.PERMANENT
         );
     }
 
-    private void savePluginIdsFile(final PlatformTextFile platformTextFile) throws CantCreateFileException,
-            CantPersistFileException {
+    private void savePluginIdsFile(final PlatformTextFile platformTextFile) throws CantCreateFileException  ,
+                                                                                   CantPersistFileException {
 
         String fileContent = "";
         for (final Map.Entry<PluginVersionReference, UUID> plugin : pluginIdsMap.entrySet())

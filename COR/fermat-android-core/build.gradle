@@ -90,13 +90,13 @@ dependencies {
     compile project(':fermat-core')
     compile project(':fermat-osa-android-core')
     compile 'com.github.ozodrukh:CircularReveal:1.1.0'
-    // CCP Projects (Wallets)
+    // DMP Projects (Wallets)
     compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
     //compile(group: 'org.fermat.ccp.android.bitcoin.wallet', name: 'fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai', version: '1.0.1', ext: 'aar')
 
-    //    compile project(':fermat-ccp-android-clone-reference-nich-wallet'
-    compile project(':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai')
-   compile project(':fermat-ccp-android-wallet-fermat-wallet-bitdubai')
+    //    compile project(':fermat-ccp-android-clone-reference-nich-wallet')
+//    compile project(':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai')
+//    compile project(':fermat-ccp-android-wallet-fermat-wallet-bitdubai')
     // DMP Projects (Sub APPs)
     compile project(':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai')
     compile project(':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai')

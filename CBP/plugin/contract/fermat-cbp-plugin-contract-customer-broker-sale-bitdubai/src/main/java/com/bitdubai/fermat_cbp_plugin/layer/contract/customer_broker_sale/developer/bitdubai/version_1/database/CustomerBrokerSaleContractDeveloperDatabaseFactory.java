@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -8,11 +9,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleContractDatabaseException;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleContractDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- * <p/>
+ *
  * Created by Angel Veloz - (vlzangel91@gmail.com) on 23/12/15.
  *
  * @version 1.0
@@ -67,7 +69,7 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory {//implements De
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerSaleContractDatabaseConstants.DATABASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -88,7 +90,7 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory {//implements De
                   /*
                    * We create the new database
                    */
-                database = customerBrokerSaleContractDatabaseFactory.createDatabase(pluginId, CustomerBrokerSaleContractDatabaseConstants.DATABASE_NAME);
+                database = customerBrokerSaleContractDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -104,7 +106,7 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory {//implements De
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(CustomerBrokerSaleContractDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("Customer Broker Sale", this.pluginId.toString()));
         return databases;
     }
 
@@ -164,6 +166,7 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory {//implements De
         tables.add(clauseStatusLogTable);
 
 
+
         return tables;
     }
 
@@ -180,12 +183,12 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory {//implements De
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row : records) {
+            for (DatabaseTableRecord row: records){
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()) {
+                for (DatabaseRecord field : row.getValues()){
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -205,7 +208,7 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory {//implements De
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e) {
+        } catch (Exception e){
             database.closeDatabase();
             return returnedRecords;
         }

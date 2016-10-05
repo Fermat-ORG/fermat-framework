@@ -21,29 +21,29 @@ public class ServicesHelpers {
     private boolean isInBackground;
 
 
-    public ServicesHelpers(Context contextWeakReference, boolean isInBackground) {
+    public ServicesHelpers(Context contextWeakReference,boolean isInBackground){
         this.isInBackground = isInBackground;
-        if (!isInBackground) {
+        if(!isInBackground) {
             appManagerServiceHelper = new AppManagerServiceHelper(contextWeakReference);
             notificationServiceHelper = new NotificationServiceHelper(contextWeakReference);
             clientSystemBrokerServiceAIDL = new ClientSideBrokerServiceHelperAidle(contextWeakReference);
         }
     }
 
-    public void bindServices() {
+    public void bindServices(){
         Log.d(TAG, "binding every service");
         bindBackgroundServices();
-        if (!isInBackground) {
+        if(!isInBackground) {
             appManagerServiceHelper.bindAppManagerService();
             notificationServiceHelper.bindNotificationService();
             clientSystemBrokerServiceAIDL.clientSideBrokerBoundService();
         }
     }
 
-    public void unbindServices() {
+    public void unbindServices(){
         Log.d(TAG, "unbind every service");
         unbindBackgroundServices();
-        if (!isInBackground) {
+        if(!isInBackground) {
             appManagerServiceHelper.unbindAppManagerService();
             notificationServiceHelper.unbindNotificationService();
             clientSystemBrokerServiceAIDL.unbindClientSideBrokerService();
@@ -57,12 +57,12 @@ public class ServicesHelpers {
 
     }
 
-    public void unbindBackgroundServices() {
+    public void unbindBackgroundServices(){
 
     }
 
 
-    public FermatAppsManagerService getAppManager() {
+    public FermatAppsManagerService getAppManager(){
         return appManagerServiceHelper.getFermatAppsManagerService();
     }
 
@@ -71,7 +71,7 @@ public class ServicesHelpers {
         return notificationServiceHelper.getNotificationService();
     }
 
-    public void clear() {
+    public void clear(){
         appManagerServiceHelper.clear();
         notificationServiceHelper.clear();
     }

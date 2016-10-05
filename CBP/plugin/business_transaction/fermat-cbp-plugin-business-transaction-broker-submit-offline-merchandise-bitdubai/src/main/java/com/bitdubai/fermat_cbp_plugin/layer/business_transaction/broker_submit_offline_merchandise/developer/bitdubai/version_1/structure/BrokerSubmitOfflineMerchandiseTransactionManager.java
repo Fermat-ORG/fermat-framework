@@ -93,9 +93,10 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
      * In this case, this method submit merchandise and not requires the cbpWalletPublicKey,
      * this public key can be obtained from the crypto broker wallet
      *
-     * @param referencePrice     reference price
+     * @param referencePrice reference price
      * @param cbpWalletPublicKey broker wallet public key
-     * @param contractHash       contract Hash also known as contract ID
+     * @param contractHash contract Hash also known as contract ID
+     *
      * @throws CantSubmitMerchandiseException
      */
     @Override
@@ -111,7 +112,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             final Collection<Clause> clauses = saleNegotiation.getClauses();
             final String moneyTypeCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_PAYMENT_METHOD);
             final MoneyType moneyType = MoneyType.getByCode(moneyTypeCode);
-            final String merchandiseCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY);
+            final String merchandiseCurrencyCode =  NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY);
             final FiatCurrency merchandiseCurrency = FiatCurrency.getByCode(merchandiseCurrencyCode);
 
 
@@ -223,6 +224,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
      * This method returns a {@link CustomerBrokerSaleNegotiation} by the negotiation ID.
      *
      * @param negotiationId the negotiation ID
+     *
      * @return the {@link CustomerBrokerSaleNegotiation} object
      */
     private CustomerBrokerSaleNegotiation getCustomerBrokerSaleNegotiation(String negotiationId) throws CantGetListSaleNegotiationsException {
@@ -234,7 +236,9 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
      * This method gets the Merchandise type from Negotiation Clauses.
      *
      * @param saleNegotiation the negotiation object with all the info of the negotiation
+     *
      * @return the merchandise money type
+     *
      * @throws CantGetBrokerMerchandiseException
      */
     private MoneyType getMerchandiseMoneyType(CustomerBrokerSaleNegotiation saleNegotiation) throws CantGetBrokerMerchandiseException {
@@ -265,7 +269,9 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
      * This method gets the currency type from Negotiation Clauses.
      *
      * @param saleNegotiation the negotiation object with all the info of the negotiation
+     *
      * @return the merchandise fiat currency
+     *
      * @throws CantGetBrokerMerchandiseException
      */
     private FiatCurrency getFiatCurrency(
@@ -324,7 +330,9 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
      * This method returns the actual ContractTransactionStatus by a contract hash/id
      *
      * @param contractHash the contract hash/id
+     *
      * @return the {@link ContractTransactionStatus} object
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     @Override
@@ -347,7 +355,9 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
      * This method returns the transaction completion date. If returns 0 the transaction is processing.
      *
      * @param contractHash the contract hash/id
+     *
      * @return the time in millis
+     *
      * @throws CantGetCompletionDateException
      */
     @Override
@@ -370,7 +380,9 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
      * This method parse a String object to a double value
      *
      * @param stringValue the string value
+     *
      * @return the double value
+     *
      * @throws InvalidParameterException
      */
     public double parseToDouble(String stringValue) throws InvalidParameterException {

@@ -1,8 +1,5 @@
 package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
-
 import java.io.Serializable;
 
 /**
@@ -33,23 +30,5 @@ public interface IntraUserLoginIdentity extends Serializable {
      * @return the profile image of the intra user
      */
     byte[] getProfileImage();
-
-    /**
-     * The method <code>getAccuracy</code> returns the phrase created by the intra user
-     * @return string phrase object
-     */
-    long getAccuracy();
-
-    /**
-     * The method <code>getFrequency</code> returns the phrase created by the intra user
-     * @return string phrase object
-     */
-    Frequency getFrequency();
-
-    /**
-     * The method <code>getLocation</code> returns the intra user geolocation ubication
-     * @return
-     */
-    Location getLocation();
 
 }

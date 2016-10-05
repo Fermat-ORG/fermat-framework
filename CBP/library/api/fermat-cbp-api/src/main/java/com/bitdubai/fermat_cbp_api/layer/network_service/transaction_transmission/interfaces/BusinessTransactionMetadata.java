@@ -36,11 +36,9 @@ public interface BusinessTransactionMetadata {
 
     /**
      * The platform component that this event is destinated for.
-     *
      * @return {@link PlatformComponentType}
      */
     PlatformComponentType getReceiverType();
-
     /**
      * Get the Sender Id
      *
@@ -50,7 +48,6 @@ public interface BusinessTransactionMetadata {
 
     /**
      * The platform component that send this event.
-     *
      * @return {@link PlatformComponentType}
      */
     PlatformComponentType getSenderType();
@@ -74,53 +71,40 @@ public interface BusinessTransactionMetadata {
      *
      * @return BusinessTransactionTransactionType
      */
-    BusinessTransactionTransactionType getType();
+    BusinessTransactionTransactionType getType() ;
 
     /**
      * Get the Timestamp
-     *
      * @return Long
      */
     Long getTimestamp();
 
     /**
      * This method returns the transaction id
-     *
      * @return
      */
     UUID getTransactionId();
 
     /**
-     * This method returns the transaction contract id
-     *
-     * @return
-     */
-    UUID getTransactionContractId();
-
-    /**
      * This method sets the BusinessTransactionTransactionType
-     *
      * @param businessTransactionTransactionType
      */
     void setBusinessTransactionTransactionType(BusinessTransactionTransactionType businessTransactionTransactionType);
 
     /**
      * This method returns the TransactionTransmissionStates
-     *
      * @param transactionTransmissionStates
      */
     void setState(TransactionTransmissionStates transactionTransmissionStates);
 
     /**
      * This method returns the TransactionTransmissionStates
-     *
      * @return
      */
     TransactionTransmissionStates getState();
 
     /**
      * This method returns the parameter isPendingToRead
-     *
      * @return
      */
     boolean isPendingToRead();
@@ -132,7 +116,6 @@ public interface BusinessTransactionMetadata {
 
     /**
      * This method sets the Remote Business Transaction.
-     *
      * @return
      */
     Plugins getRemoteBusinessTransaction();

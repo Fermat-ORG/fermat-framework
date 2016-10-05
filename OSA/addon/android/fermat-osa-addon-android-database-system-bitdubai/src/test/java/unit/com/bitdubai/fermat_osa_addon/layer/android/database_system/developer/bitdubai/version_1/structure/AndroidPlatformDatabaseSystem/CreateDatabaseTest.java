@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidPlatformDatabaseSystem;
+import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidPluginDatabaseSystem;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +13,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.util.UUID;
 
 import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
@@ -35,7 +38,7 @@ public class CreateDatabaseTest {
 
 
     @Before
-    public void createDatabase_TheDatabaseHasNotBeenCreated_MethodInvokedSuccessfully() throws Exception {
+    public void createDatabase_TheDatabaseHasNotBeenCreated_MethodInvokedSuccessfully() throws Exception{
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = shadowOf(mockActivity).getApplicationContext();
 
@@ -44,7 +47,7 @@ public class CreateDatabaseTest {
     }
 
     @Test
-    public void createDatabase_TheDatabaseHasAlreadyBeenCreated_ThrowsCantCreateDatabaseException() throws Exception {
+    public void createDatabase_TheDatabaseHasAlreadyBeenCreated_ThrowsCantCreateDatabaseException() throws Exception{
         mockActivity = Robolectric.setupActivity(Activity.class);
 
         catchException(testDatabase).createDatabase(testDatabaseName);

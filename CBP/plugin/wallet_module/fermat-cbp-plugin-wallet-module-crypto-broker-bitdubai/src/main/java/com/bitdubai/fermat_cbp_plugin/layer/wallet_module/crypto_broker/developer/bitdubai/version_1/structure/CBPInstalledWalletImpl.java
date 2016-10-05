@@ -20,24 +20,24 @@ import java.util.UUID;
 public class CBPInstalledWalletImpl implements CBPInstalledWallet {
 
     private List<InstalledLanguage> languagesId;
-    private List<InstalledSkin> skinsId;
-    private WalletCategory walletCategory;
-    private WalletType walletType;
-    private String walletScreenSize;
-    private String walletNavigationStructureVersion;
-    private String walletPlatformIdentifier;
-    private String walletIcon;
-    private String walletPublicKey;
-    private String walletName;
-    private Version walletVersion;
-    private UUID walletCatalogId;
-    private String walletDeveloperName;
-    private String walletDeviceUserPublicKey;
-    private Platforms platform;
-    private Actors actorType;
-    private CryptoCurrency cryptoCurrency;
-    private Currency currency;
-
+    private List<InstalledSkin>     skinsId;
+    private WalletCategory          walletCategory;
+    private WalletType              walletType;
+    private String                  walletScreenSize;
+    private String                  walletNavigationStructureVersion;
+    private String                  walletPlatformIdentifier;
+    private String                  walletIcon;
+    private String                  walletPublicKey;
+    private String                  walletName;
+    private Version                 walletVersion;
+    private UUID                    walletCatalogId;
+    private String                  walletDeveloperName;
+    private String                  walletDeviceUserPublicKey;
+    private Platforms               platform;
+    private Actors                  actorType;
+    private CryptoCurrency          cryptoCurrency;
+    private Currency                currency;
+    
     public CBPInstalledWalletImpl(
             List<InstalledLanguage> languagesId,
             List<InstalledSkin> skinsId,
@@ -56,118 +56,80 @@ public class CBPInstalledWalletImpl implements CBPInstalledWallet {
             Platforms platform,
             Actors actorType,
             CryptoCurrency cryptoCurrency
-    ) {
-        this.languagesId = languagesId;
-        this.skinsId = skinsId;
-        this.walletCategory = walletCategory;
-        this.walletType = walletType;
-        this.walletScreenSize = walletScreenSize;
-        this.walletNavigationStructureVersion = walletNavigationStructureVersion;
-        this.walletPlatformIdentifier = walletPlatformIdentifier;
-        this.walletIcon = walletIcon;
-        this.walletPublicKey = walletPublicKey;
-        this.walletName = walletName;
-        this.walletVersion = walletVersion;
-        this.walletCatalogId = walletCatalogId;
-        this.walletDeveloperName = walletDeveloperName;
-        this.walletDeviceUserPublicKey = walletDeviceUserPublicKey;
-        this.platform = platform;
-        this.actorType = actorType;
-        this.cryptoCurrency = cryptoCurrency;
+    ){
+        this.languagesId                        = languagesId;
+        this.skinsId                            = skinsId;
+        this.walletCategory                     = walletCategory;
+        this.walletType                         = walletType;
+        this.walletScreenSize                   = walletScreenSize;
+        this.walletNavigationStructureVersion   = walletNavigationStructureVersion;
+        this.walletPlatformIdentifier           = walletPlatformIdentifier;
+        this.walletIcon                         = walletIcon;
+        this.walletPublicKey                    = walletPublicKey;
+        this.walletName                         = walletName;
+        this.walletVersion                      = walletVersion;
+        this.walletCatalogId                    = walletCatalogId;
+        this.walletDeveloperName                = walletDeveloperName;
+        this.walletDeviceUserPublicKey          = walletDeviceUserPublicKey;
+        this.platform                           = platform;
+        this.actorType                          = actorType;
+        this.cryptoCurrency                     = cryptoCurrency;
     }
+    
+    @Override
+    public List<InstalledLanguage> getLanguagesId(){ return this.languagesId; }
 
     @Override
-    public List<InstalledLanguage> getLanguagesId() {
-        return this.languagesId;
-    }
+    public List<InstalledSkin> getSkinsId(){ return this.skinsId; }
 
     @Override
-    public List<InstalledSkin> getSkinsId() {
-        return this.skinsId;
-    }
+    public WalletCategory getWalletCategory(){ return this.walletCategory; }
 
     @Override
-    public WalletCategory getWalletCategory() {
-        return this.walletCategory;
-    }
+    public WalletType getWalletType(){ return this.walletType; }
 
     @Override
-    public WalletType getWalletType() {
-        return this.walletType;
-    }
+    public String getWalletScreenSize(){ return this.walletScreenSize; }
 
     @Override
-    public String getWalletScreenSize() {
-        return this.walletScreenSize;
-    }
+    public String getWalletNavigationStructureVersion(){ return this.walletNavigationStructureVersion; }
 
     @Override
-    public String getWalletNavigationStructureVersion() {
-        return this.walletNavigationStructureVersion;
-    }
+    public String getWalletPlatformIdentifier(){ return this.walletPlatformIdentifier; }
 
     @Override
-    public String getWalletPlatformIdentifier() {
-        return this.walletPlatformIdentifier;
-    }
+    public String getWalletIcon(){ return this.walletIcon; }
 
     @Override
-    public String getWalletIcon() {
-        return this.walletIcon;
-    }
+    public String getWalletPublicKey(){ return this.walletPublicKey; }
 
     @Override
-    public String getWalletPublicKey() {
-        return this.walletPublicKey;
-    }
+    public String getWalletName(){ return this.walletName; }
 
     @Override
-    public String getWalletName() {
-        return this.walletName;
-    }
+    public Version getWalletVersion(){ return this.walletVersion; }
 
     @Override
-    public Version getWalletVersion() {
-        return this.walletVersion;
-    }
+    public UUID getWalletCatalogId(){ return this.walletCatalogId; }
 
     @Override
-    public UUID getWalletCatalogId() {
-        return this.walletCatalogId;
-    }
+    public String getWalletDeveloperName(){ return this.walletDeveloperName; }
 
     @Override
-    public String getWalletDeveloperName() {
-        return this.walletDeveloperName;
-    }
+    public String getWalletDeviceUserPublicKey(){ return this.walletDeviceUserPublicKey; }
 
     @Override
-    public String getWalletDeviceUserPublicKey() {
-        return this.walletDeviceUserPublicKey;
-    }
+    public Platforms getPlatform(){ return this.platform; }
 
     @Override
-    public Platforms getPlatform() {
-        return this.platform;
-    }
+    public Actors getActorType(){ return this.actorType; }
 
     @Override
-    public Actors getActorType() {
-        return this.actorType;
-    }
+    public CryptoCurrency getCryptoCurrency(){ return this.cryptoCurrency; }
+    
+    @Override
+    public Currency getCurrency(){ return this.currency; }
 
     @Override
-    public CryptoCurrency getCryptoCurrency() {
-        return this.cryptoCurrency;
-    }
-
-    @Override
-    public Currency getCurrency() {
-        return this.currency;
-    }
-
-    @Override
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
-    }
+    public void setCurrency(Currency currency){ this.currency = currency; }
 }

@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -18,11 +19,12 @@ import static org.mockito.Mockito.when;
 public class getTransactionType {
 
     @Test
-    public void getTransactionType() {
+    public void getTransactionType(){
         CustomerBrokerSaleImpl customerBrokerPurchaseImpl = mock(CustomerBrokerSaleImpl.class);
         when(customerBrokerPurchaseImpl.getTransactionType()).thenReturn(new String());
         assertThat(customerBrokerPurchaseImpl.getTransactionType()).isNotNull();
     }
+
 
 
 }

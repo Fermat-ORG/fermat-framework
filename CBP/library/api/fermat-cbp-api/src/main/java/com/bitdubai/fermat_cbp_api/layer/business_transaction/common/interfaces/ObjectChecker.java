@@ -11,19 +11,17 @@ public class ObjectChecker {
 
     /**
      * This method checks if an argument is null.
-     *
      * @param argument
      * @throws ObjectNotSetException
      */
     public static void checkArgument(
             Object argument
-    ) throws ObjectNotSetException {
+    ) throws ObjectNotSetException{
         checkArgument(argument, "The argument is null");
     }
 
     /**
      * This method checks if an argument is null, also, can sets the exception message.
-     *
      * @param argument
      * @param exceptionMessage
      * @throws ObjectNotSetException
@@ -31,8 +29,8 @@ public class ObjectChecker {
     public static void checkArgument(
             Object argument,
             String exceptionMessage) throws
-            ObjectNotSetException {
-        if (argument == null) {
+            ObjectNotSetException{
+        if(argument==null){
             throw new ObjectNotSetException(exceptionMessage);
         }
     }
@@ -40,16 +38,15 @@ public class ObjectChecker {
     /**
      * This method checks an argument List that is required to check if has a valid value.
      * In this case, checks if the argument is not null.
-     *
      * @param checkingArguments
      * @throws ObjectNotSetException
      */
     public static void checkArguments(
             List checkingArguments) throws
             ObjectNotSetException {
-        int argumentCounter = 0;
-        for (Object argument : checkingArguments) {
-            checkArgument(argument, new StringBuilder().append("The argument ").append(argumentCounter).append(" is null").toString());
+        int argumentCounter=0;
+        for(Object argument : checkingArguments){
+            checkArgument(argument, "The argument " + argumentCounter + " is null");
             argumentCounter++;
         }
 
@@ -58,7 +55,6 @@ public class ObjectChecker {
     /**
      * This method checks an argument array that is required to check if has a valid value.
      * In this case, checks if the argument is not null.
-     *
      * @param checkingArguments
      * @throws ObjectNotSetException
      */
@@ -66,9 +62,9 @@ public class ObjectChecker {
             Object[] checkingArguments) throws
             ObjectNotSetException {
 
-        int argumentCounter = 0;
-        for (Object argument : checkingArguments) {
-            checkArgument(argument, new StringBuilder().append("The argument ").append(argumentCounter).append(" is null").toString());
+        int argumentCounter=0;
+        for(Object argument : checkingArguments){
+            checkArgument(argument, "The argument " + argumentCounter+" is null");
             argumentCounter++;
         }
 

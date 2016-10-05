@@ -1,6 +1,7 @@
 package unit.com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseManagerImpl;
 
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerClose;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseManagerImpl;
 
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class GetCustomerBrokerCloseNegotiationTranasctionTest {
     private UUID transactionId = UUID.randomUUID();
 
     @Test
-    public void getCustomerBrokerNewNegotiationTranasction() throws Exception {
+    public void getCustomerBrokerNewNegotiationTranasction() throws Exception{
 
         CustomerBrokerClose customerBrokerClose = null;
 

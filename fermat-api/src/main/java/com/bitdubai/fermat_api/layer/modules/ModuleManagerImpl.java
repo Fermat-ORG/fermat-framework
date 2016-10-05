@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_api.layer.modules;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
 import java.util.UUID;
@@ -31,7 +33,7 @@ public class ModuleManagerImpl<Z extends FermatSettings> {
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
     @Deprecated
-    public final SettingsManager<Z> getSettingsManager() {
+    public final SettingsManager<Z> getSettingsManager(){
         if (this.settingsManager != null)
             return this.settingsManager;
 
@@ -43,7 +45,7 @@ public class ModuleManagerImpl<Z extends FermatSettings> {
     }
 
 
-    public final void persistSettings(String publicKey, final Z settings) throws CantPersistSettingsException {
+    public final void persistSettings(String publicKey,final Z settings) throws CantPersistSettingsException {
         getSettingsManager().persistSettings(publicKey, settings);
     }
 

@@ -305,7 +305,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
                                     Actors.INTRA_USER,
                                     moduleManager.getSelectedActorIdentity().getPublicKey()
                                     , fermatWalletSessionReferenceApp.getAppPublicKey(),
-                                    CryptoCurrency.FERMAT,
+                                    CryptoCurrency.BITCOIN,
                                     blockchainNetworkType);
                             Toast.makeText(getActivity(),"Contact Created",Toast.LENGTH_SHORT).show();
                         }

@@ -11,8 +11,6 @@ import java.util.UUID;
 
 public interface NegotiationPaymentCurrency {
     UUID getPaymentCurrencyId();
-
     Currency getPaymentCurrency();
-
     PaymentType getPaymentType();
 }

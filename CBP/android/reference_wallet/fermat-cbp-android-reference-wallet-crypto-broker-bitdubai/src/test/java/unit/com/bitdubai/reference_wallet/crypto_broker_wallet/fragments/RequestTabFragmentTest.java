@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.view.View;
 import android.widget.TextView;
 
+
 import com.bitdubai.reference_wallet.crypto_broker_wallet.BuildConfig;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.MarketRateStatisticsFragment;
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+
 
 import unit.com.bitdubai.reference_wallet.crypto_broker_wallet.TestActivity;
 

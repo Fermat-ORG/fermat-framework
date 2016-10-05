@@ -131,7 +131,9 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
      * This method returns the contract transaction status
      *
      * @param contractHash
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     @Override
@@ -156,7 +158,9 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
      * If returns 0 the transaction is processing.
      *
      * @param contractHash
+     *
      * @return
+     *
      * @throws CantGetCompletionDateException
      */
     @Override

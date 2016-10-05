@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
@@ -16,7 +17,6 @@ public class QuoteImpl implements Quote {
 
     /**
      * Constructor for QuoteImpl
-     *
      * @param merchandise
      * @param fiatCurrency
      * @param priceReference

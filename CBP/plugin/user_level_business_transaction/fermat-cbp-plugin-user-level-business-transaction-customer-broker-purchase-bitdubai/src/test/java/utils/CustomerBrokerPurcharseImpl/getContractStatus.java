@@ -1,5 +1,4 @@
 package utils.CustomerBrokerPurcharseImpl;
-
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.utils.CustomerBrokerPurchaseImpl;
 
 import org.junit.Test;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class getContractStatus {
 
     @Test
-    public void getContractStatus() {
+    public void getContractStatus(){
         CustomerBrokerPurchaseImpl customerBrokerPurchaseImpl = mock(CustomerBrokerPurchaseImpl.class);
         when(customerBrokerPurchaseImpl.getContractStatus()).thenReturn(new String());
         assertThat(customerBrokerPurchaseImpl.getContractStatus()).isNotNull();
