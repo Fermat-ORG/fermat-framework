@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -11,50 +12,89 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class AbstractAgent {
 
-    protected AgentStatus status;
+    protected AgentStatus status = AgentStatus.CREATED;
 
     private long sleepTime;
     private TimeUnit timeUnit;
     private long initDelayTime = 0;
     private String threadName;
+    private boolean isDaemon;
     private ScheduledExecutorService scheduledExecutorService;
+    private int threadPriority;
 
-    public AbstractAgent(long sleepTime,TimeUnit timeUnit) {
+    public AbstractAgent(long sleepTime, TimeUnit timeUnit) {
         this.sleepTime = sleepTime;
         this.timeUnit = timeUnit;
-        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     }
 
-    public AbstractAgent(long sleepTime,TimeUnit timeUnit,long initDelayTime) {
-        this.sleepTime = sleepTime;
-        this.timeUnit = timeUnit;
+    public AbstractAgent(long sleepTime, TimeUnit timeUnit, long initDelayTime) {
+        this(sleepTime, timeUnit);
         this.initDelayTime = initDelayTime;
-        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+    }
+
+    public AbstractAgent(final String threadName,long sleepTime, TimeUnit timeUnit, long initDelayTime) {
+        this(sleepTime,timeUnit,initDelayTime);
+        this.threadName = threadName;
     }
 
 
     public void start() throws CantStartAgentException {
-        if(isRunning()) throw new CantStartAgentException("Agent is already running, first use stop() method to reset");
-        this.scheduledExecutorService.scheduleWithFixedDelay(agentJob(),initDelayTime,sleepTime,timeUnit);
+        if (isRunning())
+            throw new CantStartAgentException("Agent is already running, first use stop() method to reset");
+        else initExecutor();
+        this.scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    agentJob();
+                }catch (Exception e){
+                    onErrorOccur(e);
+                }
+            }
+        }, initDelayTime, sleepTime, timeUnit);
         this.status = AgentStatus.STARTED;
     }
 
     public void stop() throws CantStopAgentException {
-        if(isStop()) throw new CantStopAgentException("Agent is not running");
+        if (isStop()) throw new CantStopAgentException("Agent is not running");
         this.scheduledExecutorService.shutdownNow();
         this.status = AgentStatus.STOPPED;
     }
 
-    public AgentStatus getStatus(){
+    public AgentStatus getStatus() {
         return status;
     }
 
-    public boolean isRunning(){
+    public boolean isRunning() {
         return status == AgentStatus.STARTED;
     }
 
-    public boolean isStop(){
+    public boolean isStop() {
         return status == AgentStatus.STOPPED;
+    }
+
+    public void setIsDaemon(boolean isDaemon) {
+        this.isDaemon = isDaemon;
+    }
+
+    public void setThreadPriority(int threadPriority) {
+        this.threadPriority = threadPriority;
+    }
+
+    private void initExecutor(){
+        if(scheduledExecutorService==null) {
+            ThreadFactory threadFactory = new ThreadFactory() {
+                @Override
+                public Thread newThread(Runnable r) {
+                    Thread thread = new Thread(r);
+                    if(threadName!=null) thread.setName(threadName);
+                    if (isDaemon)thread.setDaemon(true);
+                    if (threadPriority!=0)thread.setPriority(threadPriority);
+                    return thread;
+                }
+            };
+            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(threadFactory);
+        }
     }
 
     /**
@@ -62,7 +102,9 @@ public abstract class AbstractAgent {
      *
      * @return
      */
-    protected abstract Runnable agentJob();
+    protected abstract void agentJob();
 
-    protected abstract void onErrorOccur();
+    protected abstract void onErrorOccur(Exception e);
+
+
 }

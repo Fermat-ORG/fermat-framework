@@ -212,7 +212,7 @@ public class ActorProfile extends Profile {
             actorProfile.setExtraData(jsonObject.get("exd").getAsString());
 
         if (jsonObject.get("nspk") != null)
-        actorProfile.setNsIdentityPublicKey(jsonObject.get("nspk").getAsString());
+            actorProfile.setNsIdentityPublicKey(jsonObject.get("nspk").getAsString());
 
         if (jsonObject.get("clpk") != null)
             actorProfile.setClientIdentityPublicKey(jsonObject.get("clpk").getAsString());

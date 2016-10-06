@@ -158,10 +158,8 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
 
     @Override
-    protected Runnable agentJob() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
+    protected void agentJob() {
+
                 try {
                     //logManager.log(null,
                     logManager.log(ChatMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()),
@@ -174,17 +172,18 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                     chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                             e);
                 }
-            }
-        };
-        return runnable;
+
+
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
         chatMiddlewarePluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 Error"));
     }
+
+
 
     @Override
     public void setEventManager(EventManager eventManager) {

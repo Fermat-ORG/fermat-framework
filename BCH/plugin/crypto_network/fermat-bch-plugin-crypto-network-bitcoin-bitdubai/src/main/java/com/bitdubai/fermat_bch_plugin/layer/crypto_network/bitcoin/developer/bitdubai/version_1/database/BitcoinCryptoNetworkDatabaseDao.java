@@ -358,7 +358,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         /**
          * Wil load the table into memory
-          */
+         */
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -657,7 +657,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @return
      */
     private CryptoTransaction getCryptoTransactionFromRecord(DatabaseTableRecord record) {
-       CryptoTransaction cryptoTransaction = new CryptoTransaction();
+        CryptoTransaction cryptoTransaction = new CryptoTransaction();
 
         //TransactionHash
         cryptoTransaction.setTransactionHash(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME));
@@ -1165,8 +1165,8 @@ public class BitcoinCryptoNetworkDatabaseDao {
         else
             broadcastStatus.setRetriesCount(retriesAmount);
 
-            broadcastStatus.setConnectedPeers(connectedPeers);
-            broadcastStatus.setLastException(lastException);
+        broadcastStatus.setConnectedPeers(connectedPeers);
+        broadcastStatus.setLastException(lastException);
 
         /**
          * I will set the new values and execute
@@ -1345,7 +1345,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
          * If no previous record exists, I will insert a new one
          */
         if (databaseTable.getRecords().isEmpty()){
-               record = getNewActiveNetworkRecord(blockchainNetworkType, amountOfKeys);
+            record = getNewActiveNetworkRecord(blockchainNetworkType, amountOfKeys);
             try {
                 databaseTable.insertRecord(record);
             } catch (CantInsertRecordException e) {
@@ -1478,5 +1478,47 @@ public class BitcoinCryptoNetworkDatabaseDao {
             return ProtocolStatus.NO_ACTION_REQUIRED;
         // for every other case, we are returning TO_BE_NOTIFIED
         return ProtocolStatus.TO_BE_NOTIFIED;
+    }
+
+    /**
+     * returns a list of keys from imported seeds, meaning from a vault code IMS.
+     * @param blockchainNetworkType
+     * @return
+     */
+    public List<String> getImportedAddresses(BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_NETWORK_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME, CryptoVaults.IMPORTED_SEED.getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        List<String> addressList = new ArrayList<>();
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            addressList.add(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_MONITORED_ADDRESSES_COLUMN_NAME));
+        }
+
+        return addressList;
+    }
+
+
+    /**
+     * true if the network is active by existing in the database, false if not.
+     * @param blockchainNetworkType
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public boolean isNetworkActive(BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException {
+        for (BlockchainNetworkType activeBlockchainNetworkType : this.getActiveBlockchainNetworkTypes()){
+            if (activeBlockchainNetworkType.getCode().equals(blockchainNetworkType.getCode()))
+                return true;
+        }
+
+        return false;
+
     }
 }

@@ -259,14 +259,13 @@ public class BitcoinCryptoNetworkEventsAgent extends AbstractAgent{
             }
         }
 
-
     @Override
-    protected Runnable agentJob() {
-        return new NetworkAgent(this.dao);
+    protected void agentJob() {
+        doTheMainTask();
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
 
     }
 }

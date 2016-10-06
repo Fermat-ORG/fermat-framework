@@ -817,6 +817,8 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
     }
 
+
+
     public void deleteRecordOld(DatabaseTableRecord record) throws CantDeleteRecordException {
         SQLiteDatabase database = null;
         try {

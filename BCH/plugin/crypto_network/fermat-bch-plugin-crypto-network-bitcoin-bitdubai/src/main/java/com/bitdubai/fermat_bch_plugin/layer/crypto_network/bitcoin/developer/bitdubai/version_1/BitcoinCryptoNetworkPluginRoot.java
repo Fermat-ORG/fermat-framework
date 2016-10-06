@@ -258,4 +258,9 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         return bitcoinCryptoNetworkManager.getBlockchainDownloadProgress(blockchainNetworkType);
     }
 
+    @Override
+    public List<CryptoAddress> getImportedAddresses(BlockchainNetworkType blockchainNetworkType) {
+        return bitcoinCryptoNetworkManager.getImportedAddresses(blockchainNetworkType);
+    }
+
 }

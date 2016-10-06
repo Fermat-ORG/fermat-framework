@@ -71,12 +71,12 @@ public class ImportedSeedFundsManagerAgent extends AbstractAgent{
 
 
     @Override
-    protected Runnable agentJob() {
-        return this.agent;
+    protected void agentJob() {
+        this.agent.run();
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
 
     }
 

@@ -217,12 +217,12 @@ public class OutgoingMessagesDao extends AbstractBaseDao<NetworkServiceMessage> 
             }
 
             if (countFailMax == null && countFailMin == null){
-                    DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
-                    newFilter.setType(DatabaseFilterType.EQUAL);
-                    newFilter.setColumn(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME);
-                    newFilter.setValue("0");
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.EQUAL);
+                newFilter.setColumn(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME);
+                newFilter.setValue("0");
 
-                    tableFilters.add(newFilter);
+                tableFilters.add(newFilter);
 //                    templateTable.addStringFilter(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, "0", DatabaseFilterType.EQUAL);
             }
 

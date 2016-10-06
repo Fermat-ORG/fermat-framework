@@ -253,7 +253,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             /**
              * Register Elements after Start
              */
-           // handleNetworkServiceRegisteredEvent();
+            // handleNetworkServiceRegisteredEvent();
 
 
         } catch (Exception exception) {
@@ -291,16 +291,16 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             String context =
                     "Plugin ID: " + pluginId
-                    + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
-                    + "networkClientManager: " + networkClientManager
-                    + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
-                    + "pluginDatabaseSystem: " + pluginDatabaseSystem
-                    + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
-                    + "locationManager: " + locationManager
-                    + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
-                    + "errorManager: " + errorManager
-                    + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
-                    + "eventManager: " + eventManager;
+                            + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
+                            + "networkClientManager: " + networkClientManager
+                            + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
+                            + "pluginDatabaseSystem: " + pluginDatabaseSystem
+                            + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
+                            + "locationManager: " + locationManager
+                            + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
+                            + "errorManager: " + errorManager
+                            + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
+                            + "eventManager: " + eventManager;
 
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
@@ -578,7 +578,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
                 /*
                  * Read all pending message from database
                  */
-                List<NetworkServiceMessage> messages = getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAllPendingToSendByPublicKey(filters);
+                List<NetworkServiceMessage> messages = null; //getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAllPendingToSendByPublicKey(filters);
 
                 /*
                  * For each message
