@@ -91,7 +91,7 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @param date
      * @throws CantImportSeedException
      */
-    void importSeedFromMnemonicCode(List<String> mnemonicCode,long date) throws CantImportSeedException;
+    void importSeedFromMnemonicCode(CryptoAddress destinationAddress, BlockchainNetworkType blockchainNetworkType, List<String> mnemonicCode,long date) throws CantImportSeedException;
 
 
     /**

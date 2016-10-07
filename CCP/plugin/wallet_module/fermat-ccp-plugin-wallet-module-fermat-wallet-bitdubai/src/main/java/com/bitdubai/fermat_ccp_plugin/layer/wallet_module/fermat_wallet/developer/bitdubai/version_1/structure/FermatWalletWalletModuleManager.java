@@ -30,7 +30,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.FermatFaucetManager;
+//import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.FermatFaucetManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
@@ -1767,7 +1767,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     public void testNetGiveMeCoins(BlockchainNetworkType blockchainNetworkType, CryptoAddress cryptoAddress) throws CantGetCoinsFromFaucetException {
 
-        FermatFaucetManager.giveMeCoins(blockchainNetworkType, cryptoAddress, 500000000);
+       // FermatFaucetManager.giveMeCoins(blockchainNetworkType, cryptoAddress, 500000000);
 
     }
 

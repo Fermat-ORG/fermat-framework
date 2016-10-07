@@ -28,5 +28,5 @@ import java.util.List;
 
     void setContext(Object context);
 
-    void addListener(NetworkStateReceiver.NetworkStateReceiverListener networkStateReceiver);
+   // void addListener(NetworkStateReceiver.NetworkStateReceiverListener networkStateReceiver);
 }

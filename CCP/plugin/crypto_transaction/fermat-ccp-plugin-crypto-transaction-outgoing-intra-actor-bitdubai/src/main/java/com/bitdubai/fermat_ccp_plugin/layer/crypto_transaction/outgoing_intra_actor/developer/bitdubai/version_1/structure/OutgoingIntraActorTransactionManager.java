@@ -60,8 +60,8 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                                  String receptorPublicKey, Actors senderActorType,
                                  Actors receptorActorType,ReferenceWallet referenceWallet,
                                  BlockchainNetworkType blockchainNetworkType,
-                                 CryptoCurrency cryptoCurrency
-                                   ) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
+                                 CryptoCurrency cryptoCurrency,
+                                 long fee, FeeOrigin feeOrigin ) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
 
         try {
             long funds = 0;
@@ -73,7 +73,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                     funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
                 case BASIC_WALLET_FERMAT_WALLET:
-                   cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
                     funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
@@ -93,8 +93,9 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             dao.registerNewTransaction(transactionId, requestId, walletPublicKey,
                     destinationAddress, cryptoAmount, null, description, senderPublicKey,
                     senderActorType, receptorPublicKey, receptorActorType, referenceWallet, false, blockchainNetworkType,
-                    cryptoCurrency
-                    ,0,FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS);
+                    cryptoCurrency,
+                    fee,
+                    feeOrigin);
 
         } catch (OutgoingIntraActorInsufficientFundsException e) {
             throw e;
@@ -141,12 +142,12 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             CryptoWalletWallet cryptoWalletWallet;
             switch (referenceWallet) {
                 case BASIC_WALLET_BITCOIN_WALLET:
-                     cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
-                     funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
-                break;
+                    cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    break;
 
                 case BASIC_WALLET_FERMAT_WALLET:
-                     cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
                     funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
@@ -164,7 +165,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                     description, senderPublicKey, senderActorType, receptorPublicKey,
                     receptorActorType, referenceWallet, false,blockchainNetworkType,
                     cryptoCurrency,
-                     fee,
+                    fee,
                     feeOrigin);
 
             return transactionId;

@@ -15,6 +15,10 @@ public class CustomerBrokerSaleNegotiationDatabaseConstants {
     /**
      * Negotiations Sale database table definition.
      */
+
+    public static final String DATABASE_NAME = "negotiation_customer_broker_sale";
+
+
     static final String NEGOTIATIONS_SALE_TABLE_NAME = "negotiations_sale";
 
     static final String NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME = "negotiation_id";

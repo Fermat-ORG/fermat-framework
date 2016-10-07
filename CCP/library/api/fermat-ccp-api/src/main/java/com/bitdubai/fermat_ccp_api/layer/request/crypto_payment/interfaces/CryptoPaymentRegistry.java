@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantApproveCryptoPaymentRequestException;
@@ -64,7 +65,7 @@ public interface CryptoPaymentRegistry {
      * @throws CryptoPaymentRequestNotFoundException     if we can't find the payment request.
      */
     void refuseRequest(UUID requestId) throws CantRejectCryptoPaymentRequestException,
-                                              CryptoPaymentRequestNotFoundException  ;
+            CryptoPaymentRequestNotFoundException  ;
 
     /**
      * Throw the method <code>approveRequest</code> you can approve a request and send the specified crypto.
@@ -75,8 +76,8 @@ public interface CryptoPaymentRegistry {
      * @throws CryptoPaymentRequestNotFoundException      if we can't find the payment request.
      * @throws InsufficientFundsException                if there's not the enough amount of crypto to complete the request.
      */
-    void approveRequest(UUID requestId) throws CantApproveCryptoPaymentRequestException,
-                                               CryptoPaymentRequestNotFoundException   ,
+    void approveRequest(UUID requestId,long fee, FeeOrigin feeOrigin) throws CantApproveCryptoPaymentRequestException,
+            CryptoPaymentRequestNotFoundException   ,
             InsufficientFundsException;
 
     /**
@@ -90,7 +91,7 @@ public interface CryptoPaymentRegistry {
      * @throws CryptoPaymentRequestNotFoundException   if we can't find the payment request.
      */
     CryptoPayment getRequestById(UUID requestId) throws CantGetCryptoPaymentRequestException ,
-                                                        CryptoPaymentRequestNotFoundException;
+            CryptoPaymentRequestNotFoundException;
 
     /**
      * Throw the method <code>listCryptoPaymentRequests</code> you can get the list of the requests related with a wallet.
@@ -192,9 +193,9 @@ public interface CryptoPaymentRegistry {
      * @throws CantListCryptoPaymentRequestsException
      */
     List<CryptoPayment> listCryptoPaymentRequestsByTypeAndNetwork(String walletPublicKey,
-                                                                         CryptoPaymentType type           ,
-                                                                         BlockchainNetworkType blockchainNetworkType,
-                                                                         Integer           max            ,
-                                                                         Integer           offset         ) throws CantListCryptoPaymentRequestsException ;
+                                                                  CryptoPaymentType type           ,
+                                                                  BlockchainNetworkType blockchainNetworkType,
+                                                                  Integer           max            ,
+                                                                  Integer           offset         ) throws CantListCryptoPaymentRequestsException ;
 
-    }
+}
