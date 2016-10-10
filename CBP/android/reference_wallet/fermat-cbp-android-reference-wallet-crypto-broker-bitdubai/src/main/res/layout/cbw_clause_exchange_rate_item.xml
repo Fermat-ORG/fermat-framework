@@ -45,7 +45,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#1271A7"/>
+                android:background="#1271A7"
+                android:id="@+id/cbw_line_up" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -97,7 +98,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#1271A7"/>
+                android:background="#1271A7"
+                android:id="@+id/cbw_line_middle" />
 
             <RelativeLayout
                 android:id="@+id/cbw_market_rate_container"
@@ -205,7 +207,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#1271A7"/>
+                    android:background="#1271A7"
+                    android:id="@+id/cbw_line_down" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/cbw_confirm_button"

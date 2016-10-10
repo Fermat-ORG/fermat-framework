@@ -10,7 +10,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -231,25 +230,8 @@ public class BrowserTabFragment
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
         if (layoutManager == null) {
-            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT, LinearLayoutManager.VERTICAL, false);
-            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    final int itemViewType = adapter.getItemViewType(position);
-                    switch (itemViewType) {
-                        case AvailableActorsListAdapter.DATA_ITEM:
-                            return 1;
-                        case AvailableActorsListAdapter.LOADING_ITEM:
-                            return SPAN_COUNT;
-                        default:
-                            return GridLayoutManager.DEFAULT_SPAN_COUNT;
-                    }
-                }
-            });
-
-            layoutManager = gridLayoutManager;
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         }
-
 
         return layoutManager;
     }
@@ -310,6 +292,7 @@ public class BrowserTabFragment
                             .setIconRes(R.drawable.crypto_broker)
                             .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
+                            .setVIewColor(R.color.cbc_toolbar_start_background)
                             .setIsCheckEnabled(false)
                             .build();
 
@@ -336,7 +319,7 @@ public class BrowserTabFragment
     @Override
     public void onItemClickListener(final CryptoBrokerCommunityInformation data, final int position) {
         try {
-            if(data.getConnectionState() == null || data.getConnectionState() != ConnectionState.CONNECTED) {
+            if (data.getConnectionState() == null || data.getConnectionState() != ConnectionState.CONNECTED) {
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager, data, identity);
 
                 connectDialog.setTitle("Connection Request");
@@ -346,6 +329,7 @@ public class BrowserTabFragment
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         updateSelectedActorInList(data, position);
+                        onRefresh();
                     }
                 });
 
@@ -400,15 +384,16 @@ public class BrowserTabFragment
     @Override
     public List<CryptoBrokerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
-
-        try {
-            offset = pos;
-            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, location, 0, null, MAX, offset);
-            dataSet.addAll(result);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (isVisible) {
+            try {
+                offset = pos;
+                List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, location, 0, null, MAX, offset);
+                if (result != null)
+                    dataSet.addAll(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
         return dataSet;
     }
 
@@ -458,7 +443,7 @@ public class BrowserTabFragment
         onRefresh();
     }
 
-    private void loadSelectedActorIdentityInBackground(){
+    private void loadSelectedActorIdentityInBackground() {
 
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
@@ -474,13 +459,14 @@ public class BrowserTabFragment
             public void onPostExecute(Object... result) {
                 try {
                     selectedActorIdentity = (ActiveActorIdentityInformation) result[0];
-                    if(selectedActorIdentity!=null) {
+                    if (selectedActorIdentity != null) {
                         Bitmap image = BitmapFactory.decodeByteArray(selectedActorIdentity.getImage(), 0, selectedActorIdentity.getImage().length);
                         BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
                         toolbar.setLogo(bitmapDrawable);
-                    }else{
-                        Log.e(TAG,"selectedActorIdentity null, Nelson fijate si esto queres que haga");
                     }
+//                    else{
+//                        Log.e(TAG,"selectedActorIdentity null, Nelson fijate si esto queres que haga");
+//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -496,12 +482,13 @@ public class BrowserTabFragment
 
         fermatWorker.execute();
     }
-    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
+
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int width) {
         // TODO Auto-generated method stub
         int targetWidth = width;
         int targetHeight = width;
         Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight,Bitmap.Config.ARGB_8888);
+                targetHeight, Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(targetBitmap);
         Path path = new Path();
@@ -519,6 +506,7 @@ public class BrowserTabFragment
                         targetHeight), null);
         return targetBitmap;
     }
+
     /**
      * Obtain Settings or create new Settings if first time opening subApp
      */
@@ -573,6 +561,7 @@ public class BrowserTabFragment
                         .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
+                        .setVIewColor(R.color.cbc_toolbar_start_background)
                         .setIsCheckEnabled(false)
                         .build();
 
@@ -600,17 +589,20 @@ public class BrowserTabFragment
     private void showOrHideEmptyView() {
         final boolean show = cryptoBrokerCommunityInformationList.isEmpty();
         final int animationResourceId = show ? android.R.anim.fade_in : android.R.anim.fade_out;
+        if (isAttached) {
+            Animation anim = AnimationUtils.loadAnimation(getActivity(), animationResourceId);
+            if (show && (noContacts.getVisibility() == View.GONE || noContacts.getVisibility() == View.INVISIBLE)) {
+                noContacts.setAnimation(anim);
+                noContacts.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.INVISIBLE);
 
-        Animation anim = AnimationUtils.loadAnimation(getActivity(), animationResourceId);
-        if (show && (noContacts.getVisibility() == View.GONE || noContacts.getVisibility() == View.INVISIBLE)) {
-            noContacts.setAnimation(anim);
-            noContacts.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.INVISIBLE);
-
-        } else if (!show && noContacts.getVisibility() == View.VISIBLE) {
-            noContacts.setAnimation(anim);
-            noContacts.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+            } else if (!show && noContacts.getVisibility() == View.VISIBLE) {
+                noContacts.setAnimation(anim);
+                noContacts.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+        } else {
+            Log.e(TAG, "Fragment not attached");
         }
     }
 
@@ -636,7 +628,8 @@ public class BrowserTabFragment
                     actorInformation.getConnectionId(),
                     actorInformation.getLocation(),
                     actorInformation.getCountry(),
-                    actorInformation.getPlace());
+                    actorInformation.getPlace(),
+                    actorInformation.getCryptoBrokerIdentityExtraData());
 
             cryptoBrokerCommunityInformationList.set(position, updatedInfo);
             adapter.notifyItemChanged(position);
