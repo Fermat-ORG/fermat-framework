@@ -18,12 +18,15 @@ public class LossProtectedWalletSettings implements WalletSettings,Serializable 
 
     private IntraUserLoginIdentity lastSelectedIdentity;
     private boolean isPresentationHelpEnabled;
+    private boolean isPaymentHelpEnabled;
     private boolean isContactsHelpEnabled;
     private Map<Long, Long>  runningDailyBalance ;
     private BlockchainNetworkType blockchainNetworkType;
     private boolean notificationEnabled;
     private boolean lossProtectedEnabled;
     private UUID exchangeProvider;
+    private String feedLeel;
+
 
     public LossProtectedWalletSettings() {
         this.lastSelectedIdentity = null;
@@ -94,6 +97,9 @@ public class LossProtectedWalletSettings implements WalletSettings,Serializable 
     public boolean getNotificationEnabled() {
         return this.notificationEnabled;
     }
+    public boolean getPaymentHelpEnabled() {
+        return this.isPaymentHelpEnabled;
+    }
 
     public void setNotificationEnabled(boolean notificationEnabled) {
         this.notificationEnabled = notificationEnabled;
@@ -107,5 +113,15 @@ public class LossProtectedWalletSettings implements WalletSettings,Serializable 
         this.lossProtectedEnabled = lossProtectedEnabled;
     }
 
+    public String getFeedLevel() {
+        return this.feedLeel;
+    }
 
+    public void setFeedLevel(String feedLeel) {
+        this.feedLeel = feedLeel;
+    }
+
+    public void setIsPaymentHelpEnabled(boolean isPaymentHelpEnabled) {
+        this.isPaymentHelpEnabled = isPaymentHelpEnabled;
+    }
 }

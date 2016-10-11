@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
@@ -12,10 +13,11 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
-public class BitcoinWalletSettings implements WalletSettings,Serializable {
+public class BitcoinWalletSettings implements WalletSettings, Serializable {
 
     private IntraUserLoginIdentity lastSelectedIdentity;
     private boolean isPresentationHelpEnabled;
+    private boolean isPaymentHelpEnabled;
     private boolean isContactsHelpEnabled;
     private Map<Long, Long>  runningDailyBalance ;
     private BlockchainNetworkType blockchainNetworkType;
@@ -72,6 +74,10 @@ public class BitcoinWalletSettings implements WalletSettings,Serializable {
         this.isPresentationHelpEnabled = isPresentationHelpEnabled;
     }
 
+    public void setIsPaymentHelpEnabled(boolean isPaymentHelpEnabled) {
+        this.isPaymentHelpEnabled = isPaymentHelpEnabled;
+    }
+
     public void setIsBlockchainDownloadEnabled(boolean isBlockchainDownloadEnabled) {
         this.isBlockchainDownloadEnabled = isBlockchainDownloadEnabled;
     }
@@ -100,6 +106,9 @@ public class BitcoinWalletSettings implements WalletSettings,Serializable {
 
     public boolean getNotificationEnabled() {
         return this.notificationEnabled;
+    }
+    public boolean getPaymentHelpEnabled() {
+        return this.isPaymentHelpEnabled;
     }
 
     public void setNotificationEnabled(boolean notificationEnabled) {

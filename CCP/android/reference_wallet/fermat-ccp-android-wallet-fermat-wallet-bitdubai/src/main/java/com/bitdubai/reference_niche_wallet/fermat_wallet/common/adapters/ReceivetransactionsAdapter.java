@@ -58,7 +58,7 @@ public class ReceivetransactionsAdapter
                         data.getAmount(),
                         MAX_DECIMAL_FOR_TRANSACTION_BALANCE,
                         MIN_DECIMAL_FOR_TRANSACTION_BALANCE,
-                        ShowMoneyType.BITCOIN.getCode()));
+                        ShowMoneyType.FRMT.getCode()));
 
         //Set format and Date Transaction
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a ", Locale.US);
@@ -74,12 +74,12 @@ public class ReceivetransactionsAdapter
         if (data.getInvolvedActor() != null)
             contactName = data.getInvolvedActor().getName();
         else
-        if (data.getTransactionType() == TransactionType.CREDIT)
+       /* if (data.getTransactionType() == TransactionType.CREDIT)
             if (data.getActorFromType()== Actors.BITCOIN_BASIC_USER)
                 contactName = "Bitcoin Wallet";
             else
                 contactName = "Unknown";
-        else
+        else*/
             contactName = "Unknown";
 
         holder.getTxt_user().setText(contactName);

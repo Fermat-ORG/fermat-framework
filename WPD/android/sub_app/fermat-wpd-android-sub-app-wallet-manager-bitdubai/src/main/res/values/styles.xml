@@ -23,9 +23,9 @@
 
     <style name="ButtonBarButton" />
 
-<style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="android:Theme.Light">
 
-</style>
+    </style>
 
 
     <!-- Base application theme. -->
