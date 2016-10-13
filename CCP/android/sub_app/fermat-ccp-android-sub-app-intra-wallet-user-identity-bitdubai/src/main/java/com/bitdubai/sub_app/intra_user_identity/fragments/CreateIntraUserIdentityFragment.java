@@ -394,31 +394,31 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                         if (checkCameraPermission()) {
                             if (checkWriteExternalPermission()) {
                                 if (imageBitmap != null) {
-                                   // if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
-                                        final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, imageBitmap);
-                                        dialogCropImage.show();
-                                        dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                            @Override
-                                            public void onDismiss(DialogInterface dialog) {
-                                                if (dialogCropImage.getCroppedImage() != null) {
-                                                    imageBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
-                                                    mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
-                                                    brokerImageByteArray = toByteArray(imageBitmap);
-                                                    updateProfileImage = true;
+                                    // if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
+                                    final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, imageBitmap);
+                                    dialogCropImage.show();
+                                    dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            if (dialogCropImage.getCroppedImage() != null) {
+                                                imageBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                                mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
+                                                brokerImageByteArray = toByteArray(imageBitmap);
+                                                updateProfileImage = true;
 
-                                                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mphoto_header,getResources(),false);
-                                                    bitmapWorkerTask.execute(brokerImageByteArray );
-                                                    mphoto_header.setAlpha(150);
+                                                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mphoto_header,getResources(),false);
+                                                bitmapWorkerTask.execute(brokerImageByteArray );
+                                                mphoto_header.setAlpha(150);
 
-                                                } else {
-                                                    imageBitmap = null;
-                                                }
+                                            } else {
+                                                imageBitmap = null;
                                             }
-                                        });
+                                        }
+                                    });
                                     //} else {
-                                     //   Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
-                                        //cryptoBrokerBitmap = null;
-                                      //  Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                                    //   Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                    //cryptoBrokerBitmap = null;
+                                    //  Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                                     //}
                                 } else {
                                     Toast.makeText(getActivity(), getResources().getString(R.string.upload_image_error), Toast.LENGTH_LONG).show();

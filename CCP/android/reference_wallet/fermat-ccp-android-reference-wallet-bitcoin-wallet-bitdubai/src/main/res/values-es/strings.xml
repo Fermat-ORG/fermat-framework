@@ -162,13 +162,13 @@
     <string name="wallet_type">Esta cartera permite dos tipos diferentes de usuarios:</string>
     <string name="btc_loss">Ingresa la cantidad de BTC que quieres enviar a Loss Protected Wallet</string>
     <string name="phone_notifications">Notificaciones de telefono</string>
-    <string name="middle_name_text" translatable="false">Segundo nombre</string>
-    <string name="title_activity_account_detail" translatable="false">Detalles de cuenta</string>
-    <string name="title_activity_accounts" translatable="false">Cuentas</string>
+    <string name="middle_name_text">Segundo nombre</string>
+    <string name="title_activity_account_detail">Detalles de cuenta</string>
+    <string name="title_activity_accounts">Cuentas</string>
     <string name="title_activity_activity_main">Principal</string>
     <string name="title_activity_balance_available">Balance disponible</string>
     <string name="title_activity_contacts">Contactos</string>
-    <string name="title_activity_daily_discounts" translatable="false">Descuentos diarios</string>
+    <string name="title_activity_daily_discounts" >Descuentos diarios</string>
     <string name="title_activity_edit_personal_profile">Editar perfil personal</string>
     <string name="title_activity_main">Cartera Joven</string>
     <string name="title_activity_monthly_discounts">Descuentos mensuales</string>
