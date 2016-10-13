@@ -18,7 +18,6 @@ public interface CBPActorConnectionManager
 
     /**
      * This method creates a request connection with location in the argument
-     *
      * @param actorSending
      * @param actorReceiving
      * @param receivingLocation
@@ -27,7 +26,7 @@ public interface CBPActorConnectionManager
      * @throws ConnectionAlreadyRequestedException
      */
     void requestConnection(
-            final ActorIdentityInformation actorSending,
+            final ActorIdentityInformation actorSending  ,
             final ActorIdentityInformation actorReceiving,
             final Location receivingLocation)
             throws CantRequestActorConnectionException,
@@ -36,7 +35,6 @@ public interface CBPActorConnectionManager
 
     /**
      * This method persist the location within an actor connection
-     *
      * @param actorConnection
      * @throws CantUpdateRecordException
      */

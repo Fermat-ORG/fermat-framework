@@ -12,9 +12,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class GetSetTest {
     CustomerOfflinePaymentRecord customerOfflinePaymentRecord;
-
     @Test
-    public void getSetTest() {
+    public void getSetTest(){
         customerOfflinePaymentRecord = new CustomerOfflinePaymentRecord();
         customerOfflinePaymentRecord.setBrokerPublicKey("Test1");
         customerOfflinePaymentRecord.setContractHash("Test2");
@@ -24,12 +23,12 @@ public class GetSetTest {
         customerOfflinePaymentRecord.setTransactionHash("Test4");
         customerOfflinePaymentRecord.setTransactionId("Test5");
 
-        assertEquals(customerOfflinePaymentRecord.getBrokerPublicKey(), "Test1");
-        assertEquals(customerOfflinePaymentRecord.getContractHash(), "Test2");
-        assertEquals(customerOfflinePaymentRecord.getContractTransactionStatus(), ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT);
-        assertEquals(customerOfflinePaymentRecord.getCustomerPublicKey(), "Test3");
-        assertEquals(customerOfflinePaymentRecord.getTimestamp(), 1);
-        assertEquals(customerOfflinePaymentRecord.getTransactionHash(), "Test4");
-        assertEquals(customerOfflinePaymentRecord.getTransactionId(), "Test5");
+        assertEquals(customerOfflinePaymentRecord.getBrokerPublicKey(),"Test1");
+        assertEquals(customerOfflinePaymentRecord.getContractHash(),"Test2");
+        assertEquals(customerOfflinePaymentRecord.getContractTransactionStatus(),ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT);
+        assertEquals(customerOfflinePaymentRecord.getCustomerPublicKey(),"Test3");
+        assertEquals(customerOfflinePaymentRecord.getTimestamp(),1);
+        assertEquals(customerOfflinePaymentRecord.getTransactionHash(),"Test4");
+        assertEquals(customerOfflinePaymentRecord.getTransactionId(),"Test5");
     }
 }

@@ -7,7 +7,6 @@ public interface IdentityUserInformation {
 
     /**
      * The method <code>getPublicKet</code> returns the public key of the represented Intra User
-     *
      * @return the public key of the intra user
      */
     String getPublicKey();

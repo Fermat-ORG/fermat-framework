@@ -7,8 +7,6 @@ import java.util.UUID;
  */
 public interface BrokerIdentityWalletRelationship {
     UUID getRelationshipId();
-
     String getCryptoBroker();
-
     String getWallet();
 }

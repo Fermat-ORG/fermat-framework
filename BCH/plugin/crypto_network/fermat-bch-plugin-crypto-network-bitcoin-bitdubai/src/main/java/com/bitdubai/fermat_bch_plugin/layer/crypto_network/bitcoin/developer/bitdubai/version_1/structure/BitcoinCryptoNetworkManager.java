@@ -393,8 +393,8 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
 
 
             return wallet;
-            }
-         else {
+        }
+        else {
             // will get the context for this wallet.
             Context context = new Context(NETWORK_PARAMETER);
 
@@ -800,7 +800,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
 
         /**
          * Will invalidate the transaction in the wallet
-        */
+         */
         monitor.cancelBroadcast(txHash);
 
         /**
@@ -1135,7 +1135,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
 
             return new BlockchainDownloadProgress(blockchainNetworkType, 0, 0, 0, 0);
         } else
-        return networkMonitor.getBlockchainDownloadProgress();
+            return networkMonitor.getBlockchainDownloadProgress();
     }
 
     /**

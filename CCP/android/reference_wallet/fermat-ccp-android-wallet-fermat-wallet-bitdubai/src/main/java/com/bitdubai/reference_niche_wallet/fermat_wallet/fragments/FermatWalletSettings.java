@@ -95,10 +95,10 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
             fermatWalletModule = appSession.getModuleManager();
 
-               if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
-                    blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
-                else
-                    blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
 
 
@@ -117,7 +117,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
     @Override
     protected List<PreferenceSettingsItem> setSettingsItems() {
-         List<PreferenceSettingsItem> list = new ArrayList<>();
+        List<PreferenceSettingsItem> list = new ArrayList<>();
         Boolean notificationEnabled = true;
 
         //noinspection TryWithIdenticalCatches
@@ -160,7 +160,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
             //list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 
-           // list.add(new PreferenceSettingsLinkText(11, "Send Bitcoins To Loss Protected Wallet", "",15,Color.GRAY));
+            // list.add(new PreferenceSettingsLinkText(11, "Send Bitcoins To Loss Protected Wallet", "",15,Color.GRAY));
 
             //list.add(new PreferenceSettingsLinkText(12, "Import Mnemonic code", "",15,Color.GRAY));
 
@@ -203,8 +203,8 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
             else if(preferenceSettingsItem.getId() == 13){
 
                 //receive Mainet test fermats
-               Log.i("info", "LongPress");
-               Toast.makeText(getActivity(), "MainNet download Init", Toast.LENGTH_SHORT).show();
+                Log.i("info", "LongPress");
+                Toast.makeText(getActivity(), "MainNet download Init", Toast.LENGTH_SHORT).show();
                 GETMainNetFrm(getActivity());
             }
 
@@ -284,7 +284,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
         try {
 
-                fermatWalletSettings = fermatWalletModule.loadAndGetSettings(appSession.getAppPublicKey());
+            fermatWalletSettings = fermatWalletModule.loadAndGetSettings(appSession.getAppPublicKey());
 
             if (preferenceSettingsItem.getId() == 1) {
                 //enable notifications settings
@@ -458,46 +458,46 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                     String response = "";
                     try {
 
-                            CryptoAddress cryptoAddress = new CryptoAddress("pKMqJrEe26Vq8JNV7H7Di7T57Cdb6ntzv3", CryptoCurrency.FERMAT);
+                        CryptoAddress cryptoAddress = new CryptoAddress("pKMqJrEe26Vq8JNV7H7Di7T57Cdb6ntzv3", CryptoCurrency.FERMAT);
 
-                            try {
-                                fermatWalletWalletContact = fermatWalletModule.findWalletContactByName("MainNet_Fermats", appSession.getAppPublicKey(), fermatWalletModule.getSelectedActorIdentity().getPublicKey());
+                        try {
+                            fermatWalletWalletContact = fermatWalletModule.findWalletContactByName("MainNet_Fermats", appSession.getAppPublicKey(), fermatWalletModule.getSelectedActorIdentity().getPublicKey());
 
-                                if(fermatWalletWalletContact == null)
-                                {
-                                    fermatWalletWalletContact = fermatWalletModule.createWalletContact(
-                                            cryptoAddress, "MainNet_Fermats", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(),blockchainNetworkType);
-
-                                }
-                            } catch (WalletContactNotFoundException e) {
-
+                            if(fermatWalletWalletContact == null)
+                            {
                                 fermatWalletWalletContact = fermatWalletModule.createWalletContact(
                                         cryptoAddress, "MainNet_Fermats", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(),blockchainNetworkType);
 
-
-                            } catch (CantFindWalletContactException e) {
-
-                                response = "transaccion fallida";
-                                e.printStackTrace();
-
-                            } catch (Exception e) {
-                                response = "transaccion fallida";
-                                e.printStackTrace();
                             }
+                        } catch (WalletContactNotFoundException e) {
 
-                            if(fermatWalletWalletContact != null)
-                                fermatWalletModule.testNetGiveMeCoins(blockchainNetworkType,getWalletAddress(fermatWalletWalletContact.getActorPublicKey()));
+                            fermatWalletWalletContact = fermatWalletModule.createWalletContact(
+                                    cryptoAddress, "MainNet_Fermats", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(),blockchainNetworkType);
 
-                        } catch (CantGetCoinsFromFaucetException e) {
+
+                        } catch (CantFindWalletContactException e) {
+
+                            response = "transaccion fallida";
                             e.printStackTrace();
-                        } catch (com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantCreateWalletContactException e) {
-                            e.printStackTrace();
-                        } catch (ContactNameAlreadyExistsException e) {
+
+                        } catch (Exception e) {
+                            response = "transaccion fallida";
                             e.printStackTrace();
                         }
 
+                        if(fermatWalletWalletContact != null)
+                            fermatWalletModule.testNetGiveMeCoins(blockchainNetworkType,getWalletAddress(fermatWalletWalletContact.getActorPublicKey()));
 
-                        final String finalResponse = response;
+                    } catch (CantGetCoinsFromFaucetException e) {
+                        e.printStackTrace();
+                    } catch (com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantCreateWalletContactException e) {
+                        e.printStackTrace();
+                    } catch (ContactNameAlreadyExistsException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    final String finalResponse = response;
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -543,7 +543,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
             e.printStackTrace();
         } catch (CantRequestFermatAddressException e) {
-           // Toast.makeText(getActivity().getApplicationContext(), "CantRequestFermatsAddressException", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getActivity().getApplicationContext(), "CantRequestFermatsAddressException", Toast.LENGTH_SHORT).show();
 
             e.printStackTrace();
         }

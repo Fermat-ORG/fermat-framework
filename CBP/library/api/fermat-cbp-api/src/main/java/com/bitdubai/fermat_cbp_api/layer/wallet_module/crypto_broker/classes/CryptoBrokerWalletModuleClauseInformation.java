@@ -11,7 +11,6 @@ import java.util.UUID;
 
 /**
  * Created by Nelson Ramirez
- *
  * @since 05/11/15.
  */
 public class CryptoBrokerWalletModuleClauseInformation implements ClauseInformation, Serializable {
@@ -35,7 +34,7 @@ public class CryptoBrokerWalletModuleClauseInformation implements ClauseInformat
         this.clauseId = clause.getClauseId();
     }
 
-    public CryptoBrokerWalletModuleClauseInformation(ClauseInformation clauseInformation) {
+    public CryptoBrokerWalletModuleClauseInformation(ClauseInformation clauseInformation){
         this.clauseType = clauseInformation.getType();
         this.value = clauseInformation.getValue();
         this.status = clauseInformation.getStatus();
@@ -62,7 +61,7 @@ public class CryptoBrokerWalletModuleClauseInformation implements ClauseInformat
         return status;
     }
 
-    public void setStatus(ClauseStatus status) {
+    public void setStatus(ClauseStatus status){
         this.status = status;
     }
 

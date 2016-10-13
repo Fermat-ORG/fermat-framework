@@ -73,7 +73,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                     funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
                 case BASIC_WALLET_FERMAT_WALLET:
-                   cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
                     funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
@@ -142,12 +142,12 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             CryptoWalletWallet cryptoWalletWallet;
             switch (referenceWallet) {
                 case BASIC_WALLET_BITCOIN_WALLET:
-                     cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
-                     funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
-                break;
+                    cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    break;
 
                 case BASIC_WALLET_FERMAT_WALLET:
-                     cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
                     funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
@@ -165,7 +165,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                     description, senderPublicKey, senderActorType, receptorPublicKey,
                     receptorActorType, referenceWallet, false,blockchainNetworkType,
                     cryptoCurrency,
-                     fee,
+                    fee,
                     feeOrigin);
 
             return transactionId;

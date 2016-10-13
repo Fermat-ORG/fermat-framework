@@ -2,7 +2,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -25,6 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
@@ -77,11 +77,11 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
     /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeCryptoCustomerIdentityDatabaseException {
         try {
-            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, CryptoCustomerIdentityDatabaseConstants.DATABASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
         } catch (DatabaseNotFoundException e) {
             try {
                 CryptoCustomerIdentityDatabaseFactory databaseFactory = new CryptoCustomerIdentityDatabaseFactory(pluginDatabaseSystem);
-                database = databaseFactory.createDatabase(pluginId, CryptoCustomerIdentityDatabaseConstants.DATABASE_NAME);
+                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeCryptoCustomerIdentityDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {

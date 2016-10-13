@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.hardware.HardwareManager;
-import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
+//import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -146,9 +146,10 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
     }
 
     private String printErrorReport(final String source, final String severity, final FermatException exception) {
-        String report = new ErrorReport(source, severity, exception).generateReport();
-        System.err.println(report);
-        return report;
+        //String report = new ErrorReport(source, severity, exception).generateReport();
+        //System.err.println(report);
+       // return report;
+        return null;
         //saveToFile(report);
 
     }

@@ -56,7 +56,6 @@ public abstract class AbstractBusinessTransactionAgent
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception(this.getClass().getName() + " Error"));
     }
-
     /**
      * This method must implement the main method of the agent.
      */

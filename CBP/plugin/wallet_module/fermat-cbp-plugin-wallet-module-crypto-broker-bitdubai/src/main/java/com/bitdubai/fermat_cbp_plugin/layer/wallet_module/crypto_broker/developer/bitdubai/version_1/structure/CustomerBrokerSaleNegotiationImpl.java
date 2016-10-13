@@ -219,7 +219,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
             clauses.add(new ClauseImpl(value, brokerPublicKey));
         }
 
-        this.status = dataHasChanged ? NegotiationStatus.SENT_TO_CUSTOMER : NegotiationStatus.WAITING_FOR_CLOSING;
+        this.status = NegotiationStatus.SENT_TO_CUSTOMER;
     }
 
     public boolean dataHasChanged() {

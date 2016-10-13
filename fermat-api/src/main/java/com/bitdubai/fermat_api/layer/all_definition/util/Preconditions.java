@@ -6,4 +6,5 @@ package com.bitdubai.fermat_api.layer.all_definition.util;
 public class Preconditions {
 
 
+
 }

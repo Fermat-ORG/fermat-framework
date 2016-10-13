@@ -19,7 +19,6 @@ public interface CashMoneyTransaction {
      * @return the UUID
      */
     UUID getTransactionId();
-
     void setTransactionId(UUID transactionId);
 
     /**
@@ -28,7 +27,6 @@ public interface CashMoneyTransaction {
      * @return the Sting
      */
     String getActorPublicKey();
-
     void setActorPublicKey(String actorPublicKey);
 
     /**
@@ -37,7 +35,6 @@ public interface CashMoneyTransaction {
      * @return the FiatCurrency
      */
     FiatCurrency getFiatCurrency();
-
     void setFiatCurrency(FiatCurrency fiatCurrency);
 
     /**
@@ -46,7 +43,6 @@ public interface CashMoneyTransaction {
      * @return the Sting
      */
     String getCbpWalletPublicKey();
-
     void setCbpWalletPublicKey(String cbpWalletPublicKey);
 
     /**
@@ -55,7 +51,6 @@ public interface CashMoneyTransaction {
      * @return the Sting
      */
     String getCashWalletPublicKey();
-
     void setCashWalletPublicKey(String CashWalletPublicKey);
 
     /**
@@ -64,16 +59,13 @@ public interface CashMoneyTransaction {
      * @return the Sting
      */
     String getConcept();
-
     void setConcept(String concept);
 
     /**
      * The property <code>CashReference</code>  represented the public Cash Reference
-     *
      * @return the Sting
      */
     String getCashReference();
-
     void setCashReference(String cashReference);
 
     /**
@@ -82,7 +74,6 @@ public interface CashMoneyTransaction {
      * @return the BigDecimal
      */
     BigDecimal getAmount();
-
     void setAmount(BigDecimal amount);
 
     /**
@@ -91,7 +82,6 @@ public interface CashMoneyTransaction {
      * @return the Timestamp
      */
     Timestamp getTimeStamp();
-
     void setTimeStamp(Timestamp timeStamp);
 
     /**
@@ -100,7 +90,6 @@ public interface CashMoneyTransaction {
      * @return the Sting
      */
     String getMemo();
-
     void setMemo(String memo);
 
     /**
@@ -109,16 +98,13 @@ public interface CashMoneyTransaction {
      * @return the Sting
      */
     TransactionStatusRestockDestock getTransactionStatus();
-
     void setTransactionStatus(TransactionStatusRestockDestock transactionStatus);
 
     /**
      * The property <code>PriceReference</code>  represented the Price Reference
-     *
      * @return BigDecimal
      */
     BigDecimal getPriceReference();
-
     void setPriceReference(BigDecimal priceReference);
 
     /**
@@ -127,7 +113,6 @@ public interface CashMoneyTransaction {
      * @return the OriginTransaction
      */
     OriginTransaction getOriginTransaction();
-
     void setOriginTransaction(OriginTransaction originTransaction);
 
     /**
@@ -136,7 +121,6 @@ public interface CashMoneyTransaction {
      * @return the String
      */
     String getOriginTransactionId();
-
     void setOriginTransactionId(String originTransactionId);
 
 }

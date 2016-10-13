@@ -50,8 +50,7 @@ public class NetworkClientCommunicationSupervisorConnectionAgent implements Runn
                     System.out.println("SENDING PING TO NODE");
 
                     if (session.isOpen())
-//                        getCommunicationsNetworkClientChannel().sendPing();
-                        getCommunicationsNetworkClientChannel().sendPong();
+                        getCommunicationsNetworkClientChannel().sendPing();
 
                 }catch (Exception ex) {
                     ex.printStackTrace();

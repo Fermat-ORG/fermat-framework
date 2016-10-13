@@ -913,11 +913,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
             s.setSpan(new MyTypefaceSpan(getApplicationContext(), "Roboto-Regular.ttf"), 0, s.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             //for the size
 //            s.setSpan(new RelativeSizeSpan(2f), 0,s.length(), 0);
 
-        // Update the action bar title with the TypefaceSpan instance
+            // Update the action bar title with the TypefaceSpan instance
             if (collapsingToolbarLayout != null)
                 collapsingToolbarLayout.setTitle(s);
             mToolbar.setTitle(s);
@@ -1250,7 +1250,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 for (int position = 0; position < tabLayout.getTabCount(); position++) {
                     TabLayout.Tab tab = tabLayout.getTabAt(position);
                     if (tab!=null)
-                            ((TextView)tab.getCustomView()).setTypeface(tf);
+                        ((TextView)tab.getCustomView()).setTypeface(tf);
                 }
                 tabLayout.setVisibility(View.VISIBLE);
                 if (tabs.getTabsColor() != null) {
@@ -1865,8 +1865,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     @Override
     public void closeDrawer() {
-       if (mDrawerLayout!=null)
-           mDrawerLayout.closeDrawer(GravityCompat.START);
+        if (mDrawerLayout!=null)
+            mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
     @Override

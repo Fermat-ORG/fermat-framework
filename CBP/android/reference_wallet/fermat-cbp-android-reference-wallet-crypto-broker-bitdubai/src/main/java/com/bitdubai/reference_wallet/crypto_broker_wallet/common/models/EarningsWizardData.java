@@ -66,8 +66,7 @@ public class EarningsWizardData {
                 linkedCurrency.equals(lhs.earningCurrency) && earningCurrency.equals(lhs.linkedCurrency);
     }
 
-    @Override
-    public int hashCode() {
+    @Override public int hashCode() {
         // Start with a non-zero constant.
         int result = 17;
 

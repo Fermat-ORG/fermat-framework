@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantCreateCustomerRelationshipException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T ADD RELATION SHIP BEETWEEN BROKER AND CUSTOMER";
-
     /**
      * This is the constructor that every inherited FermatException must implement
      *

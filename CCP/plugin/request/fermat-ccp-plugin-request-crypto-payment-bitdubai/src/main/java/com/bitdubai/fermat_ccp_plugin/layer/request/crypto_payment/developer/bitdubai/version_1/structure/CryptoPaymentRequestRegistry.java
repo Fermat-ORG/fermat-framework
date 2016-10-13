@@ -101,7 +101,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                              BlockchainNetworkType networkType      ,
                                              ReferenceWallet       referenceWallet,
                                              CryptoCurrency         cryptoCurrency
-                                             ) throws CantGenerateCryptoPaymentRequestException {
+    ) throws CantGenerateCryptoPaymentRequestException {
 
 
         System.out.println("********** Crypto Payment Request -> generating request. SENT - NOT_SENT_YET.");
@@ -196,8 +196,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                                               ReferenceWallet       referenceWallet,
                                                               String walletPublicKey,
                                                               CryptoCurrency cryptoCurrency) throws CantSendRequestException                     ,
-                                                                                                              CantChangeCryptoPaymentRequestStateException ,
-                                                                                                              CryptoPaymentRequestNotFoundException        {
+            CantChangeCryptoPaymentRequestStateException ,
+            CryptoPaymentRequestNotFoundException        {
 
         // if i can save it, i send it to the network service.
 
@@ -227,7 +227,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
     @Override
     public void refuseRequest(UUID requestId) throws CantRejectCryptoPaymentRequestException,
-                                                     CryptoPaymentRequestNotFoundException  {
+            CryptoPaymentRequestNotFoundException  {
 
         try {
 
@@ -280,8 +280,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
     @Override
     public void approveRequest(UUID requestId,long fee, FeeOrigin feeOrigin) throws CantApproveCryptoPaymentRequestException,
-                                                      CryptoPaymentRequestNotFoundException   ,
-                                                      InsufficientFundsException              {
+            CryptoPaymentRequestNotFoundException   ,
+            InsufficientFundsException              {
 
         try {
 
@@ -389,9 +389,9 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
      * i inform the approval throw the network service and after that i change the state to approved.
      */
     private void fromPaymentProcessStartedToApproved(UUID requestId) throws CantInformApprovalException                 ,
-                                                                        CantApproveCryptoPaymentRequestException    ,
-                                                                        CantChangeCryptoPaymentRequestStateException,
-                                                                        CryptoPaymentRequestNotFoundException {
+            CantApproveCryptoPaymentRequestException    ,
+            CantChangeCryptoPaymentRequestStateException,
+            CryptoPaymentRequestNotFoundException {
         try {
 
             cryptoPaymentRequestManager.informApproval(
@@ -419,7 +419,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
     @Override
     public CryptoPayment getRequestById(UUID requestId) throws CantGetCryptoPaymentRequestException,
-                                                               CryptoPaymentRequestNotFoundException {
+            CryptoPaymentRequestNotFoundException {
 
         try {
 
@@ -517,10 +517,10 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
     @Override
     public List<CryptoPayment> listCryptoPaymentRequestsByTypeAndNetwork(String            walletPublicKey,
-                                                               CryptoPaymentType type           ,
-                                                                BlockchainNetworkType blockchainNetworkType,
-                                                               Integer           max            ,
-                                                               Integer           offset         ) throws CantListCryptoPaymentRequestsException {
+                                                                         CryptoPaymentType type           ,
+                                                                         BlockchainNetworkType blockchainNetworkType,
+                                                                         Integer           max            ,
+                                                                         Integer           offset         ) throws CantListCryptoPaymentRequestsException {
 
         try {
 

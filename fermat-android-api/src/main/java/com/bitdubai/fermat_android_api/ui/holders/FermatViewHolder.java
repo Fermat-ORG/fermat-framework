@@ -26,10 +26,11 @@ public abstract class FermatViewHolder extends RecyclerView.ViewHolder {
     }
 
     /**
+     *
      * @param itemView
      * @param holderType
      */
-    protected FermatViewHolder(View itemView, int holderType) {
+    protected FermatViewHolder(View itemView,int holderType) {
         super(itemView);
         this.holderType = holderType;
     }
@@ -55,8 +56,6 @@ public abstract class FermatViewHolder extends RecyclerView.ViewHolder {
         return holderType;
     }
 
-    public int getHolderLayoutRes() {
-        return holderLayoutRes;
-    }
+    public int getHolderLayoutRes(){return holderLayoutRes;}
 
 }

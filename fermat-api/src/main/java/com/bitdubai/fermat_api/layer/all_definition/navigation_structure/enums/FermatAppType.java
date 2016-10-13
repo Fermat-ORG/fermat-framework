@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by mati on 2016.02.04..
  */
-public enum FermatAppType implements FermatEnum {
+public enum FermatAppType implements FermatEnum{
 
     WALLET("W"),
     SUB_APP("SA"),
@@ -44,7 +44,7 @@ public enum FermatAppType implements FermatEnum {
         //return null;
     }
 
-    public static int size() {
+    public static int size(){
         return values().length;
     }
 

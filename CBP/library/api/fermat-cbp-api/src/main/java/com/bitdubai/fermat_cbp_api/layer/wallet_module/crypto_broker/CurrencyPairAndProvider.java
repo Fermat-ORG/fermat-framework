@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 
-public class CurrencyPairAndProvider implements Serializable {
+public class CurrencyPairAndProvider implements Serializable{
 
 
     private Currency currencyFrom;

@@ -24,10 +24,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.FermatWalletSettings;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
 
     //Managers
     FermatWallet fermatWalletManager;
-
+    FermatWalletSettings fermatWalletSettings;
     ErrorManager errorManager;
     String fiatCurrency;
     private TextView tvLabelRate;
@@ -92,52 +92,52 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-     try {
-         View view = inflater.inflate(R.layout.view_pager, container, false);
-         tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
-         lstCurrencyView = (ListView) view.findViewById(R.id.currency_list);
-         //WheelView wheel = (WheelView) view.findViewById(R.id.wheel_picker);
+        try {
+            View view = inflater.inflate(R.layout.view_pager, container, false);
+            tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
+            lstCurrencyView = (ListView) view.findViewById(R.id.currency_list);
+            //WheelView wheel = (WheelView) view.findViewById(R.id.wheel_picker);
 
-         List<String> lstCurrencies = new ArrayList<>();
-         lstCurrencies.add(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
-         lstCurrencies.add(FiatCurrency.US_DOLLAR.getCode());
-         lstCurrencies.add(CryptoCurrency.BITCOIN.getCode());
+            List<String> lstCurrencies = new ArrayList<>();
+            lstCurrencies.add(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
+            lstCurrencies.add(FiatCurrency.US_DOLLAR.getCode());
+            lstCurrencies.add(FiatCurrency.BITCOIN.getCode());
 
-         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                 getActivity(),
-                 R.layout.wheel_item,
-                 lstCurrencies);
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                    getActivity(),
+                    R.layout.wheel_item,
+                    lstCurrencies);
 
-         lstCurrencyView.setAdapter(arrayAdapter);
+            lstCurrencyView.setAdapter(arrayAdapter);
 
-         lstCurrencyView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-             @Override
-             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                 TextView item = (TextView) view.findViewById(R.id.itemText);
+            lstCurrencyView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    TextView item = (TextView) view.findViewById(R.id.itemText);
 
-                 item.setTextColor(Color.parseColor("#2481BA"));
-                 item.setTextSize(16);
+                    item.setTextColor(Color.parseColor("#2481BA"));
+                    item.setTextSize(16);
 
-                 fiatCurrency = String.valueOf(item.getText());
-                 try {
-                     fermatSession.setData(SessionConstant.FIAT_CURRENCY,FiatCurrency.getByCode(fiatCurrency).getCode());
-                 } catch (InvalidParameterException e) {
-                     e.printStackTrace();
-                 }
-                 getAndShowMarketExchangeRateData();
+                    fiatCurrency = String.valueOf(item.getText());
+                    try {
+                        fermatSession.setData(SessionConstant.FIAT_CURRENCY, FiatCurrency.getByCode(fiatCurrency).getCode());
+                    } catch (InvalidParameterException e) {
+                        e.printStackTrace();
+                    }
+                    getAndShowMarketExchangeRateData();
 
-             }
-         });
+                }
+            });
 
 
 
-         return view;
+            return view;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-       return null;
+        return null;
     }
 
     private void getAndShowMarketExchangeRateData() {

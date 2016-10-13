@@ -15,7 +15,8 @@ public class AuxiiliaryWrapper {
         return WRAPPER_TYPES.contains(clazz);
     }
 
-    private static Set<Class<?>> getWrapperTypes() {
+    private static Set<Class<?>> getWrapperTypes()
+    {
         Set<Class<?>> ret = new HashSet<Class<?>>();
         ret.add(Boolean.class);
         ret.add(Character.class);

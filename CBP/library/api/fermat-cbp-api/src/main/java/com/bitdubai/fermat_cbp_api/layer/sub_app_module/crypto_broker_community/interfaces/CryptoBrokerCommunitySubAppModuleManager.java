@@ -42,10 +42,9 @@ import java.util.UUID;
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerModuleManager</code>
  * provides all the necessary methods for the Crypto Broker Community sub app.
- * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
- * par
  *
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
+ *par
  * @author lnacosta
  * @version 1.0.0
  */
@@ -59,6 +58,7 @@ public interface CryptoBrokerCommunitySubAppModuleManager
      * logged in crypto broker
      *
      * @return a list of all crypto brokers in the world
+     *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, DeviceLocation deviceLocation, double distance, String alias, final int max, final int offset) throws CantListCryptoBrokersException;
@@ -69,6 +69,7 @@ public interface CryptoBrokerCommunitySubAppModuleManager
      * stored locally in the device.
      *
      * @return a list of broker and customer identities the current device the user can use to log in.
+     *
      * @throws CantListIdentitiesToSelectException if something goes wrong.
      */
     List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException;
@@ -103,24 +104,26 @@ public interface CryptoBrokerCommunitySubAppModuleManager
      * The method <code>requestConnectionToCryptoBroker</code> initialises a contact request between
      * two crypto brokers.
      *
-     * @param selectedIdentity      The selected local broker identity.
-     * @param cryptoBrokerToContact The information of the remote broker to connect to.
+     * @param selectedIdentity       The selected local broker identity.
+     * @param cryptoBrokerToContact  The information of the remote broker to connect to.
+     *
      * @throws CantRequestConnectionException           if something goes wrong.
      * @throws ActorConnectionAlreadyRequestedException if the connection already exists.
      * @throws ActorTypeNotSupportedException           if the actor type is not supported.
      */
-    void requestConnectionToCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity,
-                                         CryptoBrokerCommunityInformation cryptoBrokerToContact) throws CantRequestConnectionException,
+    void requestConnectionToCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity     ,
+                                         CryptoBrokerCommunityInformation        cryptoBrokerToContact) throws CantRequestConnectionException          ,
             ActorConnectionAlreadyRequestedException,
-            ActorTypeNotSupportedException;
+            ActorTypeNotSupportedException          ;
 
     /**
      * The method <code>acceptCryptoBroker</code> takes the information of a connection request, accepts
      * the request and adds the crypto broker to the list managed by this plugin with ContactState CONTACT.
      *
-     * @param requestId The request id of te connection to accept.
-     * @throws CantAcceptRequestException         if something goes wrong.
-     * @throws ConnectionRequestNotFoundException if we cant find the connection request..
+     * @param requestId      The request id of te connection to accept.
+     *
+     * @throws CantAcceptRequestException           if something goes wrong.
+     * @throws ConnectionRequestNotFoundException   if we cant find the connection request..
      */
     void acceptCryptoBroker(UUID requestId) throws CantAcceptRequestException, ConnectionRequestNotFoundException;
 
@@ -128,9 +131,10 @@ public interface CryptoBrokerCommunitySubAppModuleManager
     /**
      * The method <code>denyConnection</code> denies a conection request from other crypto broker
      *
-     * @param requestId The request id of te connection to deny.
+     * @param requestId      The request id of te connection to deny.
+     *
      * @throws CryptoBrokerConnectionDenialFailedException if something goes wrong.
-     * @throws ConnectionRequestNotFoundException          if we cant find the connection request.
+     * @throws ConnectionRequestNotFoundException   if we cant find the connection request.
      */
     void denyConnection(UUID requestId) throws CryptoBrokerConnectionDenialFailedException, ConnectionRequestNotFoundException;
 
@@ -138,18 +142,20 @@ public interface CryptoBrokerCommunitySubAppModuleManager
      * The method <code>disconnectCryptoBroker</code> disconnect an crypto broker from the list managed by this
      * plugin
      *
-     * @param requestId The request id of te connection to disconnect.
+     * @param requestId      The request id of te connection to disconnect.
+     *
      * @throws CryptoBrokerDisconnectingFailedException if something goes wrong.
-     * @throws ConnectionRequestNotFoundException       if we cant find the connection request.
+     * @throws ConnectionRequestNotFoundException   if we cant find the connection request.
      */
     void disconnectCryptoBroker(UUID requestId) throws CryptoBrokerDisconnectingFailedException, ConnectionRequestNotFoundException;
 
     /**
      * The method <code>cancelCryptoBroker</code> cancels an crypto broker from the list managed by this
      *
-     * @param requestId The request id of te connection to cancel.
+     * @param requestId      The request id of te connection to cancel.
+     *
      * @throws CryptoBrokerCancellingFailedException if something goes wrong.
-     * @throws ConnectionRequestNotFoundException    if we cant find the connection request.
+     * @throws ConnectionRequestNotFoundException   if we cant find the connection request.
      */
     void cancelCryptoBroker(UUID requestId) throws CryptoBrokerCancellingFailedException, ConnectionRequestNotFoundException;
 
@@ -161,17 +167,19 @@ public interface CryptoBrokerCommunitySubAppModuleManager
      * logged in crypto broker
      *
      * @return the list of crypto brokers connected to the logged in crypto broker
+     *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerCommunityInformation> listAllConnectedCryptoBrokers(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
-                                                                         final int max,
-                                                                         final int offset) throws CantListCryptoBrokersException;
+                                                                         final int                                     max             ,
+                                                                         final int                                     offset          ) throws CantListCryptoBrokersException;
 
     /**
      * The method <code>listCryptoBrokersPendingLocalAction</code> returns the list of crypto brokers waiting to be accepted
      * or rejected by the logged in crypto broker
      *
      * @return the list of crypto brokers waiting to be accepted or rejected by the  logged in crypto broker
+     *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerCommunityInformation> listCryptoBrokersPendingLocalAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
@@ -183,7 +191,8 @@ public interface CryptoBrokerCommunitySubAppModuleManager
      * answered to a sent connection request by the current logged in crypto broker.
      *
      * @return the list of crypto brokers that haven't answered to a sent connection request by the current
-     * logged in crypto broker.
+     *         logged in crypto broker.
+     *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerCommunityInformation> listCryptoBrokersPendingRemoteAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
@@ -192,7 +201,6 @@ public interface CryptoBrokerCommunitySubAppModuleManager
 
     /**
      * Count crypto broker waiting
-     *
      * @return
      */
     int getCryptoBrokersWaitingYourAcceptanceCount();
@@ -200,9 +208,10 @@ public interface CryptoBrokerCommunitySubAppModuleManager
     /**
      * The method <code>getActorConnectionState</code> returns the ConnectionState of a given actor
      * with respect to the selected actor
-     *
      * @param publicKey
+     *
      * @return
+     *
      * @throws CantValidateConnectionStateException if something goes wrong.
      */
     ConnectionState getActorConnectionState(String publicKey) throws CantValidateConnectionStateException;

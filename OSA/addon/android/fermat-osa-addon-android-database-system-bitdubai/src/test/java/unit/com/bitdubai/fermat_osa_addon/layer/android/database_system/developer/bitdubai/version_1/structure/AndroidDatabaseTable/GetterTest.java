@@ -27,8 +27,10 @@ import java.util.UUID;
 
 import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
+import static com.googlecode.catchexception.CatchException.catchException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.robolectric.Shadows.shadowOf;
 
 /**
  * Created by natalia on 14/09/15.
@@ -73,14 +75,14 @@ public class GetterTest {
 
 
     @Test
-    public void getTableNameTest() throws Exception {
+    public void getTableNameTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
         assertThat(testDatabaseTable.getTableName()).isInstanceOf(String.class);
 
     }
 
     @Test
-    public void getEmptyTableFilterTest() throws Exception {
+    public void getEmptyTableFilterTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
         assertThat(testDatabaseTable.getEmptyTableFilter()).isInstanceOf(DatabaseTableFilter.class);
 
@@ -88,35 +90,35 @@ public class GetterTest {
 
 
     @Test
-    public void getEmptyTableFilterGroupTest() throws Exception {
+    public void getEmptyTableFilterGroupTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
         fail("not sure why");
     }
 
     @Test
-    public void getEmptyRecordTest() throws Exception {
+    public void getEmptyRecordTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
         assertThat(testDatabaseTable.getEmptyRecord()).isInstanceOf(DatabaseTableRecord.class);
 
     }
 
     @Test
-    public void getFilterGroupTest() throws Exception {
+    public void getFilterGroupTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
         List<DatabaseTableFilter> databaseTableFilterList = new ArrayList<>();
-        List<DatabaseTableFilterGroup> databaseTableFilterGroupList = new ArrayList<>();
+        List<DatabaseTableFilterGroup>  databaseTableFilterGroupList = new ArrayList<>();
         testDatabaseTable.setFilterGroup(databaseTableFilterList, databaseTableFilterGroupList, DatabaseFilterOperator.OR);
     }
 
     @Test
-    public void getFiltersTest() throws Exception {
+    public void getFiltersTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
-        testDatabaseTable.addStringFilter("testColumn2", "ss", DatabaseFilterType.EQUAL);
+       testDatabaseTable.addStringFilter("testColumn2", "ss", DatabaseFilterType.EQUAL);
         testDatabaseTable.addUUIDFilter("testColumn3", UUID.randomUUID(), DatabaseFilterType.EQUAL);
     }
 
     @Test
-    public void getTableSelectOperatorTest() throws Exception {
+    public void getTableSelectOperatorTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
         testDatabaseTable.addAggregateFunction("testColumn1", DataBaseAggregateFunctionType.SUM, "total");
 
@@ -125,7 +127,7 @@ public class GetterTest {
     }
 
     @Test
-    public void getRecordFromPkTest_RecordsListLoaded() throws Exception {
+    public void getRecordFromPkTest_RecordsListLoaded() throws Exception{
 
         DatabaseTableFactory testTable1 = new AndroidDatabaseTableFactory("table2");
         testTable1.addColumn("testColumn1", DatabaseDataType.INTEGER, 0, false);
@@ -146,7 +148,7 @@ public class GetterTest {
     }
 
     @Test
-    public void toStringTest() throws Exception {
+    public void toStringTest() throws Exception{
         testDatabaseTable = testDatabase.getTable("otherTable");
         String table = testDatabaseTable.toString();
         assertThat(table).isNotNull();
@@ -154,7 +156,7 @@ public class GetterTest {
 
 
     @Test
-    public void setStateFilterTest() throws Exception {
+    public void setStateFilterTest() throws Exception{
         testDatabaseTable = testDatabase.getTable("otherTable");
         //testDatabaseTable.setStateFilter("testColum2", WalletFactoryProjectState.CLOSED, DatabaseFilterType.EQUAL);
         fail("not sure why");
@@ -162,7 +164,7 @@ public class GetterTest {
 
 
     @Test
-    public void clearAllFiltersTest() throws Exception {
+    public void clearAllFiltersTest() throws Exception{
         testDatabaseTable = testDatabase.getTable("otherTable");
 
         testDatabaseTable = testDatabase.getTable(testDatabaseName);

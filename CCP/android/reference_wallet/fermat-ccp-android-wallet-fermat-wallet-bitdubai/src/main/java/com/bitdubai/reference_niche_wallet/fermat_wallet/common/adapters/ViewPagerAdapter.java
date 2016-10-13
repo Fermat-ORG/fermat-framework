@@ -46,7 +46,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                     exchangeRateProvidersList.get(position).getProviderName(),
                     exchangeRateProvidersList.get(position).getProviderId(),
                     this.fermatWalletSession
-                    );
+            );
         else return null;
     }
 

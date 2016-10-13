@@ -188,12 +188,12 @@ public class WalletContactsMiddlewareDao {
         try {
             DatabaseTable walletContactAddressBookTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_TABLE_NAME);
             walletContactAddressBookTable.addUUIDFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_CONTACT_ID_COLUMN_NAME, walletContactRecord.getContactId(), DatabaseFilterType.EQUAL);
-            walletContactAddressBookTable.loadToMemory();
+           // walletContactAddressBookTable.loadToMemory();
 
-//           DatabaseTableRecord record = walletContactAddressBookTable.getEmptyRecord();
-//
-            if (!walletContactAddressBookTable.getRecords().isEmpty()) {
-                DatabaseTableRecord record = walletContactAddressBookTable.getRecords().get(0); //walletContactAddressBookTable.getEmptyRecord(); //records.get(0);
+           DatabaseTableRecord record = walletContactAddressBookTable.getEmptyRecord();
+
+           // if (!walletContactAddressBookTable.getRecords().isEmpty()) {
+               // DatabaseTableRecord record = walletContactAddressBookTable.getRecords().get(0); //walletContactAddressBookTable.getEmptyRecord(); //records.get(0);
 
                 if (walletContactRecord.getActorAlias() != null)
                     record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_ALIAS_COLUMN_NAME, walletContactRecord.getActorAlias());
@@ -206,14 +206,12 @@ public class WalletContactsMiddlewareDao {
                 insertCryptoAddresses(walletContactRecord.getContactId(), walletContactRecord.getCryptoAddresses());
 
                 walletContactAddressBookTable.updateRecord(record);
-            }
+            //}
 
         } catch (CantInsertCryptoAddressesException | CantDeleteCryptoAddressesException e) {
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, e, "", "There's a problem updating crypto addresses");
-         } catch (CantUpdateRecordException exception) {
+        } catch (CantUpdateRecordException exception) {
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, exception, "", "Cant update record exception.");
-        } catch (CantLoadTableToMemoryException e) {
-            e.printStackTrace();
         }
     }
 
@@ -245,8 +243,9 @@ public class WalletContactsMiddlewareDao {
             DatabaseTable walletContactAddressBookTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_TABLE_NAME);
 
             walletContactAddressBookTable.addUUIDFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_CONTACT_ID_COLUMN_NAME, contactId, DatabaseFilterType.EQUAL);
-            DatabaseTableRecord record = walletContactAddressBookTable.getEmptyRecord();
 
+
+            DatabaseTableRecord record = walletContactAddressBookTable.getEmptyRecord();
 
             record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_COMPATIBILITY_COLUMN_NAME, compatibility.getCode());
 

@@ -14,10 +14,12 @@ public enum UISource implements FermatEnum {
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    ACTIVITY("ACTIV"),
-    ADAPTER("ADAPT"),
-    TASK("TASK"),
-    VIEW("VIEW"),;
+    ACTIVITY  ("ACTIV"),
+    ADAPTER   ("ADAPT"),
+    TASK      ("TASK" ),
+    VIEW      ("VIEW" ),
+
+    ;
 
     private final String code;
 
@@ -30,14 +32,10 @@ public enum UISource implements FermatEnum {
 
         switch (code) {
 
-            case "ACTIV":
-                return ACTIVITY;
-            case "ADAPT":
-                return ADAPTER;
-            case "TASK":
-                return TASK;
-            case "VIEW":
-                return VIEW;
+            case "ACTIV": return ACTIVITY;
+            case "ADAPT": return ADAPTER ;
+            case "TASK":  return TASK    ;
+            case "VIEW":  return VIEW    ;
 
             default:
                 throw new InvalidParameterException(

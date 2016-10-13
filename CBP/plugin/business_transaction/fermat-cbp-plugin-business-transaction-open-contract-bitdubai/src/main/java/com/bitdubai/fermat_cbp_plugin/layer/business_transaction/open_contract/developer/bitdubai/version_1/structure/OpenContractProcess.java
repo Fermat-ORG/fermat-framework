@@ -169,12 +169,12 @@ public class OpenContractProcess {
             openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CHECKING_HASH);
 
             return true;
-            
+
         } catch (Exception e) {
             throw new UnexpectedResultReturnedFromDatabaseException(
-                e,
-                "Pending To Submit contract",
-                "Error in Sending Open Contract Transaction");
+                    e,
+                    "Pending To Submit contract",
+                    "Error in Sending Open Contract Transaction");
         }
     }
 

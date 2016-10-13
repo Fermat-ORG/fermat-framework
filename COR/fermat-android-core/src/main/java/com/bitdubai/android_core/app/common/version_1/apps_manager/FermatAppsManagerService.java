@@ -78,7 +78,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     }
 
     public void init() {
-//        AppsConfiguration appsConfiguration = new AppsConfiguration(this);
+        AppsConfiguration appsConfiguration = new AppsConfiguration(this);
         //appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
         //if(appsInstalledInDevice.isEmpty()){
 //        appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();

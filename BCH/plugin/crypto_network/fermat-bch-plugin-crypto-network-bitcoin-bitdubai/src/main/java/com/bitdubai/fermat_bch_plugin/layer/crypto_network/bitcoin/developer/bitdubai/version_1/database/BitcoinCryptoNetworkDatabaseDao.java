@@ -357,7 +357,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         /**
          * Wil load the table into memory
-          */
+         */
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -656,7 +656,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @return
      */
     private CryptoTransaction getCryptoTransactionFromRecord(DatabaseTableRecord record) {
-       CryptoTransaction cryptoTransaction = new CryptoTransaction();
+        CryptoTransaction cryptoTransaction = new CryptoTransaction();
 
         //TransactionHash
         cryptoTransaction.setTransactionHash(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME));
@@ -1146,8 +1146,8 @@ public class BitcoinCryptoNetworkDatabaseDao {
         else
             broadcastStatus.setRetriesCount(retriesAmount);
 
-            broadcastStatus.setConnectedPeers(connectedPeers);
-            broadcastStatus.setLastException(lastException);
+        broadcastStatus.setConnectedPeers(connectedPeers);
+        broadcastStatus.setLastException(lastException);
 
         /**
          * I will set the new values and execute
@@ -1326,7 +1326,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
          * If no previous record exists, I will insert a new one
          */
         if (databaseTable.getRecords().isEmpty()){
-               record = getNewActiveNetworkRecord(blockchainNetworkType, amountOfKeys);
+            record = getNewActiveNetworkRecord(blockchainNetworkType, amountOfKeys);
             try {
                 databaseTable.insertRecord(record);
             } catch (CantInsertRecordException e) {

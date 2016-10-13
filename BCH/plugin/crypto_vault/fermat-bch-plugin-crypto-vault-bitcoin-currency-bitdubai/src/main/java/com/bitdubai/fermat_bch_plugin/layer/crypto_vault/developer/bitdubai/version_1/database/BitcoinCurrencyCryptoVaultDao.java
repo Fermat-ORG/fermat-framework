@@ -223,10 +223,10 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @throws CantExecuteDatabaseOperationException
      */
     public void updateMaintainerStatistics(int hierarchyAccountId,
-                                            String date,
-                                            int currentGeneratedKeys,
-                                            int currentUsedKeys,
-                                            int currentThreshold)
+                                           String date,
+                                           int currentGeneratedKeys,
+                                           int currentUsedKeys,
+                                           int currentThreshold)
             throws CantExecuteDatabaseOperationException{
 
         DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);

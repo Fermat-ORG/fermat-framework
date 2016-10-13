@@ -223,7 +223,6 @@ public class ConnectionsTabFragment
                             .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
                             .setIsCheckEnabled(false)
-                            .setVIewColor(R.color.ccc_color_dialog)
                             .build();
 
                 helpDialog.show();
@@ -280,18 +279,18 @@ public class ConnectionsTabFragment
     @Override
     public List<CryptoCustomerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoCustomerCommunityInformation> dataSet = new ArrayList<>();
-        if (isVisible) {
-            try {
-                offset = pos;
-                if (moduleManager.getSelectedActorIdentity() != null) {
-                    final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
-                    List<CryptoCustomerCommunityInformation> result = moduleManager.listAllConnectedCryptoCustomers(selectedActorIdentity, MAX, offset);
-                    dataSet.addAll(result);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+
+        try {
+            offset = pos;
+            if(moduleManager.getSelectedActorIdentity() != null) {
+                final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
+                List<CryptoCustomerCommunityInformation> result = moduleManager.listAllConnectedCryptoCustomers(selectedActorIdentity, MAX, offset);
+                dataSet.addAll(result);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return dataSet;
     }
 

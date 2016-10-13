@@ -98,11 +98,11 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
      * @param pluginFileSystem
      */
     public BitcoinCurrencyCryptoVaultManager(UUID pluginId,
-                                   PluginFileSystem pluginFileSystem,
-                                   PluginDatabaseSystem pluginDatabaseSystem,
-                                   String seedFileName,
+                                             PluginFileSystem pluginFileSystem,
+                                             PluginDatabaseSystem pluginDatabaseSystem,
+                                             String seedFileName,
                                              BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
-                                   ErrorManager errorManager) throws InvalidSeedException {
+                                             ErrorManager errorManager) throws InvalidSeedException {
         super(pluginFileSystem, pluginId, bitcoinNetworkManager, "BitcoinVaultSeed", seedFileName);
 
         this.pluginId = pluginId;
@@ -338,7 +338,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         Context walletContext = new Context(networkParameters);
 
         try {
-             wallet = Wallet.fromSeed(walletContext.getParams(), getVaultSeed());
+            wallet = Wallet.fromSeed(walletContext.getParams(), getVaultSeed());
         } catch (InvalidSeedException e) {
             e.printStackTrace();
         }
@@ -519,7 +519,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
          * I get the network for this address and validate that is active
          */
         try {
-           validateNetorkIsActive(blockchainNetworkType);
+            validateNetorkIsActive(blockchainNetworkType);
         } catch (CantValidateCryptoNetworkIsActiveException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "The network to which this address belongs to, is not active!", null);

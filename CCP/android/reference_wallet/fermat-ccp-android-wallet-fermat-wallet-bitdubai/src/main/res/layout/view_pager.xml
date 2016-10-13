@@ -32,20 +32,20 @@
             android:layout_centerVertical="true"/>
 
 
-            <LinearLayout
-                android:layout_width="100dp"
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="15dp">
+
+            <ListView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="15dp">
+                android:id="@+id/currency_list"
+                android:scrollbars="none">
+            </ListView>
 
-                <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/currency_list"
-                    android:scrollbars="none">
-                </ListView>
-
-            </LinearLayout>
+        </LinearLayout>
 
 
 

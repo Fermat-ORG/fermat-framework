@@ -693,25 +693,25 @@ public class CryptoBrokerCommunityManager
         String createdPublicKey = null;
 
 
-            try {
-                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 10, GeoFrequency.NORMAL);
-                createdPublicKey = createdIdentity.getPublicKey();
+        try {
+            final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 10, GeoFrequency.NORMAL);
+            createdPublicKey = createdIdentity.getPublicKey();
 
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            cryptoCustomerIdentityManager.publishIdentity(createdIdentity.getPublicKey());
-                        } catch (CantPublishIdentityException | IdentityNotFoundException e) {
-                            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                        }
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        cryptoCustomerIdentityManager.publishIdentity(createdIdentity.getPublicKey());
+                    } catch (CantPublishIdentityException | IdentityNotFoundException e) {
+                        pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                     }
-                }.start();
+                }
+            }.start();
 
-            } catch (Exception e) {
-                this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                return;
-            }
+        } catch (Exception e) {
+            this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            return;
+        }
 
 
 
@@ -727,7 +727,7 @@ public class CryptoBrokerCommunityManager
             appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
 
 
-            appSettings.setLastSelectedActorType(Actors.CBP_CRYPTO_CUSTOMER);
+        appSettings.setLastSelectedActorType(Actors.CBP_CRYPTO_CUSTOMER);
 
 
 

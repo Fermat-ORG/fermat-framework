@@ -38,7 +38,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalle
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ReceiveFragmentDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.BitmapWorkerTask;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
@@ -178,7 +177,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                     Toast.makeText(getActivity(),"You don't have address to request\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
                 }
             }
-            else if ( id == R.id.linear_layout_extra_user_receive){
+            /*else if ( id == R.id.linear_layout_extra_user_receive){
                 ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(
                         getActivity(),
                         cryptoWallet,
@@ -188,7 +187,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                         fermatWalletSessionReferenceApp.getAppPublicKey(),
                         blockchainNetworkType);
                 receiveFragmentDialog.show();
-            }
+            }*/
 
         }catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);

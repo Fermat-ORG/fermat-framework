@@ -1,7 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters;
 
 import android.content.Context;
-
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 

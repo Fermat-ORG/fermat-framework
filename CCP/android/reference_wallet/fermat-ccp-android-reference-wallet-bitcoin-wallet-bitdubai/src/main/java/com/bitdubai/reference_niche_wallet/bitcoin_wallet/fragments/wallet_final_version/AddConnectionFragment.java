@@ -42,6 +42,8 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.Connectio
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.AddConnectionCallback;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,14 +106,14 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
             setUpScreen(layout);
-            //setUpFAV();
+            setUpFAV();
             onRefresh();
             if(intraUserInformationList.isEmpty()){
                 FermatAnimationsUtils.showEmpty(getActivity(), true, empty_view);
-                isContactAddPopUp = true;
+                isContactAddPopUp = false;
             }else {
                 FermatAnimationsUtils.showEmpty(getActivity(),false,empty_view);
-                isContactAddPopUp = false;
+                isContactAddPopUp = true;
             }
 
         } catch (Exception e){
@@ -150,13 +152,13 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         frameLayout.addView(view);
         frameLayout.setOnClickListener(onClickListener);
         view.setOnClickListener(onClickListener);
-      /*  final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+        final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout).setBackgroundDrawable(R.drawable.btn_add_connection_selector)
                 .build();
 
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .attachTo(actionButton)
-                .build();*/
+                .build();
     }
 
     private void setUpScreen(View layout) {
@@ -266,11 +268,11 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-       /* this.menu = menu;
+        this.menu = menu;
         if(isMenuVisible){
             menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        }*/
+        }
 
         //inflater.inflate(R.menu.home_menu, menu);
     }
@@ -304,10 +306,6 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                 }
                 onRefresh();
                 return true;
-            }
-            else{
-                Object[] object = new Object[2];
-                changeApp(SubAppsPublicKeys.CCP_COMMUNITY.getCode(), object);
             }
 
         } catch (Exception e) {
@@ -377,16 +375,12 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
 
     @Override
     public void addMenuEnabled() {
-        try {
-            connectionPickCounter++;
-         /*   if (!isMenuVisible) {
-                isMenuVisible = true;
-                menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
-                        .setIcon(R.drawable.button_add_connection)
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            }*/
-        }catch (Exception e){
-            e.printStackTrace();
+        connectionPickCounter++;
+        if(!isMenuVisible){
+            isMenuVisible = true;
+            menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
+                    .setIcon(R.drawable.button_add_connection)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
     }
 

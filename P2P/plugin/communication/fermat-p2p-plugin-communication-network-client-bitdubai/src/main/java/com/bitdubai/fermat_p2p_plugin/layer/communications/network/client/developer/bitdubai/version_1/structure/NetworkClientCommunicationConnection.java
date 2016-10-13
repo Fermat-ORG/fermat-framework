@@ -129,10 +129,10 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      */
     private NetworkClientCommunicationChannel networkClientCommunicationChannel;
 
-   /*
-    * is used to validate if it is connection to an external node
-    * when receive check-in-client then send register all profile
-    */
+    /*
+     * is used to validate if it is connection to an external node
+     * when receive check-in-client then send register all profile
+     */
     private boolean isExternalNode;
 
     /*

@@ -15,8 +15,10 @@ public enum DeveloperUtils implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    DATABASE_TOOLS("DBT"),
-    LOG_TOOLS("LGT"),;
+    DATABASE_TOOLS ("DBT"),
+    LOG_TOOLS      ("LGT"),
+
+    ;
 
     private String code;
 
@@ -29,10 +31,8 @@ public enum DeveloperUtils implements FermatEnum {
 
         switch (code) {
 
-            case "DBT":
-                return DATABASE_TOOLS;
-            case "LGT":
-                return LOG_TOOLS;
+            case "DBT": return DATABASE_TOOLS;
+            case "LGT": return LOG_TOOLS     ;
 
             default:
                 throw new InvalidParameterException(

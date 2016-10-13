@@ -22,22 +22,22 @@ public class CryptoAddress implements Serializable {
     public CryptoAddress() {
     }
 
-    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
+    public void setCryptoCurrency (CryptoCurrency cryptoCurrency){
         this.cryptoCurrency = cryptoCurrency;
     }
-
-    public void setAddress(String address) {
+    
+    public void setAddress (String address){
         this.address = address;
         //TODO: validate the format according to each cryptocurrency.
     }
 
-    public String getAddress() {
-        return this.address;
+    public String getAddress (){
+        return  this.address;
 
     }
 
-    public CryptoCurrency getCryptoCurrency() {
-        return this.cryptoCurrency;
+    public CryptoCurrency getCryptoCurrency (){
+        return  this.cryptoCurrency;
 
     }
 
@@ -48,7 +48,7 @@ public class CryptoAddress implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof CryptoAddress) || obj == null)
+        if (!(obj instanceof CryptoAddress) || obj == null )
             return false;
 
         /**
@@ -64,8 +64,8 @@ public class CryptoAddress implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int hash = 1;
-        hash = prime * hash + ((cryptoCurrency == null ? 0 : cryptoCurrency.hashCode()));
-        hash = prime * hash + ((StringUtils.isBlank(address) ? 0 : address.hashCode()));
+        hash = prime * hash +  ((cryptoCurrency == null ? 0 : cryptoCurrency.hashCode()));
+        hash = prime * hash +  ((StringUtils.isBlank(address) ? 0 : address.hashCode()));
 
         return hash;
     }

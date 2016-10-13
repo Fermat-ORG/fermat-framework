@@ -88,7 +88,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                     parameters[i] = fermatModuleObjectWrapper;
                 } catch (ClassCastException e) {
                     //e.printStackTrace();
-                    Log.e(TAG, "ERROR: Objeto " + args[i].getClass().getName() + " no implementa interface Serializable");
+                    Log.e(TAG, new StringBuilder().append("ERROR: Objeto ").append(args[i].getClass().getName()).append(" no implementa interface Serializable").toString());
                     return null;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -133,7 +133,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                         //Method canceled and return an exception
                         objectFuture.cancel(true);
                         poolExecutor.purge();
-                        Log.i(TAG, "Timeout launched wainting for method: " + method.getName() + "in module: " + pluginVersionReference.toString3() + " ,this will return null");
+                        Log.i(TAG, new StringBuilder().append("Timeout launched wainting for method: ").append(method.getName()).append("in module: ").append(pluginVersionReference.toString3()).append(" ,this will return null").toString());
                         return new MethodTimeOutException();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -160,12 +160,12 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         }
         Log.i(TAG, "SendMessage return from server");
         if (objectArrived != null) {
-            Log.i(TAG, "Object: " + objectArrived.getObject());
+            Log.i(TAG, new StringBuilder().append("Object: ").append(objectArrived.getObject()).toString());
             if (objectArrived.getE() != null) return objectArrived.getE();
             isDataChuncked = objectArrived.isLargeData();
         } else {
             if (!method.getReturnType().equals(Void.TYPE))
-                Log.i(TAG, "Object arrived null in method: " + method.getName() + ", this happen when an error occur in the module or if you activate the timeout, please check your module and contact furszy if the error persist.");
+                Log.i(TAG, new StringBuilder().append("Object arrived null in method: ").append(method.getName()).append(", this happen when an error occur in the module or if you activate the timeout, please check your module and contact furszy if the error persist.").toString());
             return null;
         }
         Object o = null;
@@ -210,12 +210,12 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                             method.getName(),
                             parameters);
                 } catch (TransactionTooLargeException t1) {
-                    Log.e(TAG, "Method send too much data, remove large data from method's parameters, minimize data returned by the module or check the android framework documentation for make a large data background request, method=" + method.getName() + " at pluginVersionReference=" + pluginVersionReference.toString3());
+                    Log.e(TAG, new StringBuilder().append("Method send too much data, remove large data from method's parameters, minimize data returned by the module or check the android framework documentation for make a large data background request, method=").append(method.getName()).append(" at pluginVersionReference=").append(pluginVersionReference.toString3()).toString());
                     objectArrived = new FermatModuleObjectWrapper(new LargeDataRequestException(proxy, method, t1));
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 } catch (RuntimeException e) {
-                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in class " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
+                    Log.e(TAG, new StringBuilder().append("ERROR: Some of the parameters not implement Serializable interface in class ").append(proxy.getClass().getInterfaces()[0]).append(" in method:").append(method.getName()).toString());
                     e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -256,7 +256,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                         method.getName(),
                         parameters);
             } catch (TransactionTooLargeException t1) {
-                Log.e(TAG, "Method request too much data on the main thread, method=" + method.getName() + " at pluginVersionReference=" + pluginVersionReference.toString3());
+                Log.e(TAG, new StringBuilder().append("Method request too much data on the main thread, method=").append(method.getName()).append(" at pluginVersionReference=").append(pluginVersionReference.toString3()).toString());
                 fermatModuleObjectWrapper = new FermatModuleObjectWrapper(new LargeWorkOnMainThreadException(proxy, method, t1));
             } catch (DeadObjectException e) {
                 Log.e(TAG, "DeadObjectException");
@@ -265,7 +265,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 Log.e(TAG, "Explota acá");
                 e.printStackTrace();
             } catch (RuntimeException e) {
-                Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
+                Log.e(TAG, new StringBuilder().append("ERROR: Some of the parameters not implement Serializable interface in interface ").append(proxy.getClass().getInterfaces()[0]).append(" in method:").append(method.getName()).toString());
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -492,7 +492,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     class IncomingHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            Log.d(TAG, "Received from service: " + msg.arg1);
+            Log.d(TAG, new StringBuilder().append("Received from service: ").append(msg.arg1).toString());
             Bundle bundle = msg.getData();
             String id = bundle.getString(CommunicationDataKeys.DATA_REQUEST_ID);
             switch (msg.what) {

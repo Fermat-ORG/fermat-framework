@@ -201,11 +201,12 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
             }
 
 
-            // 2) Set update filter
+            // 2) Find the Intra users.
             table.addStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
 
-            // 3) Get a record to set data
-           DatabaseTableRecord record =  table.getEmptyRecord();
+            // 3) Get Intra users.
+            for (DatabaseTableRecord record : table.getRecords ()) {
 
                 double lat = 0;
                 double lng = 0;
@@ -223,9 +224,8 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
                 record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LAT_COLUMN, lat);
                 record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LONG_COLUMN, lng);
 
-            //update data
                 table.updateRecord(record);
-
+            }
 
             if(profileImage!=null)
                 persistNewUserProfileImage(publicKey, profileImage);
@@ -261,16 +261,22 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
                 throw new CantGetUserDeveloperIdentitiesException ("Cant get intra user identity list, table not found.", "Intra User Identity", "Cant get Intra User identity list, table not found.");
             }
 
-            // 2) Set filter to delete.
+
+            // 2) Find the Intra users.
             table.addStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
 
 
-            // 3) Get a record to set data
-            DatabaseTableRecord record =  table.getEmptyRecord();
+            // 3) Get Intra users.
+            for (DatabaseTableRecord record : table.getRecords ()) {
 
                 //set new values
-            record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME, "false");
-             table.updateRecord(record);
+                record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME, "false");
+
+
+                table.updateRecord(record);
+            }
+
 
 
         } catch (CantUpdateRecordException e){

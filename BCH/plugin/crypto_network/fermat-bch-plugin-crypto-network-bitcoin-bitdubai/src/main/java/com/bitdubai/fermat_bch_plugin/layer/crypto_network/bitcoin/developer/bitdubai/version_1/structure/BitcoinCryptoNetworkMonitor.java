@@ -323,7 +323,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  */
                 peerGroup.setDownloadTxDependencies(true);
                 peerGroup.start();
-               // peerGroup.startBlockChainDownload(cryptoNetworkBlockChain);
+                // peerGroup.startBlockChainDownload(cryptoNetworkBlockChain);
 
                 //start the controller of the blocks
                 BlocksDownloadControllerAgent blocksDownloadControllerAgent = new BlocksDownloadControllerAgent(2, TimeUnit.MINUTES, this.peerGroup, this.blockChain);
@@ -392,7 +392,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * The transaction is stored in the Wallet and the database, so I will make sure this is correct.
              */
             Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
-             validateTransactionExistsinDatabase(txHash);
+            validateTransactionExistsinDatabase(txHash);
 
             // gets the transaction from the wallet.
             Transaction transaction = wallet.getTransaction(sha256Hash);
@@ -434,14 +434,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             }
 
 
-             /**
-              * will update this transaction status to broadcasting.
-              */
-             try {
-                 dao.setBroadcastStatus(Status.BROADCASTING, connectedPeers, null, txHash);
-             } catch (CantExecuteDatabaseOperationException e) {
-                 e.printStackTrace();
-             }
+            /**
+             * will update this transaction status to broadcasting.
+             */
+            try {
+                dao.setBroadcastStatus(Status.BROADCASTING, connectedPeers, null, txHash);
+            } catch (CantExecuteDatabaseOperationException e) {
+                e.printStackTrace();
+            }
 
             System.out.println("***CryptoNetwork***  Broadcasting transaction " + txHash + "...");
 
@@ -1111,7 +1111,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             for (Peer peer : peerGroup.getConnectedPeers()){
                 Long peerValue = peer.getBestHeight();
-               int delta =  peerValue.intValue() - currentDownloadedBlocks;
+                int delta =  peerValue.intValue() - currentDownloadedBlocks;
 
                 System.out.println("***CryptoNetwork*** Peer notified block difference: " + peer.getPeerBlockHeightDifference());
 

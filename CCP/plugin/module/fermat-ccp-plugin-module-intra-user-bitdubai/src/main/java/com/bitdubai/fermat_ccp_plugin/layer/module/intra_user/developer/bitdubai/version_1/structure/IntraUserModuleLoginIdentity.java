@@ -28,8 +28,8 @@ public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity,Seri
      */
 
     public IntraUserModuleLoginIdentity(String alias,String publicKey,byte[] profileImage,long accurancy,
-           Frequency frequency,
-            Location location)
+                                        Frequency frequency,
+                                        Location location)
     {
         this.alias = alias;
         this.publicKey = publicKey;

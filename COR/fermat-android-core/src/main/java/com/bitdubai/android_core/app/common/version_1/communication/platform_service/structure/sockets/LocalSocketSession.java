@@ -56,13 +56,13 @@ public abstract class LocalSocketSession {
 
     public void startSender(){
         if(objectOutputStream!=null)throw new RuntimeException("InvalidState: objectOutputStream!=null");
-            try {
-                objectOutputStream = new ObjectOutputStream(localSocket.getOutputStream());
-                isSenderActive = true;
-                objectOutputStream.flush();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+        try {
+            objectOutputStream = new ObjectOutputStream(localSocket.getOutputStream());
+            isSenderActive = true;
+            objectOutputStream.flush();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -221,44 +221,44 @@ public abstract class LocalSocketSession {
                 if(localSocket!=null) {
                     isReceiverActive = true;
                     int read = -1;
-                        while (isReceiverActive) {
+                    while (isReceiverActive) {
 //                                if(objectInputStream.available()!=0) {
-                                    read = objectInputStream.read();
+                        read = objectInputStream.read();
 //                                }else {
 //                                    read = 0;
-                                    if (read != -1) {
-                                        Log.i(TAG, "pidiendo objeto");
-                                        FermatModuleObjectWrapper object = null;
-                                        try {
+                        if (read != -1) {
+                            Log.i(TAG, "pidiendo objeto");
+                            FermatModuleObjectWrapper object = null;
+                            try {
 //                                            Log.e(TAG,"LocalSocket states: "+ "connected: "+localSocket.isConnected()+", bound: "+localSocket.isBound());
-                                            if(localSocket.isConnected()) {
-                                                Object o = objectInputStream.readObject();
-                                                if(o instanceof FermatModuleObjectWrapper){
-                                                    object = (FermatModuleObjectWrapper) o;
-                                                }else{
-                                                    Log.e(TAG,"ERROR, object returned is not FermatModuleObjectWrapper. Object: "+o.getClass().getName());
-                                                }
-                                            }
-                                            else Log.e(TAG,"Socket cerrado, hace falta cerrar hilo");
-                                        } catch (OptionalDataException e) {
-                                            e.printStackTrace();
-                                            read = +objectInputStream.read();
-                                            Log.e(TAG, String.valueOf(read));
-                                        }
-                                        //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
-                                        if (object != null) {
-                                            onReceiveMessage(object);
-                                        } else {
-                                            Log.e(TAG, "Object receiver null");
-                                            Log.e(TAG, "Read: " + read);
-//                                        TimeUnit.SECONDS.sleep(2);
-                                        }
-                                    } else {
-                                        //Log.e(TAG,"end of input stream");
-//                                    isReceiverActive = false;
+                                if(localSocket.isConnected()) {
+                                    Object o = objectInputStream.readObject();
+                                    if(o instanceof FermatModuleObjectWrapper){
+                                        object = (FermatModuleObjectWrapper) o;
+                                    }else{
+                                        Log.e(TAG,"ERROR, object returned is not FermatModuleObjectWrapper. Object: "+o.getClass().getName());
                                     }
-//                                }
+                                }
+                                else Log.e(TAG,"Socket cerrado, hace falta cerrar hilo");
+                            } catch (OptionalDataException e) {
+                                e.printStackTrace();
+                                read = +objectInputStream.read();
+                                Log.e(TAG, String.valueOf(read));
+                            }
+                            //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
+                            if (object != null) {
+                                onReceiveMessage(object);
+                            } else {
+                                Log.e(TAG, "Object receiver null");
+                                Log.e(TAG, "Read: " + read);
+//                                        TimeUnit.SECONDS.sleep(2);
+                            }
+                        } else {
+                            //Log.e(TAG,"end of input stream");
+//                                    isReceiverActive = false;
                         }
+//                                }
+                    }
                 }
 
             } catch (IOException e) {

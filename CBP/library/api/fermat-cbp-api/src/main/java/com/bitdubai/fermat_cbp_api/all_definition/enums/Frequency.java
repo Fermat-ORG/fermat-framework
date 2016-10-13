@@ -10,10 +10,10 @@ public enum Frequency implements FermatEnum {
     /**
      * Definition types frecuency
      */
-    LOW("LO", 1000),
-    NORMAL("NL", 2000),
-    HIGH("HI", 3000),
-    NONE("NN", 0);
+    LOW    ("LO", 1000),
+    NORMAL ("NL", 2000),
+    HIGH   ("HI", 3000),
+    NONE   ("NN", 0);
 
     /**
      * Represent the code of the message status
@@ -31,7 +31,6 @@ public enum Frequency implements FermatEnum {
         this.code = code;
         this.refreshInterval = refreshInterval;
     }
-
     /**
      * Throw the method <code>getCode</code> you can get the code of the specific element of the enum.
      *
@@ -39,7 +38,7 @@ public enum Frequency implements FermatEnum {
      */
     @Override
     public String getCode() {
-        return this.code;
+        return this.code ;
     }
 
     /**
@@ -70,10 +69,9 @@ public enum Frequency implements FermatEnum {
 
     /**
      * This method returns the  pre-defined refresh interval
-     *
      * @return
      */
-    public int getRefreshInterval() {
+    public int getRefreshInterval(){
         return this.refreshInterval;
     }
 }

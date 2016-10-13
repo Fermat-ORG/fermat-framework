@@ -42,6 +42,7 @@ public interface DatabaseTable {
 
     void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException;
 
+
     DatabaseTableRecord getEmptyRecord();
 
     boolean isTableExists();

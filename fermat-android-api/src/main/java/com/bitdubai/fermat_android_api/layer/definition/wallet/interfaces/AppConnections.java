@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public abstract class AppConnections<S extends FermatSession> implements FermatAppConnection {
+public abstract class AppConnections<S extends FermatSession> implements FermatAppConnection{
 
     private WeakReference<Context> activity;
     private S fullyLoadedSession;
@@ -34,9 +34,10 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
         this.fullyLoadedSession = session;
     }
 
-    public S getFullyLoadedSession() {
+    public S getFullyLoadedSession(){
         return fullyLoadedSession;
     }
+
 
 
     public void setActivity(WeakReference<Context> activity) {
@@ -44,32 +45,28 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
     }
 
 
-    public NotificationPainter getNotificationPainter(String code) {
+    public NotificationPainter getNotificationPainter(String code){
         return null;
     }
 
-    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle) {
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle){
         return null;
     }
 
 
-    protected FermatSession getSession() {
-        return null;
-    }
-
-    ;
+    protected  FermatSession getSession(){return null;};
 
 
     public void changeApp(String appPublicKey) throws Exception {
         getApplicationManager().openFermatApp(appPublicKey);
     }
 
-    public void goHome() {
+    public void goHome(){
         getApplicationManager().openFermatHome();
     }
 
-    public FermatApplicationCaller getApplicationManager() {
-        return ((FermatApplicationSession) (activity.get()).getApplicationContext()).getApplicationManager();
+    public FermatApplicationCaller getApplicationManager(){
+        return ((FermatApplicationSession)(activity.get()).getApplicationContext()).getApplicationManager();
     }
 
 
@@ -81,7 +78,7 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
         this.activity = new WeakReference<Context>(context);
     }
 
-    public ResourceSearcher getResourceSearcher() {
+    public ResourceSearcher getResourceSearcher(){
         return null;
     }
 }

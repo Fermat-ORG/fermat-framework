@@ -6,7 +6,7 @@
     <string name="add_a_note_button">AGREGAR NOTA</string>
     <string name="amount">Monto</string>
     <string name="amount_to_restock_or_destock">Especifique un monto para restock o destock</string>
-    <string name="arrow" translatable="false">flecha</string>
+    <string name="arrow">flecha</string>
     <string name="at">\@</string>
     <string name="bought">Comprado</string>
     <string name="broker_bank_account_title">Cuentas Bancarias del Vendedor</string>

@@ -211,30 +211,30 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 
 
 
-            holder.getBtn_accept_request().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    try {
-                        //check amount + fee less than balance
+        holder.getBtn_accept_request().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    //check amount + fee less than balance
 
-                        long availableBalance = cryptoWallet.getBalance(com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(), blockchainNetworkType);
-                        if((data.getAmount() + BitcoinFee.valueOf(feeLevel).getFee()) < availableBalance)
-                        {
-                            cryptoWallet.approveRequest(data.getRequestId()
-                                    , referenceWalletSession.getModuleManager().getSelectedActorIdentity().getPublicKey());
-                            Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
-                            notifyDataSetChanged();
-                        }
-                        else
-                            showMessage(context, "Insufficient funds - Can't Accept Receive Payment" );
-
-                        onRefreshList.onRefresh();
-                    } catch (Exception e) {
-                        showMessage(context, "Cant Accept Receive Payment Exception- " + e.getMessage());
+                    long availableBalance = cryptoWallet.getBalance(com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(), blockchainNetworkType);
+                    if((data.getAmount() + BitcoinFee.valueOf(feeLevel).getFee()) < availableBalance)
+                    {
+                        cryptoWallet.approveRequest(data.getRequestId()
+                                , referenceWalletSession.getModuleManager().getSelectedActorIdentity().getPublicKey());
+                        Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
+                        notifyDataSetChanged();
                     }
+                    else
+                        showMessage(context, "Insufficient funds - Can't Accept Receive Payment" );
 
+                    onRefreshList.onRefresh();
+                } catch (Exception e) {
+                    showMessage(context, "Cant Accept Receive Payment Exception- " + e.getMessage());
                 }
-            });
+
+            }
+        });
 
         holder.getBtn_refuse_request().setOnClickListener(new View.OnClickListener() {
             @Override

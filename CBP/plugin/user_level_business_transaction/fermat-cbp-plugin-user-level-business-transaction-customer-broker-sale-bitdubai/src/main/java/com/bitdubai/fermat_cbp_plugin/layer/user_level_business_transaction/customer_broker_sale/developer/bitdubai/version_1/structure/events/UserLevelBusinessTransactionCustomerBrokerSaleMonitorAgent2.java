@@ -157,7 +157,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                 new Exception("UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 Error"));
     }
 
-
     private void doTheMainTask() {
         try {
             final String transactionStatusColumnName = UserLevelBusinessTransactionCustomerBrokerSaleConstants.

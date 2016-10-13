@@ -14,8 +14,10 @@ public enum ExposureLevel implements FermatEnum {
     /**
      * In order to do make code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    HIDE("HID"),
-    PUBLISH("PUB"),;
+    HIDE    ("HID"),
+    PUBLISH ("PUB"),
+
+    ;
 
     private final String code;
 
@@ -27,10 +29,8 @@ public enum ExposureLevel implements FermatEnum {
 
         switch (code) {
 
-            case "HID":
-                return HIDE;
-            case "PUB":
-                return PUBLISH;
+            case "HID": return HIDE   ;
+            case "PUB": return PUBLISH;
 
             default:
                 throw new InvalidParameterException(

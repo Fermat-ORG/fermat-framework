@@ -110,6 +110,8 @@ public class CryptoAddressesMiddlewarePluginRoot extends AbstractPlugin implemen
                 // execute pending crypto addresses requests
                 executorService.executePendingActions();
             } catch (CantExecutePendingActionsException e) {
+
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 e.printStackTrace();
             }
 

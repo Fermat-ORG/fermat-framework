@@ -14,7 +14,7 @@ public class Owner implements Serializable {
     }
 
     public Owner(String ownerAppPublicKey) {
-        this.ownerAppPublicKey = ownerAppPublicKey;
+        this.ownerAppPublicKey= ownerAppPublicKey;
     }
 
     public String getOwnerAppPublicKey() {

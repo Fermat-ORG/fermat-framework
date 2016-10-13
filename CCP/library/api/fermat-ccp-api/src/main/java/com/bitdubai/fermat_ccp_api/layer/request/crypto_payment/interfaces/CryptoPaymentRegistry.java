@@ -65,7 +65,7 @@ public interface CryptoPaymentRegistry {
      * @throws CryptoPaymentRequestNotFoundException     if we can't find the payment request.
      */
     void refuseRequest(UUID requestId) throws CantRejectCryptoPaymentRequestException,
-                                              CryptoPaymentRequestNotFoundException  ;
+            CryptoPaymentRequestNotFoundException  ;
 
     /**
      * Throw the method <code>approveRequest</code> you can approve a request and send the specified crypto.
@@ -77,7 +77,7 @@ public interface CryptoPaymentRegistry {
      * @throws InsufficientFundsException                if there's not the enough amount of crypto to complete the request.
      */
     void approveRequest(UUID requestId,long fee, FeeOrigin feeOrigin) throws CantApproveCryptoPaymentRequestException,
-                                               CryptoPaymentRequestNotFoundException   ,
+            CryptoPaymentRequestNotFoundException   ,
             InsufficientFundsException;
 
     /**
@@ -91,7 +91,7 @@ public interface CryptoPaymentRegistry {
      * @throws CryptoPaymentRequestNotFoundException   if we can't find the payment request.
      */
     CryptoPayment getRequestById(UUID requestId) throws CantGetCryptoPaymentRequestException ,
-                                                        CryptoPaymentRequestNotFoundException;
+            CryptoPaymentRequestNotFoundException;
 
     /**
      * Throw the method <code>listCryptoPaymentRequests</code> you can get the list of the requests related with a wallet.
@@ -193,9 +193,9 @@ public interface CryptoPaymentRegistry {
      * @throws CantListCryptoPaymentRequestsException
      */
     List<CryptoPayment> listCryptoPaymentRequestsByTypeAndNetwork(String walletPublicKey,
-                                                                         CryptoPaymentType type           ,
-                                                                         BlockchainNetworkType blockchainNetworkType,
-                                                                         Integer           max            ,
-                                                                         Integer           offset         ) throws CantListCryptoPaymentRequestsException ;
+                                                                  CryptoPaymentType type           ,
+                                                                  BlockchainNetworkType blockchainNetworkType,
+                                                                  Integer           max            ,
+                                                                  Integer           offset         ) throws CantListCryptoPaymentRequestsException ;
 
-    }
+}

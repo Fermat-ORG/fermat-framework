@@ -139,16 +139,16 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
             this.outgoingIntraActorDao.initialize(this.pluginId);
             this.transactionHandlerFactory = new OutgoingIntraActorTransactionHandlerFactory(this.eventManager,this.cryptoWalletManager, this.outgoingIntraActorDao,this.lossProtectedWalletManager);
             this.transactionProcessorAgent = new OutgoingIntraActorTransactionProcessorAgent(getErrorManager(),
-                                                                                            this.cryptoVaultManager,
-                                                                                            this.cryptoFermatVaultManager,
-                                                                                            this.bitcoinNetworkManager,
-                                                                                            this.cryptoWalletManager,
-                                                                                            this.outgoingIntraActorDao,
-                                                                                            this.transactionHandlerFactory,
-                                                                                            this.cryptoTransmissionNetworkServiceManager,
-                                                                                            this.eventManager,
-                                                                                            this.broadcaster,
-                                                                                            this.lossProtectedWalletManager);
+                    this.cryptoVaultManager,
+                    this.cryptoFermatVaultManager,
+                    this.bitcoinNetworkManager,
+                    this.cryptoWalletManager,
+                    this.outgoingIntraActorDao,
+                    this.transactionHandlerFactory,
+                    this.cryptoTransmissionNetworkServiceManager,
+                    this.eventManager,
+                    this.broadcaster,
+                    this.lossProtectedWalletManager);
             this.transactionProcessorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;

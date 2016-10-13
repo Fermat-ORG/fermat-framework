@@ -10,10 +10,10 @@ import org.junit.Test;
 public class CreatePrivateKeyStressLoad {
 
     @Test
-    public void createPrivateKeyTest() {
+    public void createPrivateKeyTest(){
         int times = 101;
         long now = System.currentTimeMillis();
-        for (int i = 0; i < times; i++) {
+        for (int i=0; i < times; i++){
             ECCKeyPair keyPair = new ECCKeyPair();
             keyPair.getPrivateKey();
             keyPair.getPublicKey();

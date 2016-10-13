@@ -19,7 +19,6 @@ public abstract class CBPActorConnection extends ActorConnection {
 
     /**
      * Default constructor with parameters
-     *
      * @param connectionId
      * @param linkedIdentity
      * @param publicKey
@@ -54,7 +53,6 @@ public abstract class CBPActorConnection extends ActorConnection {
 
     /**
      * This method returns the ActorConnection Location
-     *
      * @return
      */
     public Location getLocation() {

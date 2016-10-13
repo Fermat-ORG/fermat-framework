@@ -112,8 +112,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     private long balanceAvailable;
     private long realBalance;
 
-    private FermatWorker fermatWorker;
-
     LossProtectedWalletSettings lossProtectedWalletSettings;
 
     BlockchainNetworkType blockchainNetworkType;
@@ -569,7 +567,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         final int MAX_DECIMAL_FOR_RATE = 2;
         final int MIN_DECIMAL_FOR_RATE = 2;
 
-         fermatWorker = new FermatWorker(getActivity()) {
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground() throws Exception {
 
@@ -642,14 +640,5 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         fermatWorker.execute();
     }
 
-
-    @Override
-    public void onStop() {
-
-
-        if(fermatWorker != null)
-            fermatWorker.shutdownNow();
-        super.onStop();
-    }
 
 }

@@ -281,13 +281,6 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     }
 
 
-    @Override
-    public void onFragmentFocus() {
-        super.onFragmentFocus();
-
-        isRefreshing = false;
-        onRefresh();
-    }
 
     @Override
     protected boolean hasMenu() {

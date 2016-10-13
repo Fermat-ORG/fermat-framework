@@ -33,7 +33,7 @@ public class UniversalTime {
 
     private static final int ZONE_INDEX = 1;
 
-    private static final String SECONDS_TO_ADD = ":00";
+    private static final String SECONDS_TO_ADD =":00";
 
     private static final int HOUR_INDEX = 0;
 
@@ -45,6 +45,7 @@ public class UniversalTime {
      * This method returns a Date object with the local time based on UTC.
      *
      * @return
+     *
      * @throws CantGetUTCException
      */
     public static Date getLocatedUniversalTime() throws CantGetUTCException {
@@ -60,7 +61,9 @@ public class UniversalTime {
      * Try to use the String that provides from the <code>getUTCDateStringFromExternalURL()</code> method.
      *
      * @param utcString
+     *
      * @return
+     *
      * @throws CantGetUTCException
      */
     public static Date getLocalDateFromUTCDateString(String utcString) throws CantGetUTCException {
@@ -83,6 +86,7 @@ public class UniversalTime {
      * This method returns the UTC Date.
      *
      * @return
+     *
      * @throws CantGetUTCException
      */
     public static Date getUTC() throws CantGetUTCException {
@@ -98,7 +102,9 @@ public class UniversalTime {
      * Try to use the String that provides from the <code>getUTCDateStringFromExternalURL()</code> method.
      *
      * @param utcString
+     *
      * @return
+     *
      * @throws CantGetUTCException
      */
     public static Date getUTCDateFromUTCDateString(String utcString) throws CantGetUTCException {
@@ -119,6 +125,7 @@ public class UniversalTime {
      * This method returns a Sting with UTC
      *
      * @return
+     *
      * @throws CantGetUTCException
      */
     public static String getUTCDateStringFromExternalURL() throws CantGetUTCException {
@@ -153,7 +160,6 @@ public class UniversalTime {
 
     /**
      * This method parse a string to Date
-     *
      * @param simpleDateFormat
      * @param utcString
      * @return
@@ -172,7 +178,6 @@ public class UniversalTime {
 
     /**
      * This method fix the string date.
-     *
      * @param stringDate
      * @return
      * @throws CantGetUTCException
@@ -180,7 +185,7 @@ public class UniversalTime {
      */
     private static String fixDate(String stringDate) throws CantGetUTCException, ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
-        if (stringDate.contains("+")) {
+        if(stringDate.contains("+")){
             return restTime(simpleDateFormat, stringDate);
         }
         //In this version I'll remove this case
@@ -195,7 +200,6 @@ public class UniversalTime {
 
     /**
      * This method add additional time to a string date
-     *
      * @param simpleDateFormat
      * @param stringDate
      * @return
@@ -206,20 +210,20 @@ public class UniversalTime {
             throws ParseException,
             CantGetUTCException {
         String[] arrayDate = stringDate.split("\\+");
-        if (arrayDate.length == 2) {
+        if(arrayDate.length==2){
             String time = arrayDate[DATE_INDEX];
-            String zone = arrayDate[ZONE_INDEX] + SECONDS_TO_ADD;
+            String zone = arrayDate[ZONE_INDEX]+SECONDS_TO_ADD;
             int[] diffArray = parseStringToIntegerArray(zone);
             Date originalDate = parseStringToDate(simpleDateFormat, time);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(originalDate);
             //Fixing time process
-            calendar.set(Calendar.HOUR, calendar.get(Calendar.HOUR) - diffArray[HOUR_INDEX]);
-            calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) - diffArray[MINUTES_INDEX]);
-            calendar.set(Calendar.SECOND, calendar.get(Calendar.SECOND) - diffArray[SECONDS_INDEX]);
+            calendar.set(Calendar.HOUR,calendar.get(Calendar.HOUR)-diffArray[HOUR_INDEX]);
+            calendar.set(Calendar.MINUTE,calendar.get(Calendar.MINUTE)-diffArray[MINUTES_INDEX]);
+            calendar.set(Calendar.SECOND,calendar.get(Calendar.SECOND)-diffArray[SECONDS_INDEX]);
             Date fixedDate = calendar.getTime();
             return simpleDateFormat.format(fixedDate);
-        } else {
+        } else{
             throw new CantGetUTCException("Cannot fix the date format");
         }
     }
@@ -227,18 +231,17 @@ public class UniversalTime {
     /**
      * This method returns an integer array based in stringToParse
      * If there any kind of error, the value is set to 0
-     *
      * @param stringToParse
      * @return
      */
-    private static int[] parseStringToIntegerArray(String stringToParse) {
+    private static int[] parseStringToIntegerArray(String stringToParse){
         String[] array = stringToParse.split(":");
         int[] resultArray = new int[array.length];
         int counter = 0;
-        for (String element : array) {
-            try {
+        for(String element : array){
+            try{
                 resultArray[counter] = Integer.valueOf(element);
-            } catch (Exception e) {
+            } catch (Exception e){
                 resultArray[counter] = 0;
             }
             counter++;

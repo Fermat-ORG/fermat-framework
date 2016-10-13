@@ -36,7 +36,6 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
 
     /**
      * Constructor for CryptoBrokerStockTransactionImpl
-     *
      * @param runningBookBalance
      * @param runningAvailableBalance
      * @param previousBookBalance

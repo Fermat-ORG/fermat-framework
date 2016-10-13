@@ -103,17 +103,17 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
             list.add(new PreferenceSettingsSwithItem(1, getResources().getString(R.string.settings_notifications),(Boolean)appSession.getData(SessionConstant.NOTIFICATION_ENABLED)));
 
 
-                switch (blockchainNetworkType) {
-                    case PRODUCTION:
-                        previousSelectedItem = "MainNet";
-                        break;
-                    case REG_TEST:
-                        previousSelectedItem = "RegTest";
-                        break;
-                    case TEST_NET:
-                        previousSelectedItem = "TestNet";
-                        break;
-                }
+            switch (blockchainNetworkType) {
+                case PRODUCTION:
+                    previousSelectedItem = "MainNet";
+                    break;
+                case REG_TEST:
+                    previousSelectedItem = "RegTest";
+                    break;
+                case TEST_NET:
+                    previousSelectedItem = "TestNet";
+                    break;
+            }
 
 
 
@@ -150,9 +150,9 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
 
             //list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 
-           // list.add(new PreferenceSettingsLinkText(11, "Send Bitcoins To Loss Protected Wallet", "",15,Color.GRAY));
+            // list.add(new PreferenceSettingsLinkText(11, "Send Bitcoins To Loss Protected Wallet", "",15,Color.GRAY));
 
-           // list.add(new PreferenceSettingsLinkText(12, "Import Mnemonic code", "",15,Color.GRAY));
+            // list.add(new PreferenceSettingsLinkText(12, "Import Mnemonic code", "",15,Color.GRAY));
 
 
 
@@ -326,48 +326,48 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
     @Override
     public void dialogOptionSelected(String item, int position) {
         try {
-        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
-        bitcoinWalletSettings = referenceWalletSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey());
-
-
-        String feedLevel = "SLOW";
-
-        switch (item) {
-
-            case "MainNet":
-                blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
-
-                break;
-
-            case "TestNet":
-                blockchainNetworkType = BlockchainNetworkType.TEST_NET;
-                break;
-
-            case "RegTest":
-                blockchainNetworkType = BlockchainNetworkType.REG_TEST;
-                break;
-
-            default:
-                feedLevel = item;
-                bitcoinWalletSettings.setFeedLevel(feedLevel);
-                appSession.setData(SessionConstant.FEE_LEVEL, feedLevel);
-                break;
-
-        }
+            bitcoinWalletSettings = referenceWalletSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey());
 
 
-        if (blockchainNetworkType == null) {
-            if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
-                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-            } else {
-                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            String feedLevel = "SLOW";
+
+            switch (item) {
+
+                case "MainNet":
+                    blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
+
+                    break;
+
+                case "TestNet":
+                    blockchainNetworkType = BlockchainNetworkType.TEST_NET;
+                    break;
+
+                case "RegTest":
+                    blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+                    break;
+
+                default:
+                    feedLevel = item;
+                    bitcoinWalletSettings.setFeedLevel(feedLevel);
+                    appSession.setData(SessionConstant.FEE_LEVEL, feedLevel);
+                    break;
+
             }
-        }
 
-        bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
 
-        appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
+            if (blockchainNetworkType == null) {
+                if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
+                    blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                } else {
+                    blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                }
+            }
+
+            bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+
+            appSession.setData(SessionConstant.BLOCKCHANIN_TYPE, blockchainNetworkType);
 
 
 

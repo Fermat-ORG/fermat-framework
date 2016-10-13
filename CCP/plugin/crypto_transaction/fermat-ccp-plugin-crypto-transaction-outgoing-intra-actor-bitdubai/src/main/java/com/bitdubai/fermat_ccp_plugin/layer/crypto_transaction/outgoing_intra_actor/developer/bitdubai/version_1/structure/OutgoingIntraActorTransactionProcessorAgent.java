@@ -130,7 +130,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
         executorPool = new NetworkExecutorPool(2, 4, 2, TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(2), threadFactory, rejectedBroadcastExecutionHandler);
 
-}
+    }
 
 
     public void start() {
@@ -183,7 +183,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         private void initialize (ErrorManager                               errorManager,
                                  OutgoingIntraActorDao dao,
                                  CryptoWalletManager cryptoWalletManager,
-                                  CryptoVaultManager cryptoFermatVaultManager,
+                                 CryptoVaultManager cryptoFermatVaultManager,
                                  CryptoVaultManager cryptoVaultManager,
                                  BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
                                  OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
@@ -417,7 +417,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         }*/
 
 
-                     } catch (Exception e) {
+                    } catch (Exception e) {
                         reportUnexpectedException(FermatException.wrapException(e));
                         //if I spend more than five minutes I canceled
                        /* long sentDate = transaction.getTimestamp();
@@ -448,7 +448,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                 /**
                  * Now we proceed to send the transaction hash to the vault to send it(in future will be the transaction to the crypto network)
                  */
-            //TODO: Esto lo voy a hacer cuando rodrigo aplique sus cambios
+                //TODO: Esto lo voy a hacer cuando rodrigo aplique sus cambios
 //                for (OutgoingIntraActorTransactionWrapper transaction : transactionList){
 //                    ExecutorService executorService = Executors.newFixedThreadPool(6);
 //                    executorService.
@@ -541,7 +541,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                             revertPaymentRequest(transaction.getRequestId());
                         break;
                     case BASIC_WALLET_LOSS_PROTECTED_WALLET:
-                         BitcoinLossProtectedWallet bitcoinLossProtectedWallet = bitcoinLossProtectedWalletManager.loadWallet(transaction.getWalletPublicKey());
+                        BitcoinLossProtectedWallet bitcoinLossProtectedWallet = bitcoinLossProtectedWalletManager.loadWallet(transaction.getWalletPublicKey());
 
                         //change transaction state to reversed and update balance to revert
                         bitcoinLossProtectedWallet.revertTransaction(transaction,credit);

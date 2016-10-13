@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoCustomerActorConnection</code>
  * represents an actor connection for the crypto broker actor.
- * <p/>
+ * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
  * Updated by Manuel Perez on 07/05/2016
  */
@@ -18,7 +18,6 @@ public final class CryptoBrokerActorConnection extends CBPActorConnection {
 
     /**
      * Default constructor with parameters
-     *
      * @param connectionId
      * @param linkedIdentity
      * @param publicKey

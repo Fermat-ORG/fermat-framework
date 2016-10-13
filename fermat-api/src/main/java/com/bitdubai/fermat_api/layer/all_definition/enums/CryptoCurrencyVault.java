@@ -15,8 +15,10 @@ public enum CryptoCurrencyVault implements FermatVaultEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    BITCOIN_VAULT("BITV", CryptoCurrency.BITCOIN),
-    FERMAT_VAULT("FERV", CryptoCurrency.FERMAT);
+    BITCOIN_VAULT   ("BITV", CryptoCurrency.BITCOIN),
+    FERMAT_VAULT    ("FERV", CryptoCurrency.FERMAT)
+
+    ;
 
     private final String code;
 

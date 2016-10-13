@@ -145,7 +145,7 @@ public class FermatWalletSessionReferenceApp extends AbstractReferenceAppFermatS
         return "public_key_intra_user_commmunity";
     }
 
- private String searchConnectionPublicKey(String code){
+    private String searchConnectionPublicKey(String code){
         for(FermatApp fermatApp : getPosibleConnections()){
             if(fermatApp.getAppName().equals(code)){
                 return fermatApp.getAppPublicKey();

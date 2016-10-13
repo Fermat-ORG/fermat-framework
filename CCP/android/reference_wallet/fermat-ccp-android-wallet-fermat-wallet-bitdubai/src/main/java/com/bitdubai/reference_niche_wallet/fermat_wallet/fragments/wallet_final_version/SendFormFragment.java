@@ -164,13 +164,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             if(appSession.getData(SessionConstant.FEE_LEVEL) != null)
                 feeLevel = (String)appSession.getData(SessionConstant.FEE_LEVEL);
-                else
-                    feeLevel = BitcoinFee.NORMAL.toString();
+            else
+                feeLevel = BitcoinFee.NORMAL.toString();
 
 
             fermatWallet = appSession.getModuleManager();
-          //  InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-           // imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            //  InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            // imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
 
 
@@ -279,7 +279,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         fee_high_btn  =(RadioButton)  rootView.findViewById(R.id.fee_High);
         editFeedamount=(EditText)     rootView.findViewById(R.id.fee_amount);
 
-       // editFeedamount = (EditText) rootView.findViewById(R.id.feed_amount);
+        // editFeedamount = (EditText) rootView.findViewById(R.id.feed_amount);
 
         advances_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -307,7 +307,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         String feelevel = null;
         try {
-             feelevel = bitcoinConverter.getBTC(String.valueOf(BitcoinFee.valueOf(feeLevel).getFee()));
+            feelevel = bitcoinConverter.getBTC(String.valueOf(BitcoinFee.valueOf(feeLevel).getFee()));
 
         }catch (Exception e){
             e.printStackTrace();
@@ -797,7 +797,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                             BigDecimal operator = new BigDecimal(newAmount);
 
-                           if(operator.compareTo(minSatoshis) == 1 )
+                            if(operator.compareTo(minSatoshis) == 1 )
                             {
                                 //check amount + fee less than balance
                                 long total = 0;
@@ -835,7 +835,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                             }else{
                                 Toast.makeText(getActivity(), "Invalid Amount, must be greater than " +msg, Toast.LENGTH_LONG).show();
-                           }
+                            }
 
 
                         } catch (Exception e) {
@@ -882,7 +882,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
 
         } catch (Exception e) {
-                showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
+            showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
             e.printStackTrace();
         }
         return contacts;

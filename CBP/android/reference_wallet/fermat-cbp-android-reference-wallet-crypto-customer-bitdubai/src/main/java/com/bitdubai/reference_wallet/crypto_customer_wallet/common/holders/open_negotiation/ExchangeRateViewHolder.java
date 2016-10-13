@@ -126,12 +126,12 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private String fixFormat(String value) {
 
 
-            if (compareLessThan1(value)) {
-                numberFormat.setMaximumFractionDigits(8);
-            } else {
-                numberFormat.setMaximumFractionDigits(2);
-            }
-            return numberFormat.format(new BigDecimal(Double.valueOf(value)));
+        if (compareLessThan1(value)) {
+            numberFormat.setMaximumFractionDigits(8);
+        } else {
+            numberFormat.setMaximumFractionDigits(2);
+        }
+        return numberFormat.format(new BigDecimal(Double.valueOf(value)));
 
 
     }

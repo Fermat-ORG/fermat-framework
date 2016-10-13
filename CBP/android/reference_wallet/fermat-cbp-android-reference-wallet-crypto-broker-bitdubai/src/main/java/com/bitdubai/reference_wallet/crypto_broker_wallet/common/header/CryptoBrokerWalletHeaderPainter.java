@@ -96,7 +96,7 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
                     List<IndexInfoSummary> summaries = (List<IndexInfoSummary>) result[0];
                     session.setData(FragmentsCommons.EXCHANGE_RATES, summaries);
 
-                    if (progressBar != null) progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
 
                     if (summaries.isEmpty()) {
                         FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.cbw_no_market_rate);

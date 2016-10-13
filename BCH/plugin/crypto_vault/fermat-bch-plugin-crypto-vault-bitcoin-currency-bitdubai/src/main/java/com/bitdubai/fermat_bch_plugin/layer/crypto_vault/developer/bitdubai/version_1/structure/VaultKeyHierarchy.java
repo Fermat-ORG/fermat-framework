@@ -260,7 +260,7 @@ public class VaultKeyHierarchy extends KeyHierarchy {
      * @return
      */
     public List<ECKey> getDerivedKeys(HierarchyAccount account){
-       return getDerivedPrivateKeys(account);
+        return getDerivedPrivateKeys(account);
     }
 
     @Override

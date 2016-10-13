@@ -28,10 +28,8 @@ public enum PlatformComponents implements FermatEnum {
     public static PlatformComponents getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "PLAT":
-                return PlatformComponents.PLATFORM;
-            case "PLATIM":
-                return PlatformComponents.PLATFORM_IDENTITY_MANAGER;
+            case "PLAT":   return PlatformComponents.PLATFORM;
+            case "PLATIM": return PlatformComponents.PLATFORM_IDENTITY_MANAGER;
 
             default:
                 throw new InvalidParameterException(
