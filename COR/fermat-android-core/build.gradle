@@ -93,13 +93,13 @@ dependencies {
     compile project(':fermat-core')
     compile project(':fermat-osa-android-core')
     compile 'com.github.ozodrukh:CircularReveal:1.1.0'
-    // DMP Projects (Wallets)
+    // CCP Projects (Wallets)
     compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
     //compile(group: 'org.fermat.ccp.android.bitcoin.wallet', name: 'fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai', version: '1.0.1', ext: 'aar')
 
-    //    compile project(':fermat-ccp-android-clone-reference-nich-wallet')
-//    compile project(':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai')
-//    compile project(':fermat-ccp-android-wallet-fermat-wallet-bitdubai')
+    //    compile project(':fermat-ccp-android-clone-reference-nich-wallet'
+    compile project(':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai')
+    compile project(':fermat-ccp-android-wallet-fermat-wallet-bitdubai')
     // DMP Projects (Sub APPs)
     compile project(':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai')
     compile project(':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai')
@@ -163,7 +163,7 @@ dependencies {
     compile 'com.android.support:support-v13:23.1.1'
     //compile 'com.google.android.gms:play-services:6.5.87'
 
-     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.5.3'
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.5.3'
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
