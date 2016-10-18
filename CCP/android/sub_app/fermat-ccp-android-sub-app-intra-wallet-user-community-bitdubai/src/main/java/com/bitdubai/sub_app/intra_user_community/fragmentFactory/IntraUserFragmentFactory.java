@@ -6,8 +6,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.sub_app.intra_user_community.fragments.BrowserTabFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionOtherProfileFragment;
+import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionTabListFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsWorldFragment;
 
@@ -27,7 +29,7 @@ public class IntraUserFragmentFactory extends FermatFragmentFactory<ReferenceApp
 
         switch (fragments) {
             case CWP_WALLET_STORE_ALL_FRAGMENT:
-                currentFragment = ConnectionsWorldFragment.newInstance();
+                currentFragment = BrowserTabFragment.newInstance(); //ConnectionsWorldFragment.newInstance();
                 break;
             case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL_FRAGMENT:
                 currentFragment = null;
@@ -39,10 +41,11 @@ public class IntraUserFragmentFactory extends FermatFragmentFactory<ReferenceApp
                 currentFragment = ConnectionOtherProfileFragment.newInstance();
                 break;
             case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT:
-                currentFragment = ConnectionsWorldFragment.newInstance();
+                currentFragment = BrowserTabFragment.newInstance();
+                //currentFragment = ConnectionsWorldFragment.newInstance();
                 break;
             case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT:
-                currentFragment = ConnectionsListFragment.newInstance();
+                currentFragment = ConnectionTabListFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.toString(), "Swith failed");

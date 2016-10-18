@@ -225,13 +225,13 @@ public class BrowserTabFragment
 
             if(location!=null){
                 if(location.getLatitude() == 0)
-                //  showErrorGPS();
-                Toast.makeText(getActivity(), getResources().getString(R.string.turn_on_gps), Toast.LENGTH_SHORT);
+                    //  showErrorGPS();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.turn_on_gps), Toast.LENGTH_SHORT);
                 else
-                //update profile to reresh location
-                if(!location.getLatitude().equals(identity.getLocation().getLatitude()) )
-                    moduleManager.updateIntraUserIdentity(identity.getPublicKey(),identity.getAlias(),"",
-                            identity.getProfileImage(), identity.getAccuracy(),identity.getFrequency(),location);
+                    //update profile to reresh location
+                    if(!location.getLatitude().equals(identity.getLocation().getLatitude()) )
+                        moduleManager.updateIntraUserIdentity(identity.getPublicKey(),identity.getAlias(),"",
+                                identity.getProfileImage(), identity.getAccuracy(),identity.getFrequency(),location);
             }
 
 
