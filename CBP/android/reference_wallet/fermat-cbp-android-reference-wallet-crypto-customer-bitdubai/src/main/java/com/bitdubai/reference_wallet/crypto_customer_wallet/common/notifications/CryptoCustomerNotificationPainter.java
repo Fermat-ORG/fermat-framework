@@ -6,10 +6,10 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 
 /**
  * Created by guillermo on 04/03/16.
+ *
  */
 public class CryptoCustomerNotificationPainter extends NotificationPainter {
 
-    private RemoteViews remoteViews;
     private String title;
     private String image;
     private String textBody;
@@ -29,7 +29,7 @@ public class CryptoCustomerNotificationPainter extends NotificationPainter {
 
     @Override
     public RemoteViews getNotificationView(String code) {
-        return remoteViews;
+        return null;
     }
 
     @Override

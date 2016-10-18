@@ -82,12 +82,7 @@ public final class MatchingEngineMiddlewareEarningTransaction implements Earning
 
     @Override
     public String toString() {
-        return "MatchingEngineMiddlewareEarningTransaction{" +
-                "id=" + id +
-                ", earningCurrency=" + earningCurrency +
-                ", amount=" + amount +
-                ", state=" + state +
-                '}';
+        return "MatchingEngineMiddlewareEarningTransaction{" + "id=" + id + ", earningCurrency=" + earningCurrency + ", amount=" + amount + ", state=" + state + '}';
     }
 
     public int getDay() {

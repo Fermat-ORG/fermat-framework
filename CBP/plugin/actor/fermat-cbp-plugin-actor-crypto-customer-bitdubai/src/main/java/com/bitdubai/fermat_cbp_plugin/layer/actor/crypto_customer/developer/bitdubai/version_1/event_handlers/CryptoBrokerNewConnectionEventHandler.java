@@ -19,13 +19,13 @@ public class CryptoBrokerNewConnectionEventHandler implements FermatEventHandler
     public CryptoBrokerNewConnectionEventHandler(final ActorCustomerExtraDataEventActions actorExtraDataEventActions,
                                                  final CryptoCustomerActorPluginRoot cryptoCustomerActorPluginRoot) {
 
-        this.actorExtraDataEventAction   = actorExtraDataEventActions;
+        this.actorExtraDataEventAction = actorExtraDataEventActions;
         this.cryptoCustomerActorPluginRoot = cryptoCustomerActorPluginRoot;
     }
 
     /**
      * FermatEventHandler interface implementation
-     *
+     * <p/>
      * Plugin is started?
      * The event is the expected event?
      */
@@ -36,8 +36,7 @@ public class CryptoBrokerNewConnectionEventHandler implements FermatEventHandler
                 this.actorExtraDataEventAction.handleNewConnectionEvent();
             } else {
                 EventType eventExpected = EventType.CRYPTO_BROKER_ACTOR_CONNECTION_NEW_CONNECTION;
-                String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
-                        "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
+                String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode() + "\n" + "Event expected: " + eventExpected.toString() + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);
             }
         } else {

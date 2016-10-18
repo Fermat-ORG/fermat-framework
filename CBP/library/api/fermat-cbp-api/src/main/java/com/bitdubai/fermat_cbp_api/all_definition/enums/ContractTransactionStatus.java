@@ -81,8 +81,9 @@ public enum ContractTransactionStatus implements FermatEnum {
     NOTIFICATION_ACK_CONFIRMED("NACF");
 
     String code;
-    ContractTransactionStatus(String code){
-        this.code=code;
+
+    ContractTransactionStatus(String code) {
+        this.code = code;
     }
 
     //PUBLIC METHODS
@@ -96,9 +97,7 @@ public enum ContractTransactionStatus implements FermatEnum {
 
     @Override
     public String toString() {
-        return "ContractTransactionStatus{" +
-                "code='" + code + '\'' +
-                '}';
+        return "ContractTransactionStatus{" + "code='" + code + '\'' + '}';
     }
 
     //GETTER AND SETTERS

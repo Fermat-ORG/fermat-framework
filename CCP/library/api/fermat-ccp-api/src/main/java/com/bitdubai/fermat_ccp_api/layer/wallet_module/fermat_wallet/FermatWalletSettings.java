@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
@@ -17,11 +18,13 @@ public class FermatWalletSettings implements WalletSettings,Serializable {
     private IntraUserLoginIdentity lastSelectedIdentity;
     private boolean isPresentationHelpEnabled;
     private boolean isContactsHelpEnabled;
+    private boolean isPaymentHelpEnabled;
     private Map<Long, Long>  runningDailyBalance ;
     private BlockchainNetworkType blockchainNetworkType;
     private boolean notificationEnabled;
     private boolean isBlockchainDownloadEnabled;
-
+    private String feedLeel;
+    private String fiatCurrency;
     public FermatWalletSettings() {
         this.lastSelectedIdentity = null;
     }
@@ -44,7 +47,7 @@ public class FermatWalletSettings implements WalletSettings,Serializable {
         return null;
     }
 
-    public Map<Long, Long> getRunningDailyBalance()  {
+    public Map<Long, Long> getRunningDailyBalance(){
         return this.runningDailyBalance ;
     }
 
@@ -103,5 +106,25 @@ public class FermatWalletSettings implements WalletSettings,Serializable {
 
     public void setNotificationEnabled(boolean notificationEnabled) {
         this.notificationEnabled = notificationEnabled;
+    }
+
+    public String getFeedLevel() {
+        return this.feedLeel;
+    }
+
+    public void setFeedLevel(String feedLeel) {
+        this.feedLeel = feedLeel;
+    }
+
+    public String getFiatCurrency(){return this.fiatCurrency;}
+
+    public void setFiatCurrency(String fiatCurrency){this.fiatCurrency = fiatCurrency;}
+
+    public boolean getPaymentHelpEnabled() {
+        return this.isPaymentHelpEnabled;
+    }
+
+    public void setIsPaymentHelpEnabled(boolean isPaymentHelpEnabled) {
+        this.isPaymentHelpEnabled = isPaymentHelpEnabled;
     }
 }

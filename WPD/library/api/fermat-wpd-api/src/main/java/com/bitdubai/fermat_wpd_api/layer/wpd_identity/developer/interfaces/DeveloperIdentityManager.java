@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces;
 
-import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 
 import java.util.List;
 
@@ -9,8 +9,9 @@ import java.util.List;
  * The Interface <code>DeveloperIdentityManager</code>
  * indicates the functionality of a DeveloperIdentityManager
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
+ *
  * @version 1.0
  * @since Java JDK 1.7
  */

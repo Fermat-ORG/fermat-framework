@@ -16,7 +16,9 @@ jar {
 
 dependencies {
 //    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':fermat-api') }
+//    compile project(':fermat-api')
+    compile project(':fermat-pip-api')
+}
 
 task bchApiFatJar(type: Jar) {
     manifest {

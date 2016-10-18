@@ -40,14 +40,14 @@ public class IncomingMoneyEventWrapper {
 
     public IncomingMoneyEventWrapper(
             IncomingMoneyNotificationEvent incomingMoneyNotificationEvent
-    ){
-        this.eventId= UUID.randomUUID().toString();
-        this.receiverPublicKey=incomingMoneyNotificationEvent.getActorId();
-        this.cryptoAmount=incomingMoneyNotificationEvent.getAmount();
-        this.cryptoCurrency=incomingMoneyNotificationEvent.getCryptoCurrency();
-        this.walletPublicKey=incomingMoneyNotificationEvent.getWalletPublicKey();
-        this.senderPublicKey=incomingMoneyNotificationEvent.getIntraUserIdentityPublicKey();
-        this.timestamp=System.currentTimeMillis();
+    ) {
+        this.eventId = UUID.randomUUID().toString();
+        this.receiverPublicKey = incomingMoneyNotificationEvent.getActorId();
+        this.cryptoAmount = incomingMoneyNotificationEvent.getAmount();
+        this.cryptoCurrency = incomingMoneyNotificationEvent.getCryptoCurrency();
+        this.walletPublicKey = incomingMoneyNotificationEvent.getWalletPublicKey();
+        this.senderPublicKey = incomingMoneyNotificationEvent.getIntraUserIdentityPublicKey();
+        this.timestamp = System.currentTimeMillis();
         this.transactionHash = incomingMoneyNotificationEvent.getTransactionHash();
     }
 
@@ -103,24 +103,16 @@ public class IncomingMoneyEventWrapper {
         this.senderPublicKey = senderPublicKey;
     }
 
-    public String getTransactionHash(){
+    public String getTransactionHash() {
         return transactionHash;
     }
 
-    public void setTransactionHash(String transactionHash){
+    public void setTransactionHash(String transactionHash) {
         this.transactionHash = transactionHash;
     }
 
     @Override
     public String toString() {
-        return "IncomingMoneyEventWrapper{" +
-                "eventId='" + eventId + '\'' +
-                ", receiverPublicKey='" + receiverPublicKey + '\'' +
-                ", cryptoAmount=" + cryptoAmount +
-                ", cryptoCurrency=" + cryptoCurrency +
-                ", walletPublicKey='" + walletPublicKey + '\'' +
-                ", senderPublicKey='" + senderPublicKey + '\'' +
-                ", transactionHash='"+ transactionHash + '\'' +
-                '}';
+        return "IncomingMoneyEventWrapper{" + "eventId='" + eventId + '\'' + ", receiverPublicKey='" + receiverPublicKey + '\'' + ", cryptoAmount=" + cryptoAmount + ", cryptoCurrency=" + cryptoCurrency + ", walletPublicKey='" + walletPublicKey + '\'' + ", senderPublicKey='" + senderPublicKey + '\'' + ", transactionHash='" + transactionHash + '\'' + '}';
     }
 }

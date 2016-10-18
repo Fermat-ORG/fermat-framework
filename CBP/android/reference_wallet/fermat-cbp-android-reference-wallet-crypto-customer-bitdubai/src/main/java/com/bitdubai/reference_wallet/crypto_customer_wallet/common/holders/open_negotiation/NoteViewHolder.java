@@ -7,15 +7,15 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 /**
- *Created by Yordin Alayn on 23.01.16.
- * Based in NoteViewHolder of negotiation_details by nelson
+ * Created by Yordin Alayn on 23.01.16.
+ *
  */
 public class NoteViewHolder extends FermatViewHolder {
 
     TextView noteTextView;
 
     public NoteViewHolder(View itemView) {
-        super(itemView);
+        super(itemView, 0);
 
         noteTextView = (TextView) itemView.findViewById(R.id.note_text);
     }

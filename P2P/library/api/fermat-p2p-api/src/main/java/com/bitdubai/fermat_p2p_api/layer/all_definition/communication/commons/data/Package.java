@@ -6,6 +6,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Pack
 
 import java.io.Serializable;
 import java.security.InvalidParameterException;
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package</code> wrap
@@ -20,6 +21,12 @@ import java.security.InvalidParameterException;
 public class Package implements Serializable {
 
     /**
+     * Represent the id
+     * si es un ack el package id es el id del paquete enviado
+     */
+    private UUID packageId;
+
+    /**
      * Represent the content value
      */
     private String content;
@@ -28,11 +35,6 @@ public class Package implements Serializable {
      * Represent the packageType value
      */
     private PackageType packageType;
-
-    /**
-     * Represent the networkServiceTypeSource value
-     */
-    private NetworkServiceType networkServiceTypeSource;
 
     /**
      * Represent the destinationPublicKey
@@ -54,26 +56,54 @@ public class Package implements Serializable {
      *
      * @throws InvalidParameterException if the parameters are bad.
      */
-    protected Package(final String             content                 ,
-                      final NetworkServiceType networkServiceTypeSource,
-                      final PackageType        packageType             ,
-                      final String             signature               ,
-                      final String             destinationPublicKey    ) {
+    protected Package(
+            final UUID packageId,
+            final String             content                 ,
+            final NetworkServiceType networkServiceTypeSource,
+            final PackageType        packageType             ,
+            final String             signature               ,
+            final String             destinationPublicKey    ) {
 
         if (content == null)
             throw new InvalidParameterException("Content can't be null.");
 
-        if (networkServiceTypeSource == null)
-            throw new InvalidParameterException("networkServiceTypeSource can't be null.");
+        //esto no es necesario..
+//        if (networkServiceTypeSource == null)
+//            throw new InvalidParameterException("networkServiceTypeSource can't be null.");
 
         if (packageType == null)
-            throw new InvalidParameterException("packageType can't be null.");
+            throw new InvalidParameterException("packageType can't be null. ns type: "+networkServiceTypeSource);
 
-        if (signature == null)
-            throw new InvalidParameterException("signature can't be null.");
+//        if (signature == null)
+//            throw new InvalidParameterException("signature can't be null.");
 
+        this.packageId = packageId;
         this.content                  = content                 ;
-        this.networkServiceTypeSource = networkServiceTypeSource;
+        this.packageType              = packageType             ;
+        this.signature                = signature               ;
+        this.destinationPublicKey     = destinationPublicKey    ;
+    }
+
+    protected Package(
+            final UUID packageId,
+            final String             content                 ,
+            final PackageType        packageType             ,
+            final String             signature               ,
+            final String             destinationPublicKey    ) {
+
+        if (content == null)
+            throw new InvalidParameterException("Content can't be null.");
+
+        //esto no es necesario..
+
+        if (packageType == null)
+            throw new InvalidParameterException("packageType can't be null. content: "+content);
+
+//        if (signature == null)
+//            throw new InvalidParameterException("signature can't be null.");
+
+        this.packageId = packageId;
+        this.content                  = content                 ;
         this.packageType              = packageType             ;
         this.signature                = signature               ;
         this.destinationPublicKey     = destinationPublicKey    ;
@@ -106,14 +136,6 @@ public class Package implements Serializable {
         return packageType;
     }
 
-    /**
-     * Gets the value of networkServiceTypeSource and returns
-     *
-     * @return networkServiceTypeSource
-     */
-    public NetworkServiceType getNetworkServiceTypeSource() {
-        return networkServiceTypeSource;
-    }
 
     /**
      * Set the ClientDestination
@@ -131,12 +153,19 @@ public class Package implements Serializable {
         return destinationPublicKey;
     }
 
+    public UUID getPackageId() {
+        return packageId;
+    }
+
+    public void setPackageId(UUID packageId) {
+        this.packageId = packageId;
+    }
+
     /**
      * Construct a package instance encrypted with the destination identity public key and signed
      * whit the private key passed as an argument
      *
      * @param content                       content of the package.
-     * @param networkServiceTypeSource      type of network service who is sending the package.
      * @param packageType                   package type.
      * @param senderPrivateKey              the private key of the sender.
      * @param destinationIdentityPublicKey  the public key of the receiver.
@@ -144,7 +173,6 @@ public class Package implements Serializable {
      * @return Package signed instance
      */
     public static Package createInstance(final String             content                     ,
-                                         final NetworkServiceType networkServiceTypeSource    ,
                                          final PackageType        packageType                 ,
                                          final String             senderPrivateKey            ,
                                          final String             destinationIdentityPublicKey) {
@@ -160,12 +188,107 @@ public class Package implements Serializable {
                 senderPrivateKey
         );
 
+
         return new Package(
+                UUID.randomUUID(),
                 content                     ,
-                networkServiceTypeSource    ,
                 packageType                 ,
                 signature                   ,
                 destinationIdentityPublicKey
         );
+    }
+
+    public static Package createInstance(final UUID packageId,
+                                         final String             content                     ,
+                                         final PackageType        packageType                 ,
+                                         final String             senderPrivateKey            ,
+                                         final String             destinationIdentityPublicKey) {
+
+
+        String messageHash = AsymmetricCryptography.encryptMessagePublicKey(
+                content,
+                destinationIdentityPublicKey
+        );
+
+        String signature   = AsymmetricCryptography.createMessageSignature(
+                messageHash,
+                senderPrivateKey
+        );
+
+
+        return new Package(
+                packageId,
+                content                     ,
+                packageType                 ,
+                signature                   ,
+                destinationIdentityPublicKey
+        );
+    }
+
+
+//    public static Package rebuildInstance(final UUID packageId,
+//                                          final String             content                     ,
+////                                          final NetworkServiceType networkServiceTypeSource    ,
+//                                          final PackageType        packageType                 ,
+//                                          final String             destinationIdentityPublicKey) {
+//
+//
+////        String messageHash = AsymmetricCryptography.encryptMessagePublicKey(
+////                content,
+////                destinationIdentityPublicKey
+////        );
+////
+////        String signature   = AsymmetricCryptography.createMessageSignature(
+////                messageHash,
+////                senderPrivateKey
+////        );
+//
+//
+//        return new Package(
+//                packageId,
+//                content                     ,
+////                networkServiceTypeSource    ,
+//                packageType                 ,
+//                null                   ,
+//                destinationIdentityPublicKey
+//        );
+//    }
+
+    public static Package rebuildInstance(final UUID packageId,
+                                          final String             content                     ,
+                                          final PackageType        packageType                 ,
+                                          final String             destinationIdentityPublicKey) {
+
+
+//        String messageHash = AsymmetricCryptography.encryptMessagePublicKey(
+//                content,
+//                destinationIdentityPublicKey
+//        );
+//
+//        String signature   = AsymmetricCryptography.createMessageSignature(
+//                messageHash,
+//                senderPrivateKey
+//        );
+
+
+        return new Package(
+                packageId,
+                content                     ,
+                packageType                 ,
+                null                   ,
+                destinationIdentityPublicKey
+        );
+    }
+
+
+    @Override
+    public String toString() {
+        return "Package{" +
+                "packageId=" + packageId +
+                ", content='" + content + '\'' +
+                ", packageType=" + packageType +
+                ", destinationPublicKey='" + destinationPublicKey + '\'' +
+                ", signature='" + signature + '\'' +
+                '}';
     }
 }

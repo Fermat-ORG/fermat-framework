@@ -40,7 +40,7 @@
                 android:textAllCaps="true"
                 android:textColor="#1271A7"
                 android:textSize="14sp"
-                tools:text="Amount to Buy"/>
+                tools:text="@string/amount_buy"/>
 
             <View
                 android:layout_width="match_parent"
@@ -61,7 +61,7 @@
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
                     android:textSize="14sp"
-                    android:text="Buying"
+                    android:text="@string/buy"
                     android:textColor="@color/description_text_status_confirm"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton

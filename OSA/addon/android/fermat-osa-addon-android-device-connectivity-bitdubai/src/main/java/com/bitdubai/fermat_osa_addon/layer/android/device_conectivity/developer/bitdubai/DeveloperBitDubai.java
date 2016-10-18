@@ -1,38 +1,34 @@
 package com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.DeviceConnectivityAddonRoot;
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.AddonDeveloper;
 
 /**
  * Created by Natalia on 13/05/2015.
  */
-public class DeveloperBitDubai implements AddonDeveloper {
-
-    Addon addon;
+public class DeveloperBitDubai extends AbstractAddonDeveloper {
 
 
-
-
-
-    @Override
-    public Addon getAddon(){
-        return addon;
+    /**
+     * Constructor with params.
+     * assigns a developer to the addon developer class
+     *
+     * @param addonDeveloperReference
+     */
+    public DeveloperBitDubai(AddonDeveloperReference addonDeveloperReference) {
+        super(addonDeveloperReference);
     }
 
-
-
-
-
-    public DeveloperBitDubai(){
-        /**
-         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
-         * it is easy to choose.
-         */
-
-        addon = new DeviceConnectivityAddonRoot();
-
-
+    @Override
+    public void start() throws CantStartAddonDeveloperException {
+        try {
+            registerVersion(new DeviceConnectivityAddonRoot());
+        } catch (CantRegisterVersionException e) {
+            e.printStackTrace();
+        }
     }
 
 }

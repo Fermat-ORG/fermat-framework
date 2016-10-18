@@ -39,10 +39,9 @@ public class ProfilesExpandableAdapter
         taskList = new ArrayList<>();
         mInflater = LayoutInflater.from(context);
         this.res = res;
-        for (int i=0;i<parentItemList.size();i++)
+        for (int i = 0; i < parentItemList.size(); i++)
             onParentListItemExpanded(i);
     }
-
 
 
     /**
@@ -55,7 +54,7 @@ public class ProfilesExpandableAdapter
     @Override
     public GrouperViewHolder onCreateParentViewHolder(ViewGroup parent) {
         View view = mInflater.inflate(R.layout.com_grouper_list_item, parent, false);
-        return new GrouperViewHolder(view,res);
+        return new GrouperViewHolder(view, res);
     }
 
     /**
@@ -70,7 +69,6 @@ public class ProfilesExpandableAdapter
         View view = mInflater.inflate(R.layout.profiles_list_item, parent, false);
         return new ProfilesHolder(view);
     }
-
 
 
     /**
@@ -98,17 +96,15 @@ public class ProfilesExpandableAdapter
     }
 
     @Override
-    protected void onChangeDataSet(){
+    protected void onChangeDataSet() {
         for (BitmapWorkerTaskWithRes bitmapWorkerTaskWithRes : taskList) {
-            try{
+            try {
                 bitmapWorkerTaskWithRes.cancel(true);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
-
 
 
 }

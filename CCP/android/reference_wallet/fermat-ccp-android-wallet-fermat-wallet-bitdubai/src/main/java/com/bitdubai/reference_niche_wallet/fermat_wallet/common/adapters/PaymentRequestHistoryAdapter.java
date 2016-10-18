@@ -8,7 +8,14 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
@@ -31,7 +38,11 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     FermatWallet cryptoWallet;
 
     ReferenceAppFermatSession<FermatWallet> referenceWalletSession;
+    private FermatWalletSettings fermatWalletSettings = null;
+    private String feeLevel = "SLOW";
     Typeface tf;
+    BlockchainNetworkType blockchainNetworkType;
+
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
     }
@@ -45,6 +56,24 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         //this.mOnClickListener = onClickListener;
         this.onRefreshList = onRefresh;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+
+        try {
+            if(referenceWalletSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)referenceWalletSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+
+            if(referenceWalletSession.getData(SessionConstant.FEE_LEVEL) != null)
+                feeLevel = (String)referenceWalletSession.getData(SessionConstant.FEE_LEVEL);
+            else
+                feeLevel = BitcoinFee.NORMAL.toString();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
@@ -116,37 +145,37 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         String state = "";
         switch (data.getState()){
             case WAITING_RECEPTION_CONFIRMATION:
-                state = "Waiting for response";
+                state = this.context.getResources().getString(R.string.pr_status_1); //"Waiting for response";
                 break;
             case APPROVED:
-                state = "Accepted";
+                state = this.context.getResources().getString(R.string.pr_status_2); //"Accepted";
                 break;
             case PAID:
-                state = "Paid";
+                state = this.context.getResources().getString(R.string.pr_status_3); //"Paid";
                 break;
             case PENDING_RESPONSE:
-                state = "Pending response";
+                state = this.context.getResources().getString(R.string.pr_status_4); //"Pending response";
                 break;
             case ERROR:
-                state = "Error";
+                state = this.context.getResources().getString(R.string.pr_status_5); //"Error";
                 break;
             case NOT_SENT_YET:
-                state = "Not sent yet";
+                state = this.context.getResources().getString(R.string.pr_status_6); //"Not sent yet";
                 break;
             case PAYMENT_PROCESS_STARTED:
-                state = "Payment process started";
+                state = this.context.getResources().getString(R.string.pr_status_7); //"Payment process started";
                 break;
             case DENIED_BY_INCOMPATIBILITY:
-                state = "Denied by incompatibility";
+                state = this.context.getResources().getString(R.string.pr_status_8); //"Denied by incompatibility";
                 break;
             case IN_APPROVING_PROCESS:
-                state = "In approving process";
+                state = this.context.getResources().getString(R.string.pr_status_9); //"In approving process";
                 break;
             case REFUSED:
-                state = "Denied";
+                state = this.context.getResources().getString(R.string.pr_status_10); //"Denied";
                 break;
             default:
-                state = "Error, contact with support";
+                state = this.context.getResources().getString(R.string.pr_status_11); //"Error, contact with support";
                 break;
 
         }
@@ -182,23 +211,30 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 
 
 
-            holder.getBtn_accept_request().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    try {
+        holder.getBtn_accept_request().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    //check amount + fee less than balance
+
+                    long availableBalance = cryptoWallet.getBalance(com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(), blockchainNetworkType);
+                    if((data.getAmount() + BitcoinFee.valueOf(feeLevel).getFee()) < availableBalance)
+                    {
                         cryptoWallet.approveRequest(data.getRequestId()
                                 , referenceWalletSession.getModuleManager().getSelectedActorIdentity().getPublicKey());
                         Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
                         notifyDataSetChanged();
-//                        FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
-//                        FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
-                        onRefreshList.onRefresh();
-                    } catch (Exception e) {
-                        showMessage(context, "Cant Accept Receive Payment Exception- " + e.getMessage());
                     }
+                    else
+                        showMessage(context, "Insufficient funds - Can't Accept Receive Payment" );
 
+                    onRefreshList.onRefresh();
+                } catch (Exception e) {
+                    showMessage(context, "Cant Accept Receive Payment Exception- " + e.getMessage());
                 }
-            });
+
+            }
+        });
 
         holder.getBtn_refuse_request().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,8 +243,6 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                     cryptoWallet.refuseRequest(data.getRequestId());
                     Toast.makeText(context, "Request denied", Toast.LENGTH_SHORT).show();
                     notifyDataSetChanged();
-//                    FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
-//                    FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
                     onRefreshList.onRefresh();
                 } catch (Exception e) {
                     showMessage(context, "Cant Denied Receive Payment Exception- " + e.getMessage());

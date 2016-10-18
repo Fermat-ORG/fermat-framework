@@ -9,10 +9,12 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
@@ -79,8 +81,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
@@ -147,8 +147,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private FrameLayout contacts_container;
     private boolean connectionDialogIsShow = false;
     private boolean isScrolled = false;
+    private Toolbar toolbar;
 
-    private ExecutorService _executor;
+    FermatWorker fermatWorker;
+
 
     public static ContactsFragment newInstance() {
 
@@ -165,14 +167,18 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
 
-        _executor = Executors.newFixedThreadPool(2);
+
         try {
-        cryptoWallet = appSession.getModuleManager();
+            cryptoWallet = appSession.getModuleManager();
+            toolbar = getToolbar();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setElevation(10);
+            }
 
 
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(), "Unexpected error get Contact list - " + e.getMessage());
+            showMessage(getActivity(), getResources().getString(R.string.error_msg_getting_contact_list) + e.getMessage());
         }
     }
 
@@ -196,13 +202,12 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
-                            boolean isHelpEnabled = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
+                            boolean isHelpEnabled = (Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED);
 
                             if (isHelpEnabled)
                                 setUpTutorial(true);
-                        } catch (CantGetSettingsException e) {
-                            e.printStackTrace();
-                        } catch (SettingsNotFoundException e) {
+
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else {
@@ -212,7 +217,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             }, 300);
             return rootView;
         } catch (Exception e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
         return container;
@@ -247,8 +252,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button1 = itemBuilder
                 .setSize(65)
                 .setPadding(0,0,padding,0)
-                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.extra_user_button))
-                .setText("External User")
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.btc_extra_user_button))
+                .setText(getResources().getString(R.string.add_extra_user_text))
                 .setTextColor(Color.WHITE)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
                 .build();
@@ -258,8 +263,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button2 = itemBuilder
                 .setSize(65)
                 .setPadding(0,0,padding,0)
-                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.intra_user_button))
-                .setText("Fermat User")
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.btc_intra_user_button))
+                .setText(getResources().getString(R.string.add_fermat_user_text))
                 .setTextColor(Color.WHITE)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
                 .build();
@@ -280,7 +285,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         try {
             super.onActivityCreated(new Bundle());
         } catch (Exception e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
@@ -306,8 +311,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         mSearchView.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 String str = s.toString();
-                final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
-                mClearSearchImageButton.setVisibility(visibility);
+
+                //final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
+                // mClearSearchImageButton.setVisibility(visibility);
+
                 if (mPinnedHeaderAdapter != null) {
                     mPinnedHeaderAdapter.getFilter().filter(str);
                     mPinnedHeaderAdapter.notifyDataSetChanged();
@@ -329,9 +336,9 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
+    //    menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.bit_help_icon)
 
-        menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.bit_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+       //         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
     }
 
@@ -348,15 +355,14 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void onRefresh() {
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+        fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
 
@@ -388,14 +394,14 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                 }
                 else {
-                    makeText(getActivity(), "Cant't Get Contact List.", Toast.LENGTH_SHORT).show();
+                    makeText(getActivity(), getResources().getString(R.string.error_msg_getting_contact_list), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onErrorOccurred(Exception ex) {
 
-                makeText(getActivity(), "Cant't Get Contact List. " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                makeText(getActivity(), getResources().getString(R.string.error_msg_getting_contact_list) + ex.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -407,23 +413,23 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     }
 
     private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
-       // if (isHelpEnabled) {
-            ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), appSession, null, checkButton);
-            contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    Object b = appSession.getData(SessionConstant.CREATE_EXTRA_USER);
-                    if (b != null) {
-                        if ((Boolean) b) {
-                            lauchCreateContactDialog(false);
-                            appSession.removeData(SessionConstant.CREATE_EXTRA_USER);
-                        }
+        // if (isHelpEnabled) {
+        ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), appSession, null, checkButton);
+        contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Object b = appSession.getData(SessionConstant.CREATE_EXTRA_USER);
+                if (b != null) {
+                    if ((Boolean) b) {
+                        lauchCreateContactDialog(false);
+                        appSession.removeData(SessionConstant.CREATE_EXTRA_USER);
                     }
-
                 }
-            });
-            contactsTutorialPart1.show();
-      //  }
+
+            }
+        });
+        contactsTutorialPart1.show();
+        //  }
     }
 
     private void refreshAdapter() {
@@ -452,19 +458,21 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void setupViews(View rootView) {
         mSearchView = (EditText) rootView.findViewById(R.id.search_view);
+
         mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+
         contacts_container = (FrameLayout) rootView.findViewById(R.id.contacts_container);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
 
-        mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
+       /* mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSearchView.getText().clear();
             }
-        });
+        });*/
 
         mEmptyView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -593,7 +601,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         dialog.dismiss();
         walletContact = new WalletContact();
         walletContact.setName("");
-        registerForContextMenu(mClearSearchImageButton);
+       registerForContextMenu(mClearSearchImageButton);
+
         getActivity().openContextMenu(mClearSearchImageButton);
     }
 
@@ -603,6 +612,16 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
         this.walletResourcesProviderManager = walletResourcesProviderManager;
+    }
+
+
+    @Override
+    public void onStop() {
+
+
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+        super.onStop();
     }
 
     @Override
@@ -657,7 +676,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     @Override
     public void uncaughtException(Thread thread, Throwable throwable) {
         appSession.getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception());
-        Toast.makeText(getActivity(), "oooopps", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -678,13 +697,11 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         //imageBitmap = Bitmap.createScaledBitmap(imageBitmap,take_picture_btn.getWidth(),take_picture_btn.getHeight(),true);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(),getResources().getString(R.string.error_msg_loading_img), Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
-            //take_picture_btn.setBackground(new RoundedDrawable(imageBitmap, take_picture_btn));
-            //take_picture_btn.setImageDrawable(null);
-            //contactPicture = imageBitmap;
+
             this.lauchCreateContactDialog(true);
 
         }
@@ -783,6 +800,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             Map<Integer, CryptoWalletWalletContact> positions = new HashMap<>();
 
+            Map<Integer, CryptoWalletWalletContact> numberPositions = new HashMap<>();
+
             if (items != null)
                 if (items.size() > 0) {
                     MyComparator icc = new MyComparator();
@@ -815,19 +834,30 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         final String letterRegex = HeaderTypes.LETTER.getRegex();
 
                         // for each item in the list look if is number, symbol o letter and put it in the corresponding list
-                        for (int i = 0; i < items.size(); i++) {//) {
+                        for (int i = 0; i < items.size(); i++) {
                             CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
-                            if (currentSection.matches(numberRegex))
+                            if (currentSection.matches(numberRegex)) {
                                 // is Digit
                                 numbers.add(cryptoWalletWalletContact.getActorName());
-                            else if (currentSection.matches(letterRegex)) {
+                                numberPositions.put(i, cryptoWalletWalletContact);
+
+                            }
+                        }
+
+                        int pos= 0;
+
+                        for (int i = 0; i < items.size(); i++) {
+
+                            CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
+                            String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
+                            if (currentSection.matches(letterRegex)) {
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
-                                positions.put(i, cryptoWalletWalletContact);
-                            } else
-                                // Is other symbol
-                                symbols.add(cryptoWalletWalletContact.getActorName());
+                                positions.put(pos, cryptoWalletWalletContact);
+                                pos++;
+                            }
+
                         }
 
                         final String symbolCode = HeaderTypes.SYMBOL.getCode();
@@ -837,32 +867,40 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             // add the section position in the list section positions
                             mListSectionPos.add(mListItems.indexOf(symbolCode));
                             // add all the items in this group
-                            mListItems.addAll(symbols);
+                            //mListItems.addAll(symbols);
+                            mListItems.addAll(positions.values());
                         }
 
                         final String numberCode = HeaderTypes.NUMBER.getCode();
                         if (!numbers.isEmpty()) {
                             mListItems.add(numberCode);
                             mListSectionPos.add(mListItems.indexOf(numberCode));
-                            mListItems.addAll(numbers);
+                            mListItems.addAll(numberPositions.values());
                         }
+
+
 
                         // add the letters items in the list and his corresponding sections based on its first letter
                         String prevSection = "";
-                        for (int i = 0; i < letters.size(); i++) {//String currentItem : letters) {
-                            String currentItem = letters.get(i);
-                            String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
+                        try{
+                            for (int i = 0; i < letters.size(); i++) {//String currentItem : letters) {
+                                String currentItem = letters.get(i);
+                                String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
 
-                            if (!prevSection.equals(currentSection)) {
-                                mListItems.add(currentSection);
+                                if (!prevSection.equals(currentSection)) {
+                                    mListItems.add(currentSection);
 
-                                // array list of section positions
-                                mListSectionPos.add(mListItems.indexOf(currentSection));
-                                prevSection = currentSection;
+                                    // array list of section positions
+                                    mListSectionPos.add(mListItems.indexOf(currentSection));
+                                    prevSection = currentSection;
+                                }
+
+                                mListItems.add(positions.get(i));
                             }
-
-                            mListItems.add(positions.get(i));
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
+
                     }
 
                 }
@@ -958,5 +996,31 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             new Populate(constrainStr).execute(filtered);
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        try {
+
+            actionButton.setVisibility(View.GONE);
+            button1.setVisibility(View.GONE);
+            button2.setVisibility(View.GONE);
+
+            actionButton.detach();
+            actionButton.removeAllViewsInLayout();
+
+            button1.removeAllViewsInLayout();
+            button2.removeAllViewsInLayout();
+
+            actionButton = null;
+            button1 = null;
+            button2 = null;
+
+            actionMenu = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+//        ((ViewGroup)button1.getParent()).removeView(button1);
+        super.onDestroy();
     }
 }

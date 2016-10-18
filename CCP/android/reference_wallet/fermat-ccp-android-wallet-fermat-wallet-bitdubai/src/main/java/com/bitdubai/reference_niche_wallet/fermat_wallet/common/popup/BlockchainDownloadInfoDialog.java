@@ -99,6 +99,7 @@ public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceAppFerma
             if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
                 if(checkbox_not_show.isChecked()){
                     try {
+                        getSession().setData(SessionConstant.PRESENTATION_SCREEN_ENABLED,Boolean.FALSE);
                         FermatWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
                         bitcoinWalletSettings.setIsBlockchainDownloadEnabled(false);
                         getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);

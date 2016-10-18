@@ -12,8 +12,9 @@ public enum ContractDetailType implements FermatEnum {
     CUSTOMER_DETAIL("CDET");
 
     String code;
-    ContractDetailType(String code){
-        this.code=code;
+
+    ContractDetailType(String code) {
+        this.code = code;
     }
 
     //PUBLIC METHODS
@@ -31,9 +32,7 @@ public enum ContractDetailType implements FermatEnum {
 
     @Override
     public String toString() {
-        return "ContractDetailType{" +
-                "code='" + code + '\'' +
-                '}';
+        return "ContractDetailType{" + "code='" + code + '\'' + '}';
     }
 
     //GETTER AND SETTERS

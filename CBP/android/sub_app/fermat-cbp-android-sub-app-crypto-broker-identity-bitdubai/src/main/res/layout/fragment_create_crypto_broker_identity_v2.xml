@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f7f7">
+
+    <RelativeLayout
+        android:id="@+id/cht_image_background"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/picture_frame"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/crypto_broker_image"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="#00000000"
+            android:contentDescription="ignore"
+            android:src="@drawable/default_image" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/textViewChtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cht_image_background"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26dp"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/cbi_username"
+        android:textColor="#4270A3"
+        android:textSize="14sp" />
+    <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+
+    <EditText
+        android:id="@+id/crypto_broker_name"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/textViewChtTitle"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:foreground="#808080"
+        android:gravity="center"
+        android:hint="@string/cbi_name"
+        android:inputType="textPersonName"
+        android:maxLength="25"
+        android:textColor="#616161"
+        android:textColorHint="#B2B2B2"
+        android:textSize="16sp" />
+    <!--android:textAlignment="center"/>-->
+
+    <TextView
+        android:id="@+id/statusView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/crypto_broker_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/cbi_status"
+        android:textColor="#4270A3"
+        android:textSize="14sp"
+        android:visibility="gone" />
+    <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+
+    <EditText
+        android:id="@+id/crypto_broker_status"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/statusView"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:foregroundTint="#808080"
+        android:gravity="center"
+        android:hint="@string/cbi_status"
+        android:inputType="textPersonName"
+        android:textColor="#B2B2B2"
+        android:textColorHint="#808080"
+        android:textSize="16sp"
+        android:visibility="gone" />
+    <!--android:textAlignment="center"/>-->
+
+    <RelativeLayout
+        android:id="@+id/visibility_layout"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/crypto_broker_status"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/visibilityView"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:text="@string/cbi_visibility"
+            android:textColor="#4270A3"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/sw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/switch_off" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/create_crypto_broker_button"
+        android:layout_width="188dp"
+        android:layout_height="38dp"
+        android:layout_alignEnd="@+id/crypto_broker_name"
+        android:layout_alignLeft="@+id/crypto_broker_name"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/crypto_broker_name"
+        android:layout_alignStart="@+id/crypto_broker_name"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/accept_button"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btnRotate"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_above="@+id/create_crypto_broker_button"
+        android:layout_alignEnd="@+id/crypto_broker_status"
+        android:layout_alignLeft="@+id/crypto_broker_status"
+        android:layout_alignRight="@+id/crypto_broker_status"
+        android:layout_alignStart="@+id/crypto_broker_status"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#47BF73"
+        android:text="@string/cbi_rotate_image"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/placeholdImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/statusView"
+        android:layout_alignRight="@+id/statusView"
+        android:layout_alignTop="@+id/cht_image_background"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/cbi_progress_bar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/crypto_broker_name_text_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:gravity="right"
+        android:text="50"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

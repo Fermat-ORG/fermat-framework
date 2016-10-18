@@ -9,6 +9,11 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseI
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Map;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CURRENCY;
@@ -26,6 +31,9 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
     private FermatTextView currencyTextValue;
     private FermatTextView amountText;
     private FermatButton amountValue;
+    NumberFormat numberFormat = DecimalFormat.getInstance();
+    private View separatorLineUp;
+    private View separatorLineDown;
 
     public AmountViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
@@ -33,6 +41,8 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
         currencyTextValue = (FermatTextView) itemView.findViewById(R.id.cbw_amount_currency);
         amountText = (FermatTextView) itemView.findViewById(R.id.cbw_amount_text);
         amountValue = (FermatButton) itemView.findViewById(R.id.cbw_amount_value);
+        separatorLineDown = itemView.findViewById(R.id.cbw_line_down);
+        separatorLineUp = itemView.findViewById(R.id.cbw_line_up);
         amountValue.setOnClickListener(this);
     }
 
@@ -43,7 +53,13 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
         final ClauseType clauseType = (getHolderType() == TYPE_AMOUNT_TO_SELL) ? CUSTOMER_CURRENCY : BROKER_CURRENCY;
         final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
         currencyTextValue.setText(clauses.get(clauseType).getValue());
-        amountValue.setText(clause.getValue());
+
+        if (clause.getValue().equals("0.0") || clause.getValue().equals("0") || clause.getValue().equals("0,0")) {
+            amountValue.setText(defaultValue());
+        } else {
+            amountValue.setText(fixFormat(clause.getValue()));
+        }
+
     }
 
     @Override
@@ -78,12 +94,16 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
     protected void onAcceptedStatus() {
         amountText.setTextColor(getColor(R.color.description_text_status_accepted));
         currencyTextValue.setTextColor(getColor(R.color.description_text_status_accepted));
+        separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+        separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
     }
 
     @Override
     protected void setChangedStatus() {
         amountText.setTextColor(getColor(R.color.description_text_status_changed));
         currencyTextValue.setTextColor(getColor(R.color.description_text_status_changed));
+        separatorLineDown.setBackgroundColor(getColor(R.color.description_text_status_changed));
+        separatorLineUp.setBackgroundColor(getColor(R.color.description_text_status_changed));
     }
 
     @Override
@@ -91,4 +111,41 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
         amountText.setTextColor(getColor(R.color.description_text_status_confirm));
         currencyTextValue.setTextColor(getColor(R.color.text_value_status_confirm));
     }
+
+
+    private String fixFormat(String value) {
+
+        if (compareLessThan1(value)) {
+            numberFormat.setMaximumFractionDigits(8);
+        } else {
+            numberFormat.setMaximumFractionDigits(2);
+        }
+        return numberFormat.format(new BigDecimal(Double.valueOf(value)));
+
+    }
+
+
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
+
+        if (BigDecimal.valueOf(Double.valueOf(value)).
+                compareTo(BigDecimal.ONE) == -1) {
+            lessThan1 = true;
+        } else {
+            lessThan1 = false;
+        }
+
+        return lessThan1;
+    }
+
+    String defaultValue(){
+        DecimalFormatSymbols symbols =((DecimalFormat)  numberFormat).getDecimalFormatSymbols();
+        if(symbols.getDecimalSeparator()=='.'){
+            return "0.0";
+        }else{
+            return "0,0";
+        }
+    }
+
+
 }

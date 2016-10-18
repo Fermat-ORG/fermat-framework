@@ -105,7 +105,6 @@
         android:layout_height="wrap_content"
         android:text="@string/set_address_text"
         android:textColor="#12aca1"
-        android:paddingLeft="24dp"
         android:layout_alignParentTop="true"
         android:paddingTop="7dp"
         app:typeface="ROBOTO_REGULAR"

@@ -3,141 +3,155 @@ package com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bit
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes.ActorConnectionDao;
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionAlreadyExistsException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantChangeActorConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetProfileImageException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantInitializeActorConnectionDatabaseException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantPersistProfileImageException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantUpdateActorConnectionException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 06/04/16.
  * Edited by Miguel Rincon on 19/04/2016
  */
-public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorIdentity, ChatActorConnection> {
-
-    private ErrorManager errorManager;
-    private final UUID pluginId;
+public class ChatActorConnectionDao extends ActorConnectionDao<ChatActorConnection> {
 
     public ChatActorConnectionDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         super(pluginDatabaseSystem, pluginFileSystem, pluginId);
-        this.pluginId = pluginId;
     }
 
-    public ChatActorConnection chatActorConnectionExists(ChatLinkedActorIdentity linkedIdentity,
-                                         final String publicKey) throws CantGetActorConnectionException {
+    public void changeIdAndConnectionState(final UUID oldConnectionId,
+                                           final UUID newConnectionId,
+                                           final ConnectionState connectionState) throws CantChangeActorConnectionStateException {
 
-        if (linkedIdentity == null)
-            throw new CantGetActorConnectionException(null, "", "The linkedIdentity is required, can not be null");
+        if (oldConnectionId == null)
+            throw new CantChangeActorConnectionStateException("", "The oldConnectionId is required, can not be null");
 
-        if (publicKey == null)
-            throw new CantGetActorConnectionException(null, "", "The publicKey is required, can not be null");
+        if (newConnectionId == null)
+            throw new CantChangeActorConnectionStateException("", "The newConnectionId is required, can not be null");
+
+        if (connectionState == null)
+            throw new CantChangeActorConnectionStateException("", "The connectionState is required, can not be null");
 
         try {
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.addFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, linkedIdentity.getActorType(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, oldConnectionId, DatabaseFilterType.EQUAL);
 
-            actorConnectionsTable.loadToMemory();
+            final DatabaseTableRecord record = actorConnectionsTable.getEmptyRecord();
 
-            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+            record.setFermatEnum(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME, connectionState);
+            record.setUUIDValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, newConnectionId);
 
-            ChatActorConnection chatActorConnection = null;
+            actorConnectionsTable.updateRecord(record);
 
-            if(records != null && !records.isEmpty())
-                chatActorConnection = buildActorConnectionNewRecord(records.get(0));
+        } catch (final CantUpdateRecordException e) {
 
-            return chatActorConnection;
-
-        } catch (final CantLoadTableToMemoryException e) {
-
-            throw new CantGetActorConnectionException(
+            throw new CantChangeActorConnectionStateException(
                     e,
-                    "linkedIdentity: - publicKey: " + publicKey,
-                    "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-        } catch (InvalidParameterException e) {
-            throw new CantGetActorConnectionException(
-                    e,
-                    "linkedIdentity: - publicKey: " + publicKey,
-                    "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+                    "oldConnectionId: " + oldConnectionId+" | newConnectionId: " + newConnectionId+" | connectionState: " + connectionState,
+                    "Exception not handled by the plugin, there is a problem in database and i cannot update the record."
+            );
         }
     }
 
-    public final boolean registerChatActorConnection(final ChatActorConnection actorConnection, ChatActorConnection oldActorConnection) throws CantRegisterActorConnectionException,
-            ActorConnectionAlreadyExistsException {
+    public void changeId(final UUID oldConnectionId,
+                         final UUID newConnectionId) throws CantChangeActorConnectionStateException {
 
-        boolean isNew = true;
+        if (oldConnectionId == null)
+            throw new CantChangeActorConnectionStateException("", "The oldConnectionId is required, can not be null");
+
+
+        if (newConnectionId == null)
+            throw new CantChangeActorConnectionStateException("", "The newConnectionId is required, can not be null");
 
         try {
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            if (oldActorConnection != null) {
-                DatabaseTableRecord entityRecordOld = actorConnectionsTable.getEmptyRecord();
-                entityRecordOld = buildDatabaseRecord(
-                        entityRecordOld,
-                        oldActorConnection
-                );
-                deleteNewUserProfileImage(oldActorConnection.getPublicKey());
-                actorConnectionsTable.deleteRecord(entityRecordOld);
+            actorConnectionsTable.addUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, oldConnectionId, DatabaseFilterType.EQUAL);
 
-                if(actorConnection.getConnectionState().equals(oldActorConnection.getConnectionState())
-                        && (!actorConnection.getConnectionState().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)))
-                    isNew = false;
-            }
+            final DatabaseTableRecord record = actorConnectionsTable.getEmptyRecord();
 
-            DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
-            entityRecord = buildDatabaseRecord(
-                    entityRecord,
-                    actorConnection
+            record.setUUIDValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, newConnectionId);
+
+            actorConnectionsTable.updateRecord(record);
+
+        } catch (final CantUpdateRecordException e) {
+
+            throw new CantChangeActorConnectionStateException(
+                    e,
+                    "oldConnectionId: " + oldConnectionId+" | newConnectionId: " + newConnectionId,
+                    "Exception not handled by the plugin, there is a problem in database and i cannot update the record."
             );
-            if (actorConnection.getImage() != null && actorConnection.getImage().length > 0)
-                persistNewUserProfileImage(actorConnection.getPublicKey(), actorConnection.getImage());
+        }
+    }
 
-            actorConnectionsTable.insertRecord(entityRecord);
+    public void changeAlias(final UUID connectionId,
+                            final String alias) throws CantUpdateActorConnectionException {
 
-//            return buildActorConnectionNewRecord(entityRecord);
-            return isNew;
+        if (connectionId == null)
+            throw new CantUpdateActorConnectionException("", "The connectionId is required, can not be null");
 
 
-        } catch (final CantInsertRecordException e) {
+        if (alias == null)
+            throw new CantUpdateActorConnectionException("", "The alias is required, can not be null");
+        try {
 
-            throw new CantRegisterActorConnectionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-//        } catch (final CantGetActorConnectionException e) {
-//
-//            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to find if the actor connection exists.");
-//        } catch (CantUpdateRecordException e) {
-//
-//            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to update the actor connection");
-        } catch (CantDeleteRecordException e) {
-            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor.");
-        } catch (CantPersistProfileImageException e) {
-            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor image.");
+            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+           actorConnectionsTable.addUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
+
+            final DatabaseTableRecord record = actorConnectionsTable.getEmptyRecord();
+
+            record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME, alias);
+
+            actorConnectionsTable.updateRecord(record);
+
+        } catch (final CantUpdateRecordException e) {
+
+            throw new CantUpdateActorConnectionException(
+                    e,
+                    "connectionId: " + connectionId+" | alias: " + alias,
+                    "Exception not handled by the plugin, there is a problem in database and i cannot update the record."
+            );
+        }
+    }
+
+    public void changeImage(final UUID connectionId,
+                            final byte[] image) throws CantUpdateActorConnectionException {
+
+        if (connectionId == null)
+            throw new CantUpdateActorConnectionException("", "The connectionId is required, can not be null");
+
+
+        if (image == null)
+            throw new CantUpdateActorConnectionException("", "The image is required, can not be null");
+
+        try {
+
+            if (image.length > 0)
+                persistNewUserProfileImage(connectionId, image);
+
+        } catch (final CantPersistProfileImageException e) {
+
+            throw new CantUpdateActorConnectionException(
+                    e,
+                    "connectionId: " + connectionId+" | image: true",
+                    "Exception not handled by the plugin, there is a problem in database and i cannot update the record."
+            );
         }
     }
 
@@ -167,11 +181,10 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
         byte[] profileImage;
 
         try {
-            profileImage = getProfileImage(publicKey);
+            profileImage = getProfileImage(connectionId);
         } catch (FileNotFoundException e) {
             profileImage = new byte[0];
         } catch (CantGetProfileImageException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new InvalidParameterException(
                     e,
                     "",
@@ -195,47 +208,8 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
         );
     }
 
-    @Override
-    public void initializeDatabase() throws CantInitializeActorConnectionDatabaseException {
 
-        try {
-
-            database = this.pluginDatabaseSystem.openDatabase(
-                    pluginId,
-                    ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME
-            );
-
-        } catch (final CantOpenDatabaseException cantOpenDatabaseException) {
-
-            throw new CantInitializeActorConnectionDatabaseException(
-                    cantOpenDatabaseException,
-                    "databaseName: " + ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
-                    "There was an error trying to open database."
-            );
-
-        } catch (final DatabaseNotFoundException databaseNotFoundException) {
-
-            ChatActorConnectionDatabaseFactory actorConnectionActorConnectionDatabaseFactory = this.getChatActorConnectionDatabaseFactory();
-
-            try {
-
-                database = actorConnectionActorConnectionDatabaseFactory.createDatabase(
-                        pluginId,
-                        ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME
-                );
-
-            } catch (final CantCreateDatabaseException cantCreateDatabaseException) {
-
-                throw new CantInitializeActorConnectionDatabaseException(
-                        cantCreateDatabaseException,
-                        "databaseName: " + ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
-                        "There was an error trying to create database."
-                );
-            }
-        }
-    }
-
-    protected ChatActorConnectionDatabaseFactory getChatActorConnectionDatabaseFactory() {
+    protected ChatActorConnectionDatabaseFactory getActorConnectionDatabaseFactory() {
 
         return new ChatActorConnectionDatabaseFactory(pluginDatabaseSystem);
     }

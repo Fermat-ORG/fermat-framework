@@ -116,7 +116,9 @@ public class StockStatisticsFragment extends AbstractFermatFragment implements C
             }
         });
 
-        String[] meses = {"JAN", "FEB", "MAR", "MAY", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
+        String[] meses = {str(R.string.jan), str(R.string.feb), str(R.string.mar), str(R.string.apr),
+                str(R.string.may), str(R.string.jun), str(R.string.jul), str(R.string.aug), str(R.string.sep),
+                str(R.string.oct), str(R.string.nov), str(R.string.dec)};
 
         TextView month = (TextView) layout.findViewById(R.id.month);
         TextView year = (TextView) layout.findViewById(R.id.year);
@@ -127,6 +129,10 @@ public class StockStatisticsFragment extends AbstractFermatFragment implements C
         year.setText(idyear);
 
         return layout;
+    }
+
+    private String str(int id) {
+        return getResources().getString(id);
     }
 
     public void bind(StockStatisticsData data) {

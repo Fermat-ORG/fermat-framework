@@ -67,8 +67,6 @@ public class BankAccountData implements BankAccountNumber {
 
     @Override
     public String toString() {
-        return "Bank: " + bankName +
-                "\nAccount Type: " + accountType.getFriendlyName() +
-                "\nNumber: " + account;
+        return "Bank: " + bankName + "\nAccount Type: " + accountType.getFriendlyName() + "\nNumber: " + account;
     }
 }

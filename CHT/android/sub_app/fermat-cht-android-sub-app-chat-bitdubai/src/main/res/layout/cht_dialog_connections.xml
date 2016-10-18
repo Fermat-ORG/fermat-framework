@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical"
-    android:textColor="#00a99d"
+    android:textColor="@color/cht_dialog_title"
     android:background="@drawable/rounded_corners">
     <View
         android:id="@+id/view_color"
@@ -23,33 +23,29 @@
         android:paddingLeft="1dp"
         android:paddingRight="1dp"
         android:paddingStart="1dp"
-        android:paddingTop="20dp"
-        >
+        android:paddingTop="20dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_title"
-                android:text="Add connections"
+                android:text="@string/cht_dialog_add_connection"
                 android:paddingLeft="5dp"
                 android:layout_weight="1"
                 android:textSize="20sp"
-                android:textColor="#00a99d"
+                android:textColor="@color/cht_dialog_title"
                 app:typeface="CAVIAR_DREAMS_BOLD"
-                android:gravity="center_horizontal"
-                />
+                android:gravity="center_horizontal" />
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_weight="0.4"
                 android:id="@+id/img_icon"
                 android:src="@drawable/chat_subapp"
-                android:paddingBottom="2dp"
-                />
+                android:paddingBottom="2dp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -57,18 +53,16 @@
             android:orientation="vertical"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:weightSum="1"
-            >
+            android:weightSum="1">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                />
+                android:orientation="horizontal" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:textColor="@color/cht_dialog_search"
                 android:drawableRight="@drawable/cht_ic_action_search"
                 android:id="@+id/SearchFilterAddContacts"
                 android:layout_gravity="center_horizontal" />
@@ -79,25 +73,21 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_line_dialog"
-                android:layout_marginBottom="12dp"
-                />
+                android:layout_marginBottom="12dp" />
                 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    >
+                    android:layout_height="match_parent">
                     <ListView android:id="@+id/list"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         style="@style/ContactListView"
-                        android:divider="@drawable/cht_list_divider"
-                        />
+                        android:divider="@drawable/cht_list_divider" />
                     <TextView android:id="@+id/text"
                         android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:textColor="#000"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        />
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
                 </FrameLayout>
                 <View
                     android:layout_width="match_parent"
@@ -105,24 +95,21 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:textColor="#000"
-                    android:background="@drawable/round_corner_line_dialog"
-                    />
+                    android:background="@drawable/round_corner_line_dialog" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginLeft="15dp"
-            >
+            android:layout_marginLeft="15dp">
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:textColor="#000"
-                android:background="@drawable/round_corner_line_dialog"
-                />
+                android:background="@drawable/round_corner_line_dialog" />
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -130,28 +117,17 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/round_corner_line_dialog"
-            android:layout_marginBottom="12dp"
-            />
+            android:layout_marginBottom="12dp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginLeft="15dp"
-            >
+            android:layout_marginLeft="15dp">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-                <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_add"
-                    android:background="@drawable/cht_ok_buttom"
-                    android:textSize="12dp"
-                    android:layout_gravity="center_horizontal"
-                    /> -->
+                android:orientation="vertical">
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

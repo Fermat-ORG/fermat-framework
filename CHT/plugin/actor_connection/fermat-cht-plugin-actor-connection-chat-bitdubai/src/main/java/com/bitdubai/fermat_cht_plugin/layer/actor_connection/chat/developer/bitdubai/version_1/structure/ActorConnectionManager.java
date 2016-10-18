@@ -11,12 +11,13 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisc
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantUpdateActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
+import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
@@ -32,8 +33,6 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatMa
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatConnectionInformation;
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.ChatActorConnectionPluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.database.ChatActorConnectionDao;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -45,21 +44,18 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
     private final ChatManager chatNetworkService;
     private final ChatActorConnectionDao dao;
     private ChatActorConnectionPluginRoot chatActorConnectionPluginRoot;
-    private final PluginVersionReference pluginVersionReference;
 
     public ActorConnectionManager(final ChatManager chatNetworkService,
                                   final ChatActorConnectionDao dao,
-                                  final ChatActorConnectionPluginRoot chatActorConnectionPluginRoot,
-                                  final PluginVersionReference pluginVersionReference) {
+                                  final ChatActorConnectionPluginRoot chatActorConnectionPluginRoot) {
 
         this.chatNetworkService = chatNetworkService;
         this.dao = dao;
         this.chatActorConnectionPluginRoot = chatActorConnectionPluginRoot;
-        this.pluginVersionReference = pluginVersionReference;
     }
 
     @Override
-    public ChatActorConnectionSearch getSearch(ChatLinkedActorIdentity actorIdentitySearching) {
+    public ChatActorConnectionSearch getSearch(ActorIdentity actorIdentitySearching) {
         return new ActorConnectionSearch(actorIdentitySearching, dao);
     }
 
@@ -74,73 +70,83 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
             if (actorReceiving.getActorType() != Actors.CHAT)
                 throw new UnsupportedActorTypeException("actorSending: " + actorSending + " - actorReceiving: " + actorReceiving, "Unsupported actor type exception.");
 
+            final long currentTime = System.currentTimeMillis();
+
             /**
              * Here I generate the needed information to register the new actor connection record.
              */
-            UUID newConnectionId = UUID.randomUUID();
+
             final ChatLinkedActorIdentity linkedIdentity = new ChatLinkedActorIdentity(
                     actorSending.getPublicKey(),
                     actorSending.getActorType()
             );
 
-//            ActorConnection actorConnectionCache = dao.chatActorConnectionExists(linkedIdentity,actorReceiving.getPublicKey());
-            ConnectionState connectionState = null;
-//            if(actorConnectionCache!=null)
-//            connectionState = actorConnectionCache.getStatus();
-//
-//            if(connectionState != null && connectionState.equals(ConnectionState.PENDING_LOCALLY_ACCEPTANCE))
-//                connectionState = ConnectionState.CONNECTED;
-//            else
+            try {
 
-            ChatActorConnection oldActorConnection = dao.chatActorConnectionExists(linkedIdentity, actorReceiving.getPublicKey());
-            if(oldActorConnection != null) {
-                //if (!oldActorConnection.getStatus().getCode().equals(ConnectionState.CONNECTED.getCode()))
-                connectionState = oldActorConnection.getConnectionState();//ConnectionState.CONNECTED;
+                ChatActorConnection oldActorConnection = dao.getActorConnection(linkedIdentity, actorReceiving.getPublicKey());
 
-                //TODO: Vilchez esto debemos de analizar todo lo que estaba no funcionaba, pero de esta forma quedo estable
-                if(connectionState.getCode().equals(ConnectionState.DISCONNECTED_LOCALLY.getCode())) connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
-                if(connectionState.getCode().equals(ConnectionState.DISCONNECTED_REMOTELY.getCode())) connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
-                if(connectionState.getCode().equals(ConnectionState.DENIED_LOCALLY.getCode())) connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
-                if(connectionState.getCode().equals(ConnectionState.DENIED_REMOTELY.getCode())) connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
-                //TODO: Esto lo coloque porque cada vez que llegaba aca se creaba un nuevo ID y entonces cuando tratabas desconectar explotaba porque no lo conseguia
-                newConnectionId = oldActorConnection.getConnectionId();
-                //else
-                //    connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+                ConnectionState connectionState = oldActorConnection.getConnectionState();
 
-            }else connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
-            final long currentTime = System.currentTimeMillis();
+                if (connectionState == ConnectionState.PENDING_LOCALLY_ACCEPTANCE) {
+                    // if it is expecting a local acceptance it will mark it as connected and send the acceptance
+                    // todo we should raise an event in case the acceptance cannot be send (connection problem | counter-part not connected)
+                    // todo validate if the request is sent, otherwise we should raise an event and set the status to "CANNOT_SEND_ACCEPTANCE" in android we should show "send acceptance again"
 
-            final ChatActorConnection actorConnection = new ChatActorConnection(
-                    newConnectionId,
-                    linkedIdentity,
-                    actorReceiving.getPublicKey(),
-                    actorReceiving.getAlias(),
-                    actorReceiving.getImage(),
-                    connectionState,
-                    currentTime,
-                    currentTime,
-                    actorReceiving.getStatus()
-            );
+                    dao.changeConnectionState(oldActorConnection.getConnectionId(), ConnectionState.CONNECTED);
+                    chatNetworkService.acceptConnection(oldActorConnection.getConnectionId());
 
-            /**
-             * I register the actor connection.
-             */
-            if(!dao.registerChatActorConnection(actorConnection,oldActorConnection)) return;
+                } else {
 
-            final ChatConnectionInformation connectionInformation = new ChatConnectionInformation(
-                    newConnectionId,
-                    actorSending.getPublicKey(),
-                    actorSending.getActorType(),
-                    actorSending.getAlias(),
-                    actorSending.getImage(),
-                    actorReceiving.getPublicKey(),
-                    currentTime
-            );
+                    // if i already have the connection created but i want to resend the connection i will put it in pending remotely acceptance and send the request again
+                    // todo validate if the request is sent, otherwise we should raise an event and set the status to "CANNOT_SEND_REQUEST" in android we should show "send request again"
 
-            /**
-             * i send the request through the network service.
-             */
-            chatNetworkService.requestConnection(connectionInformation);
+                    dao.changeConnectionState(oldActorConnection.getConnectionId(), ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
+
+                    final ChatConnectionInformation connectionInformation = new ChatConnectionInformation(
+                            oldActorConnection.getConnectionId(),
+                            actorSending.getPublicKey(),
+                            actorSending.getActorType(),
+                            actorSending.getAlias(),
+                            actorSending.getImage(),
+                            actorReceiving.getPublicKey(),
+                            currentTime
+                    );
+
+                    chatNetworkService.requestConnection(connectionInformation);
+                }
+            } catch (ActorConnectionNotFoundException actorConnectionNotFound) {
+
+                // if there is not a previous connection i will create it
+                // todo validate if the request is sent, otherwise we should raise an event and set the status to "CANNOT_SEND_REQUEST" in android we should show "send request again"
+
+                UUID newConnectionId = UUID.randomUUID();
+
+                final ChatActorConnection actorConnection = new ChatActorConnection(
+                        newConnectionId,
+                        linkedIdentity,
+                        actorReceiving.getPublicKey(),
+                        actorReceiving.getAlias(),
+                        actorReceiving.getImage(),
+                        ConnectionState.PENDING_REMOTELY_ACCEPTANCE,
+                        currentTime,
+                        currentTime,
+                        actorReceiving.getStatus()
+                );
+
+                dao.registerActorConnection(actorConnection);
+
+                final ChatConnectionInformation connectionInformation = new ChatConnectionInformation(
+                        newConnectionId,
+                        actorSending.getPublicKey(),
+                        actorSending.getActorType(),
+                        actorSending.getAlias(),
+                        actorSending.getImage(),
+                        actorReceiving.getPublicKey(),
+                        currentTime
+                );
+
+                chatNetworkService.requestConnection(connectionInformation);
+            }
 
         } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {
 
@@ -401,6 +407,43 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
 
             chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantAcceptActorConnectionRequestException(exception, "connectionId: " + connectionId, "Unhandled error.");
+        }
+    }
+
+    @Override
+    public void updateAlias(UUID connectionId, String alias) throws CantUpdateActorConnectionException, ActorConnectionNotFoundException {
+
+        try {
+
+            dao.changeAlias(connectionId, alias);
+
+        } catch (final CantUpdateActorConnectionException innerException) {
+
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, innerException);
+            throw innerException;
+        }  catch (final Exception exception) {
+
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new CantUpdateActorConnectionException(exception, "connectionId: " + connectionId, "Unhandled error.");
+        }
+    }
+
+
+    @Override
+    public void updateImage(UUID connectionId, byte[] image) throws CantUpdateActorConnectionException, ActorConnectionNotFoundException {
+
+        try {
+
+            dao.changeImage(connectionId, image);
+
+        } catch (final CantUpdateActorConnectionException innerException) {
+
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, innerException);
+            throw innerException;
+        }  catch (final Exception exception) {
+
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new CantUpdateActorConnectionException(exception, "connectionId: " + connectionId, "Unhandled error.");
         }
     }
 }

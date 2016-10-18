@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
+
 /**
  * The Class <code>package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.CantInitializeWalletFactoryMiddlewareDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
- *
+ * <p/>
  * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 17/08/15.
  *
  * @version 1.0

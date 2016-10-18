@@ -186,7 +186,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment<Referenc
             }
 
         } catch (FermatException ex) {
-            Toast.makeText(getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.error_opps2), Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {

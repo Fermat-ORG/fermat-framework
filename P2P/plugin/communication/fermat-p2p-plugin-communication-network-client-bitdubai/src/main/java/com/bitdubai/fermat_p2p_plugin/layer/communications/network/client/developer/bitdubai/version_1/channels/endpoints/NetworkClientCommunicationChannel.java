@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectedToNodeEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionClosedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
@@ -22,6 +23,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.CheckOutNetworkServiceRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.MessageTransmitProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.MessageTransmitRespondProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.MessageTransmitSyncACKProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.NearNodeListRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ServerHandshakeRespondProcessor;
@@ -126,6 +128,9 @@ public class NetworkClientCommunicationChannel {
         registerMessageProcessor(new ServerHandshakeRespondProcessor(this));
         registerMessageProcessor(new UpdateActorProfileRespondProcessor(this));
 
+        //Este lo uso para las llamadas sincronas
+        registerMessageProcessor(new MessageTransmitSyncACKProcessor(this,connection));
+
     }
 
     @OnOpen
@@ -145,7 +150,8 @@ public class NetworkClientCommunicationChannel {
          * set ServerIdentity
          */
         connection.setServerIdentity((String) session.getUserProperties().get(HeadersAttName.NPKI_ATT_HEADER_NAME));
-
+        connection.startConnectionSuperVisorAgent();
+        //raiseClientConnectedNotificationEvent();
     }
 
     @OnMessage
@@ -178,6 +184,7 @@ public class NetworkClientCommunicationChannel {
         System.out.println(" NetworkClientCommunicationChannel - Starting method onClose "+(isExternalNode ? "external node ---" : ""));
 
         // if it is not an external node i raise the event.
+        connection.stopConnectionSuperVisorAgent();
         if (!isExternalNode) {
             isRegistered = Boolean.FALSE;
 
@@ -218,9 +225,16 @@ public class NetworkClientCommunicationChannel {
         getClientConnection().getBasicRemote().sendPing(pingData);
     }
 
+    public void sendPong() throws IOException {
+        String pingString = "PING";
+        ByteBuffer pingData = ByteBuffer.allocate(pingString.getBytes().length);
+        pingData.put(pingString.getBytes()).flip();
+        getClientConnection().getBasicRemote().sendPong(pingData);
+    }
+
     @OnMessage
     public void onPongMessage(PongMessage message) {
-        //System.out.println("NetworkClientCommunicationChannel - Pong message receive from server = " + message.getApplicationData().asCharBuffer().toString());
+        System.out.println("NetworkClientCommunicationChannel - Pong message receive from server = " + message.getApplicationData().asCharBuffer().toString());
     }
 
     /**
@@ -236,6 +250,18 @@ public class NetworkClientCommunicationChannel {
         System.out.println("NetworkClientCommunicationChannel - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED");
     }
 
+    /**
+     * Notify when the network client channel connection is closed.
+     */
+    public void raiseClientConnectedNotificationEvent() {
+
+        System.out.println("NetworkClientCommunicationChannel - raiseClientConnectedNotificationEvent");
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CONNNECTED_TO_NODE);
+        platformEvent.setSource(EventSource.NETWORK_CLIENT);
+        ((NetworkClientConnectedToNodeEvent) platformEvent).setCommunicationChannel(CommunicationChannels.P2P_SERVERS);
+        eventManager.raiseEvent(platformEvent);
+        System.out.println("NetworkClientCommunicationChannel - Raised Event = P2pEventType.NETWORK_CLIENT_CONNNECTED_TO_NODE");
+    }
     /**
      * Notify when the network client channel connection is lost.
      */

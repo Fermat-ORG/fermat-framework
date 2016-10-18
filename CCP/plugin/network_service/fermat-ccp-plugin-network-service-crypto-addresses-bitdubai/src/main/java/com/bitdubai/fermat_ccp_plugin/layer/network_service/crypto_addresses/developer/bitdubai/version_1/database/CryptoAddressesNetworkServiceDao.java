@@ -544,17 +544,15 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
-
-            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+            addressExchangeRequestTable.numRecords();
 
 
-            if (!records.isEmpty())
+            if (addressExchangeRequestTable.numRecords() > 0)
                 return true;
             else
                 return false;
 
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (Exception exception) {
 
             throw new CantGetPendingAddressExchangeRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
@@ -597,15 +595,13 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
 
             System.out.println("************ Crypto Addresses -> load to memory ok.");
 
-            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+           DatabaseTableRecord record = addressExchangeRequestTable.getEmptyRecord();
 
-            if (!records.isEmpty()) {
+
                 System.out.println("************ Crypto Addresses -> i will update the record.");
-                DatabaseTableRecord record = records.get(0);
 
                 record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
                 record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME         , state        .getCode()   );
@@ -614,16 +610,10 @@ public final class CryptoAddressesNetworkServiceDao {
                 addressExchangeRequestTable.updateRecord(record);
 
                 System.out.println("************ Crypto Addresses -> updating ok.");
-            } else
-                throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
 
             throw new CantAcceptAddressExchangeRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantAcceptAddressExchangeRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-
         }
     }
 
@@ -655,28 +645,17 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
+         DatabaseTableRecord record = addressExchangeRequestTable.getEmptyRecord();
 
-            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
-
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
 
                 record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME , state .getCode());
                 record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME, action.getCode());
 
                 addressExchangeRequestTable.updateRecord(record);
 
-            } else
-                throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
-
         } catch (CantUpdateRecordException e) {
 
             throw new CantDenyAddressExchangeRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantDenyAddressExchangeRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-
         }
     }
 
@@ -708,27 +687,17 @@ public final class CryptoAddressesNetworkServiceDao {
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
             addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_MESSAGE_TYPE_COLUMN_NAME, AddressesConstants.OUTGOING_MESSAGE, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
 
-            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
-
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
+            DatabaseTableRecord record = addressExchangeRequestTable.getEmptyRecord();
 
                 record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME , state .getCode());
 
                 addressExchangeRequestTable.updateRecord(record);
 
-            } else
-                throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
 
             throw new CantConfirmAddressExchangeRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantConfirmAddressExchangeRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-
         }
     }
 
@@ -757,27 +726,16 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
+           DatabaseTableRecord record = addressExchangeRequestTable.getEmptyRecord();
 
-            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+           record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME , state .getCode());
 
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
+            addressExchangeRequestTable.updateRecord(record);
 
-                record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME , state .getCode());
-
-                addressExchangeRequestTable.updateRecord(record);
-
-            } else
-                throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
 
             throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-
         }
     }
 
@@ -842,27 +800,16 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
+            DatabaseTableRecord record = addressExchangeRequestTable.getEmptyRecord();
 
-            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+           record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TYPE_COLUMN_NAME, type.getCode());
 
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
+            addressExchangeRequestTable.updateRecord(record);
 
-                record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TYPE_COLUMN_NAME, type.getCode());
-
-                addressExchangeRequestTable.updateRecord(record);
-
-            } else
-                throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
 
             throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-
         }
     }
 
@@ -875,27 +822,18 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
+            DatabaseTableRecord record = addressExchangeRequestTable.getEmptyRecord();
 
-            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
 
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
 
                 record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_READ_MARK_COLUMN_NAME, Boolean.TRUE.toString());
 
                 addressExchangeRequestTable.updateRecord(record);
 
-            } else
-                throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
 
             throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-
         }
     }
 
@@ -908,28 +846,18 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
 
-            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+            DatabaseTableRecord record = addressExchangeRequestTable.getEmptyRecord();
 
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
-
-                record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_READ_MARK_COLUMN_NAME, Boolean.TRUE.toString());
-                record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, ProtocolState.DONE.getCode());
+           record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_READ_MARK_COLUMN_NAME, Boolean.TRUE.toString());
+            record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, ProtocolState.DONE.getCode());
 
                 addressExchangeRequestTable.updateRecord(record);
 
-            } else
-                throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
 
             throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-
         }
     }
 
@@ -958,27 +886,15 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
+           DatabaseTableRecord record = addressExchangeRequestTable.getEmptyRecord();
 
-            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
-
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
-
-                record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME, action.getCode());
+           record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME, action.getCode());
 
                 addressExchangeRequestTable.updateRecord(record);
 
-            } else
-                throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
-
-        } catch (CantUpdateRecordException e) {
+             } catch (CantUpdateRecordException e) {
 
             throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-
         }
     }
 
@@ -997,27 +913,15 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
+           DatabaseTableRecord record = addressExchangeRequestTable.getEmptyRecord();
 
-            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+           record.setIntegerValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME, sentNumber);
 
-            if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
-
-                record.setIntegerValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME, sentNumber);
-
-                addressExchangeRequestTable.updateRecord(record);
-
-            } else
-                throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
+            addressExchangeRequestTable.updateRecord(record);
 
         } catch (CantUpdateRecordException e) {
 
             throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-
         }
     }
 
@@ -1028,21 +932,11 @@ public final class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
 
-            addressExchangeRequestTable.loadToMemory();
-
-            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
-
-            for (DatabaseTableRecord record : records) {
-                addressExchangeRequestTable.deleteRecord(record);
-            }
-
+            addressExchangeRequestTable.deleteRecord();
 
         } catch (CantDeleteRecordException e) {
 
             throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-        } catch(CantLoadTableToMemoryException exception){
-
-            throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Exception invalidParameterException.","");
         }
 
     }

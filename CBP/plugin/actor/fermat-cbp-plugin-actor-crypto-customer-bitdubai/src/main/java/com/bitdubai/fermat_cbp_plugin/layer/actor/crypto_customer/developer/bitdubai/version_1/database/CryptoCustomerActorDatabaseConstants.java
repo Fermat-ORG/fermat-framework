@@ -15,6 +15,9 @@ public class CryptoCustomerActorDatabaseConstants {
     /**
      * Crypto Customer Actor Relationship database table definition.
      */
+
+    public static final String DATABASE_NAME = "actor_crypto_customer";
+
     static final String CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME = "crypto_customer_actor_relationship";
 
     static final String CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME = "relationship_id";

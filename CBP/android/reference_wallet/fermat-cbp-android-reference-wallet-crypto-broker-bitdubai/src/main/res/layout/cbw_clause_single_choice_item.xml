@@ -40,7 +40,7 @@
                 android:textAllCaps="true"
                 android:textColor="#1271A7"
                 android:textSize="14sp"
-                tools:text="Single Choice Item"/>
+                tools:text="@string/single_choice_item"/>
 
             <View
                 android:layout_width="match_parent"

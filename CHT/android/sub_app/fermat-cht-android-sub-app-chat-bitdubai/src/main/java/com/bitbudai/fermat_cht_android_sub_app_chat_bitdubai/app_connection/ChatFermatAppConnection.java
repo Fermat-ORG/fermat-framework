@@ -3,7 +3,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection;
 import android.content.Context;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory.ChatFragmentFactory;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.notifications.ChatNotificationPainterBuilder;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.notifications.ChatNotificationPainter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -46,7 +46,7 @@ public class ChatFermatAppConnection
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return  new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.CHAT_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.CHAT_SUP_APP_MODULE,
@@ -76,32 +76,16 @@ public class ChatFermatAppConnection
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle){
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle) {
         int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
 
         switch (notificationID) {
             case ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE_NOTIFICATION:
-                return new ChatNotificationPainterBuilder("New Message.","New message in Chat.", "", R.drawable.chat_subapp);
+                return new ChatNotificationPainter(getContext().getResources().getString(R.string.cht_notif_new_msg_title),
+                        getContext().getResources().getString(R.string.cht_notif_new_msg_content), "", R.drawable.cht_status_icon);
             default:
                 return null;
         }
-//
-//        NotificationPainter notification = null;
-//        try
-//        {
-//
-//            String usersend = code.split("@#@#")[0];
-//            String message = code.split("@#@#")[1];
-//            //find last transaction
-//            notification = new ChatNotificationPainter("New Message Receive", usersend+" : "+message ,"","", android.R.drawable.ic_notification_overlay);
-//
-//        }
-//        catch(Exception e)
-//        {
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }
-//
-//        return notification;
     }
 
     @Override

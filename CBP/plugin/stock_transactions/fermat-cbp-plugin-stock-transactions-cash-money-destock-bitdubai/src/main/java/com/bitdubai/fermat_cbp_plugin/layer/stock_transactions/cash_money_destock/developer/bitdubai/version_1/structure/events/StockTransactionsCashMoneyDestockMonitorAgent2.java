@@ -1,11 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.AbstractAgent;
-import com.bitdubai.fermat_api.CantStartAgentException;
-import com.bitdubai.fermat_api.FermatAgent;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -28,7 +24,6 @@ import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.inter
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 
 /**
@@ -65,18 +60,12 @@ public class StockTransactionsCashMoneyDestockMonitorAgent2 extends AbstractAgen
     }
 
     @Override
-    protected Runnable agentJob() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                doTheMainTask();
-            }
-        };
-        return runnable;
+    protected void agentJob() {
+        doTheMainTask();
     }
 
     @Override
-    protected void onErrorOccur() {
+    protected void onErrorOccur(Exception e) {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 new Exception("StockTransactionsCashMoneyDestockMonitorAgent Error"));
@@ -105,11 +94,19 @@ public class StockTransactionsCashMoneyDestockMonitorAgent2 extends AbstractAgen
 
                         //Set status to IN_WALLET
                         cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
-                    break;
+                        break;
 
                     case IN_WALLET:
                         //Try to unhold the funds in the cash wallet
-                        CashTransactionParametersWrapper cashTransactionParametersWrapper = new CashTransactionParametersWrapper(cashMoneyTransaction.getTransactionId(), cashMoneyTransaction.getFiatCurrency(), cashMoneyTransaction.getCashWalletPublicKey(), cashMoneyTransaction.getActorPublicKey(), cashMoneyTransaction.getAmount(), cashMoneyTransaction.getMemo(), pluginId.toString());
+                        CashTransactionParametersWrapper cashTransactionParametersWrapper = new CashTransactionParametersWrapper(
+                                cashMoneyTransaction.getTransactionId(),
+                                cashMoneyTransaction.getFiatCurrency(),
+                                cashMoneyTransaction.getCashWalletPublicKey(),
+                                cashMoneyTransaction.getActorPublicKey(),
+                                cashMoneyTransaction.getAmount(),
+                                cashMoneyTransaction.getMemo(),
+                                pluginId.toString());
+
                         cashUnholdTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
 
                         //Set status to IN_UNHOLD
@@ -118,10 +115,10 @@ public class StockTransactionsCashMoneyDestockMonitorAgent2 extends AbstractAgen
 
                     case IN_UNHOLD:
                         //Get the status of the hold transaction from the cash wallet
-                        CashTransactionStatus castTransactionStatus = cashUnholdTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
+                        CashTransactionStatus unHoldTransactionStatus = cashUnholdTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
 
                         //If unhold was CONFIRMED, set status to COMPLETED
-                        if (CashTransactionStatus.CONFIRMED.equals(castTransactionStatus)) {
+                        if (CashTransactionStatus.CONFIRMED.equals(unHoldTransactionStatus)) {
 
                             //Send broadcast to Stock Management Fragment
                             broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_OPERATION_DESTOCK_OR_RESTOCK_UPDATE_VIEW);
@@ -129,7 +126,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent2 extends AbstractAgen
                         }
 
                         //If unhold was REJECTED, set status to REJECTED
-                        else if (CashTransactionStatus.REJECTED.equals(castTransactionStatus))
+                        else if (CashTransactionStatus.REJECTED.equals(unHoldTransactionStatus))
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
 
                         break;
@@ -153,7 +150,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent2 extends AbstractAgen
                 //Save the current bankMoneyTransaction status
                 stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
             }
-        } catch (FermatException e) {
+        } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }

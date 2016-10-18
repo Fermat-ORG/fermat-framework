@@ -20,7 +20,6 @@ import java.util.ArrayList;
 public class CommunitiesScreenAdapter extends FermatAdapter<InstalledApp, CommunitiesHolder> {
 
 
-
     public CommunitiesScreenAdapter(Context context, ArrayList<InstalledApp> dataSet) {
         super(context, dataSet);
     }

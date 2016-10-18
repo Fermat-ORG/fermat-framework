@@ -331,6 +331,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
     @Override
     public void stop() {
         try {
+            if (processorAgent!=null)
             processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception exception) {

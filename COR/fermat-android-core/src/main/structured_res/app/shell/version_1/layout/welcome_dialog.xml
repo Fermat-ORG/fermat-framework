@@ -61,7 +61,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="32dp"
                 android:gravity="center_vertical"
-                android:text="@string/no_id_dont_show_this_again_text"
+                android:text="@string/checkbox_show"
                 android:textColor="#7c7c7c"
                 android:textSize="12sp" />
         </RelativeLayout>

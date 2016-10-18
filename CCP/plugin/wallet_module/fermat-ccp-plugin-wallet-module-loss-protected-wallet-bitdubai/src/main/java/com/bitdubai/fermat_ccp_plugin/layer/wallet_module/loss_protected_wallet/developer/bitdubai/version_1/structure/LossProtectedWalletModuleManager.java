@@ -22,6 +22,8 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.BitcoinFaucetManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
@@ -93,6 +95,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.Crypt
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListReceivePaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListSentPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantApproveLossProtectedRequestPaymentException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantCreateLossProtectedWalletContactException;
@@ -407,6 +410,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                             }
                         });
                 if(!isContact)
+                    if(notActorInList(intraUserActorList,intraUser))
                 intraUserActorList.add(new LossProtectedWalletModuleIntraUserActor(
                         intraUser.getName(),
                         isContact,
@@ -421,6 +425,13 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
         }
     }
 
+    private boolean notActorInList( List<LossProtectedWalletIntraUserActor> connectionList, IntraWalletUserActor actor) {
+        for (LossProtectedWalletIntraUserActor item : connectionList) {
+            if (item.getPublicKey().equals(actor.getPublicKey()))
+                return false;
+        }
+        return true;
+    }
 
     private LossProtectedWalletIntraUserActor enrichIntraUser(IntraWalletUserActor intraWalletUser,
                                                        String walletPublicKey) throws CantEnrichLossProtectedIntraUserException {
@@ -1764,7 +1775,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                 }
             }
 
-            cryptoPaymentRegistry.approveRequest(requestId);
+            cryptoPaymentRegistry.approveRequest(requestId, 0, FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS);
 
 
         }
@@ -1792,9 +1803,9 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
 
 
     @Override
-    public boolean isValidAddress(CryptoAddress cryptoAddress) {
-        //todo natalia corregir
-        return cryptoVaultManager.isValidAddress(cryptoAddress, BlockchainNetworkType.getDefaultBlockchainNetworkType());
+    public boolean isValidAddress(CryptoAddress cryptoAddress,BlockchainNetworkType blockchainNetworkType) {
+
+        return cryptoVaultManager.isValidAddress(cryptoAddress, blockchainNetworkType);
     }
 
     @Override
@@ -2033,7 +2044,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
     @Override
     public void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException {
         try {
-            intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image,Long.parseLong("100"), Frequency.NORMAL, getLocationManager());
+            intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image, Long.parseLong("100"), Frequency.NORMAL, getLocationManager());
         } catch (CantGetDeviceLocationException e) {
             e.printStackTrace();
         }
@@ -2176,6 +2187,12 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
         return notifications;
     }
 
+    @Override
+    public void testNetGiveMeCoins(BlockchainNetworkType blockchainNetworkType, CryptoAddress cryptoAddress) throws CantGetCoinsFromFaucetException {
+
+        BitcoinFaucetManager.giveMeCoins(blockchainNetworkType, cryptoAddress, 100000000);
+
+    }
 
 
     public Location getLocationManager() throws CantGetDeviceLocationException

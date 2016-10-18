@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEvent
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.MessageMetadata;
 
 import java.util.UUID;
 
@@ -17,7 +17,7 @@ public class AbstractCHTFermatEvent implements FermatEvent {
 
     private EventSource eventSource;
 
-    private ChatMetadata chatMetadata;
+    private MessageMetadata messageMetadata;
 
     /**
      * Represents the chatId
@@ -26,8 +26,10 @@ public class AbstractCHTFermatEvent implements FermatEvent {
 
     private UUID messageId;
 
-    public AbstractCHTFermatEvent(EventType eventType){
-        this.eventType=eventType;
+    private String senderPk;
+
+    public AbstractCHTFermatEvent(EventType eventType) {
+        this.eventType = eventType;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class AbstractCHTFermatEvent implements FermatEvent {
 
     @Override
     public void setSource(EventSource eventSource) {
-        this.eventSource=eventSource;
+        this.eventSource = eventSource;
     }
 
     @Override
@@ -53,6 +55,14 @@ public class AbstractCHTFermatEvent implements FermatEvent {
         this.chatId = chatId;
     }
 
+    public void setSenderPk(String senderPk) {
+        this.senderPk = senderPk;
+    }
+
+    public String getSenderPk(){
+    return senderPk;
+    }
+
     public UUID getMessageId() {
         return messageId;
     }
@@ -61,12 +71,12 @@ public class AbstractCHTFermatEvent implements FermatEvent {
         this.messageId = messageId;
     }
 
-    public ChatMetadata getChatMetadata() {
-        return chatMetadata;
+    public MessageMetadata getMessageMetadata() {
+        return messageMetadata;
     }
 
-    public void setChatMetadata(ChatMetadata chatMetadata) {
-        this.chatMetadata = chatMetadata;
+    public void setMessageMetadata(MessageMetadata messageMetadata) {
+        this.messageMetadata = messageMetadata;
     }
 
     @Override
@@ -74,7 +84,9 @@ public class AbstractCHTFermatEvent implements FermatEvent {
         return "AbstractCHTFermatEvent{" +
                 "eventType=" + eventType +
                 ", eventSource=" + eventSource +
+                ", messageMetadata=" + messageMetadata +
                 ", chatId=" + chatId +
+                ", messageId=" + messageId +
                 '}';
     }
 }

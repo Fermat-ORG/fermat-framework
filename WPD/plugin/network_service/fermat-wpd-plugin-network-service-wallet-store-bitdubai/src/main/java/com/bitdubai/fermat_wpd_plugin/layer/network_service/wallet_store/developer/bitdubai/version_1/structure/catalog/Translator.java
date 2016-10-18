@@ -21,6 +21,7 @@ public class Translator implements TranslatorIdentity {
 
     /**
      * overloaded constructor
+     *
      * @param id
      * @param alias
      * @param publicKey
@@ -46,8 +47,7 @@ public class Translator implements TranslatorIdentity {
     }
 
     @Override
-    public String createMessageSignature(String mensage) throws CantSingMessageException
-    {
+    public String createMessageSignature(String mensage) throws CantSingMessageException {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }

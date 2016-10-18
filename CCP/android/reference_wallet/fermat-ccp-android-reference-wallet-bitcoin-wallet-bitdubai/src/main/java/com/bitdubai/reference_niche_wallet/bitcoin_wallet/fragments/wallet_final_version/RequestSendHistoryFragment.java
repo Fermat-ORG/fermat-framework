@@ -1,12 +1,20 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -17,18 +25,32 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
+import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ContactsTutorialPart1V2;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.Payment_Request_Help_Dialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
+
+import org.bitcoin.protocols.payments.Protos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +62,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestSendHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession<CryptoWallet>,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>, View.OnClickListener,onRefreshList {
+public class RequestSendHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession<CryptoWallet>,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>, View.OnClickListener,onRefreshList,OnLoadMoreDataListener {
 
     /**
      * Session
@@ -60,10 +82,16 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
      * Executor Service
      */
     private ExecutorService executor;
-    private int MAX_TRANSACTIONS = 20;
+
+    private int MAX = 10;
     private int offset = 0;
     private View rootView;
     private LinearLayout empty;
+    private String feeLevel = "";
+    private String feeOrigin = "";
+
+    private PaymentRequestHistoryAdapter adapter;
+    private FermatWorker fermatWorker;
 
 
     BlockchainNetworkType blockchainNetworkType;
@@ -85,7 +113,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
 
-        getExecutor().execute(new Runnable() {
+       /* getExecutor().execute(new Runnable() {
             @Override
             public void run() {
 //                final FermatDrawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
@@ -96,24 +124,30 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                     }
                 });
             }
-        });
+        });*/
         try {
             cryptoWallet = appSession.getModuleManager();
 
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+
+            if(appSession.getData(SessionConstant.FEE_LEVEL) != null)
+                feeLevel = (String)appSession.getData(SessionConstant.FEE_LEVEL);
+            else
+                feeLevel = BitcoinFee.NORMAL.toString();
 
 
-            BitcoinWalletSettings bitcoinWalletSettings;
-            try {
-                bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
-                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-            }catch (Exception e){
-
+            if (appSession.getData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED)==null){
+                setUpTutorial(false);
             }
             onRefresh();
+
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -127,19 +161,41 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
-            setUp();
             return rootView;
         }catch (Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
+
+
         return container;
     }
 
-    private void setUp(){
+    private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
+        // if (isHelpEnabled) {
+        Payment_Request_Help_Dialog payment_request_help_dialog = new Payment_Request_Help_Dialog(getActivity(), appSession, null, checkButton);
+        payment_request_help_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Object b = appSession.getData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED);
+                if (b != null) {
+                    if ((Boolean) b) {
+                        appSession.removeData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED);
+                    }
+                }
 
-
+            }
+        });
+        payment_request_help_dialog.show();
+        //  }
     }
 
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+        isRefreshing = false;
+        onRefresh();
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -147,7 +203,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             super.onActivityCreated(savedInstanceState);
             lstPaymentRequest = new ArrayList<PaymentRequest>();
         } catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), getResources().getString(R.string.system_error), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
@@ -199,27 +255,42 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     }
 
     @Override
+    public RecyclerView.OnScrollListener getScrollListener() {
+        if (scrollListener == null) {
+            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
+            endlessScrollListener.setOnLoadMoreDataListener(this);
+            scrollListener = endlessScrollListener;
+        }
+        return scrollListener;
+    }
+
+    @Override
+    public void onLoadMoreData(final int page, int totalItemsCount) {
+        adapter.setLoadingData(true);
+        fermatWorker = new FermatWorker(getActivity(), this) {
+            @Override
+            protected Object doInBackground() throws Exception {
+                return getMoreDataAsync(FermatRefreshTypes.NEW, page);
+            }
+        };
+
+        fermatWorker.execute();
+    }
+
+    @Override
     public List<PaymentRequest> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
 
         try {
-            //when refresh offset set 0
-            if(refreshType.equals(FermatRefreshTypes.NEW))
-                offset = 0;
-
-            lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey,blockchainNetworkType,10,offset);
-            offset+=1;
+            offset = pos;
+            lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey,blockchainNetworkType,MAX,offset);
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-           e.printStackTrace();
-       }
-        if(lstPaymentRequest!=null){
-            return lstPaymentRequest;
-        }else{
-            return  new ArrayList<>();
+            e.printStackTrace();
         }
 
+        return lstPaymentRequest;
 
     }
 
@@ -246,14 +317,41 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
+            adapter.setLoadingData(false);
             if (result != null && result.length > 0) {
-                lstPaymentRequest = (ArrayList) result[0];
-                if (adapter != null)
-                    adapter.changeDataSet(lstPaymentRequest);
-                if(lstPaymentRequest.isEmpty()) FermatAnimationsUtils.showEmpty(getActivity(), true, empty);
-                else FermatAnimationsUtils.showEmpty(getActivity(), false, empty);
+
+                if (adapter != null){
+                    if (offset==0){
+                        lstPaymentRequest.clear();
+                        lstPaymentRequest.addAll((ArrayList) result[0]);
+                        adapter.changeDataSet(lstPaymentRequest);
+                        ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
+
+                    }else {
+                        for (PaymentRequest info : (List<PaymentRequest>) result[0]) {
+                            if (notInList(info)) {
+                                lstPaymentRequest.add(info);
+                            }
+                        }
+
+                        adapter.notifyItemRangeInserted(offset, lstPaymentRequest.size() - 1);
+                    }
+
+                }
+
+                adapter.notifyDataSetChanged();
+
             }
         }
+        showOrHideEmptyView();
+    }
+
+    private boolean notInList(PaymentRequest info) {
+        for (PaymentRequest contact : lstPaymentRequest) {
+            if (contact.getRequestId().equals(info.getRequestId()))
+                return false;
+        }
+        return true;
     }
 
     @Override
@@ -263,6 +361,24 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             swipeRefreshLayout.setRefreshing(false);
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
+    }
+
+    private void showOrHideEmptyView() {
+        final boolean show = lstPaymentRequest.isEmpty();
+        final int animationResourceId = show ? android.R.anim.fade_in : android.R.anim.fade_out;
+
+        Animation anim = AnimationUtils.loadAnimation(getActivity(), animationResourceId);
+        if (show && (empty.getVisibility() == View.GONE || empty.getVisibility() == View.INVISIBLE)) {
+            empty.setAnimation(anim);
+            empty.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+
+        } else if (!show && empty.getVisibility() == View.VISIBLE) {
+            empty.setAnimation(anim);
+            empty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
     }
 
 
@@ -279,11 +395,12 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             if(id == R.id.btn_refuse_request){
 
                 cryptoWallet.refuseRequest(paymentRequest.getRequestId());
-                Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.denied), Toast.LENGTH_SHORT).show();
             }
             else if ( id == R.id.btn_accept_request){
-                cryptoWallet.approveRequest(paymentRequest.getRequestId(),cryptoWallet.getSelectedActorIdentity().getPublicKey());
-                Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
+                cryptoWallet.approveRequest(paymentRequest.getRequestId(),cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                        BitcoinFee.valueOf(feeLevel).getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.accepted), Toast.LENGTH_SHORT).show();
             }
 
         } catch (Exception e) {
@@ -293,5 +410,33 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     }
 
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+
+
+            if (id == 1) {
+                changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, appSession.getAppPublicKey());
+                return true;
+            }
+            if (id == 2){
+                setUpTutorial((Boolean) appSession.getData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED));
+
+
+            }
+        } catch (Exception e) {
+            // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

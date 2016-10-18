@@ -56,7 +56,7 @@ public class StockDestockViewHolder extends FermatViewHolder {
                 amountTextView.setText(moneyFormat.format((new BigDecimal(availableBalance))) + " " + data.getMerchandise().getCode());
             }
         } catch (Exception e) {
-            amountTextView.setText("Balance: --");
+            amountTextView.setText(R.string.balance);
         }
     }
 

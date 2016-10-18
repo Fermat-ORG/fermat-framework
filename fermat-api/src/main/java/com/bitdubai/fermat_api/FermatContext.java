@@ -11,6 +11,8 @@ public interface FermatContext {
 
     Object loadObject(String pluginName);
 
+    Object loadObject(String pluginName,ClassLoader classLoader);
+
     Object objectToProxyfactory(Object base,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface);
 
     Object loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... parameters);
@@ -18,6 +20,7 @@ public interface FermatContext {
     void registerReceiver(FermatIntentFilter filter,FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey);
 
     void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey);
+
 
 
 

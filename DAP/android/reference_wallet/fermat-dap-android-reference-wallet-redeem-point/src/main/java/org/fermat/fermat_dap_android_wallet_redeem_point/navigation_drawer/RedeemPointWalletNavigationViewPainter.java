@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by frank on 12/9/15.
  */
-public class RedeemPointWalletNavigationViewPainter implements NavigationViewPainter {
+public class RedeemPointWalletNavigationViewPainter extends NavigationViewPainter {
 
     private static final String TAG = "RedeemNavigationView";
 
@@ -34,6 +34,7 @@ public class RedeemPointWalletNavigationViewPainter implements NavigationViewPai
     public RedeemPointWalletNavigationViewPainter(Context activity,
                                                   ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule> redeemPointSession,
                                                   FermatApplicationCaller applicationsHelper) {
+        super(activity);
 
         this.activity = new WeakReference<>(activity);
         this.redeemPointSession = redeemPointSession;

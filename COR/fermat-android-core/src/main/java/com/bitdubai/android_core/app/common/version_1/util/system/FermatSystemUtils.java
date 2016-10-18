@@ -45,7 +45,6 @@ import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeMa
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -161,7 +160,7 @@ public class FermatSystemUtils {
         try {
             return (WalletManager) FermatApplication.getInstance().getFermatSystem().getPlugin(
                     new PluginVersionReference(
-                            Platforms.CRYPTO_CURRENCY_PLATFORM,
+                            Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
                             Layers.DESKTOP_MODULE,
                             Plugins.WALLET_MANAGER,
                             Developers.BITDUBAI,
@@ -335,8 +334,8 @@ public class FermatSystemUtils {
      * @return
      */
 
-    public static WsCommunicationsCloudClientManager getCloudClient() {
-        try {
+    public static String getCloudClient() {
+        /*try {
             return (WsCommunicationsCloudClientManager) FermatApplication.getInstance().getFermatSystem().getPlugin(
                     new PluginVersionReference(
                             Platforms.COMMUNICATION_PLATFORM,
@@ -349,7 +348,7 @@ public class FermatSystemUtils {
             e.printStackTrace();
         } catch (CantStartPluginException e) {
             e.printStackTrace();
-        }
+        }*/
         return null;
     }
 

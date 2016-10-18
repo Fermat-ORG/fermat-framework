@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -22,6 +24,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -32,21 +35,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.DeleteWalletContactDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ReceiveFragmentDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
-
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
 /**
@@ -78,6 +79,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
      * Platform
      */
     private CryptoWallet cryptoWallet;
+    private String PublicKey;
     private ErrorManager errorManager;
 
     /**
@@ -124,26 +126,15 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
             //typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
             errorManager = appSession.getErrorManager();
             cryptoWallet = appSession.getModuleManager();
-
-            BitcoinWalletSettings bitcoinWalletSettings = null;
-
-            bitcoinWalletSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-
-            if(bitcoinWalletSettings != null) {
-
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
-
-            }
-
-            blockchainNetworkType = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
+            PublicKey = cryptoWallet.getSelectedActorIdentity().getPublicKey();
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            makeText(getActivity(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
 //        /* Load Wallet Contact */
 //        walletContact = CollectionUtils.find(getWalletContactList(), new Predicate<WalletContact>() {
@@ -170,7 +161,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
             return mFragmentView;
         }catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
         return container;
     }
@@ -186,7 +177,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                     appSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
                     changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
                 }else{
-                    Toast.makeText(getActivity(),"You don't have address to send\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),getResources().getString(R.string.error_msg_no_address),Toast.LENGTH_SHORT).show();
                 }
             }
             else if( id == R.id.receive_button){
@@ -195,7 +186,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                     appSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
                     changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, appSession.getAppPublicKey());
                 }else{
-                    Toast.makeText(getActivity(),"You don't have address to request\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),getResources().getString(R.string.error_msg_no_address),Toast.LENGTH_SHORT).show();
                 }
             }
             else if ( id == R.id.linear_layout_extra_user_receive){
@@ -204,7 +195,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                         cryptoWallet,
                         appSession.getErrorManager(),
                         cryptoWalletWalletContact,
-                        cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                        PublicKey,
                         appSession.getAppPublicKey(),
                         blockchainNetworkType);
                 receiveFragmentDialog.show();
@@ -212,7 +203,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
 
         }catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -254,7 +245,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                                     cryptoWalletWalletContact.getActorPublicKey(),
                                     cryptoWalletWalletContact.getProfilePicture(),
                                     Actors.INTRA_USER,
-                                    cryptoWallet.getSelectedActorIdentity().getPublicKey()
+                                    PublicKey
                                     , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     blockchainNetworkType
@@ -262,7 +253,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
 
                             delayHandler.postDelayed(delay, TimeUnit.MINUTES.toMillis(DELAY_TIME));
                         }else{
-                            Toast.makeText(getActivity(),"Address exchange sent, wait 2 minutes please",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),getResources().getString(R.string.success_msg_address_sent_wait),Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -277,7 +268,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                     try {
 
                         setClipboard(getActivity(), text_view_address.getText().toString());
-                        Toast.makeText(getActivity(),"Address copied to clipbooard",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),getResources().getString(R.string.success_msg_address_copied_clipboard),Toast.LENGTH_SHORT).show();
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -300,7 +291,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
 
         //if api 17 set address font size
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR1)
-            text_view_address.setTextSize(10);
+            text_view_address.setTextSize(14);
 
         if (cryptoWalletWalletContact != null) {
             if(image_view_profile!=null){
@@ -312,7 +303,8 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                         bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
                 }catch (Exception e){
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        Toast.makeText(getContext(),"Loading image error",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),R.string.error_msg_loading_img,Toast.LENGTH_SHORT).show();
+
                     }
                     e.printStackTrace();
                 }
@@ -336,7 +328,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                                    cryptoWalletWalletContact.getActorPublicKey(),
                                    cryptoWalletWalletContact.getProfilePicture(),
                                    Actors.INTRA_USER,
-                                   cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                                   PublicKey,
                                    appSession.getAppPublicKey(),
                                    CryptoCurrency.BITCOIN,
                                    blockchainNetworkType
@@ -413,7 +405,37 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+            if (id == 2){
+                DeleteWalletContactDialog deleteWalletContactDialog = new DeleteWalletContactDialog(
+                        getActivity(),
+                        appSession,
+                        null,
+                        cryptoWalletWalletContact.getContactId(),
+                        cryptoWalletWalletContact.getActorName());
+                deleteWalletContactDialog.show();
+
+                deleteWalletContactDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if (appSession.getData(SessionConstant.CONTACT_DELETED) == true)
+                            changeActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS, appSession.getAppPublicKey());
+                    }
+                });
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -423,20 +445,24 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
         {
             if(!code.equals("BlockchainDownloadComplete"))
             {
-                //update contact address
-                cryptoWalletWalletContact = cryptoWallet.findWalletContactById(UUID.fromString(code), cryptoWallet.getSelectedActorIdentity().getPublicKey());
 
+                //check contact to show is de same to update
+                if(cryptoWalletWalletContact.getContactId().equals(UUID.fromString(code))){
+                    //update contact address
+                    CryptoWalletWalletContact cryptoWalletWalletContactUpdate = cryptoWallet.findWalletContactById(UUID.fromString(code), PublicKey);
 
-                if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
-                {
-                    text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
-                    img_update.setVisibility(View.GONE);
-                    receive_button.setVisibility(View.VISIBLE);
-                    send_button.setVisibility(View.VISIBLE);
+                    if(cryptoWalletWalletContactUpdate.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+                    {
+                        cryptoWalletWalletContact = cryptoWalletWalletContactUpdate;
+                        text_view_address.setText(cryptoWalletWalletContactUpdate.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
+                        img_update.setVisibility(View.GONE);
+                        receive_button.setVisibility(View.VISIBLE);
+                        send_button.setVisibility(View.VISIBLE);
 
+                    }
+
+                    appSession.setData("LastContactSelected", cryptoWalletWalletContactUpdate);
                 }
-
-                appSession.setData("LastContactSelected",cryptoWalletWalletContact);
 
             }
 

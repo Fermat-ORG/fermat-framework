@@ -5,12 +5,12 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -20,9 +20,6 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
@@ -31,7 +28,7 @@ import com.bitdubai.sub_app.chat_community.filters.CommunityFilter;
 import com.bitdubai.sub_app.chat_community.holders.CommunityWorldHolder;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
-import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,6 +50,9 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     private final String TAG = "communityadapter";
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
     private ChatActorCommunitySubAppModuleManager moduleManager;
+    ArrayList<ChatActorCommunityInformation> chatMessages = new ArrayList<>();
+    private AdapterCallbackList mAdapterCallbackList;
+
 
     public CommunityListAdapter(Context context) {
         super(context);
@@ -60,10 +60,12 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
 
     public CommunityListAdapter(Context context, List<ChatActorCommunityInformation> dataSet,
                                 ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
-                                ChatActorCommunitySubAppModuleManager moduleManager) {
+                                ChatActorCommunitySubAppModuleManager moduleManager,
+                                AdapterCallbackList mAdapterCallbackList) {
         super(context, dataSet);
-        this.appSession=appSession;
-        this.moduleManager=moduleManager;
+        this.appSession = appSession;
+        this.moduleManager = moduleManager;
+        this.mAdapterCallbackList = mAdapterCallbackList;
     }
 
     @Override
@@ -71,19 +73,22 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return new CommunityWorldHolder(itemView);
     }
 
+    public static interface AdapterCallbackList {
+        void onMethodCallbackConnectionStatus(int position, ConnectionState state);
+    }
+
     @Override
     protected int getCardViewResource() {
         return R.layout.cht_comm_world_item;
     }
 
-    private void updateConnectionState(ConnectionState connectionState, CommunityWorldHolder holder)
-    {
+    private void updateConnectionState(ConnectionState connectionState, CommunityWorldHolder holder) {
         if (connectionState != null) {
             switch (connectionState) {
                 case CONNECTED:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is now a connection");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_now_conn));
                     holder.connectedButton.setVisibility(View.VISIBLE);
                     holder.blockedButton.setVisibility(View.GONE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -92,7 +97,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case BLOCKED_LOCALLY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -101,7 +106,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case BLOCKED_REMOTELY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -110,7 +115,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case CANCELLED_LOCALLY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -119,7 +124,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case CANCELLED_REMOTELY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -136,7 +141,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case DENIED_LOCALLY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -145,7 +150,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case DENIED_REMOTELY:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("is blocked");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_blocked));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -186,7 +191,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case PENDING_LOCALLY_ACCEPTANCE:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("Pending Acceptance");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_pending));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.GONE);
                     holder.pendingButton.setVisibility(View.GONE);
@@ -195,7 +200,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 case PENDING_REMOTELY_ACCEPTANCE:
                     holder.add_contact_button.setVisibility(View.GONE);
                     holder.connection_text.setVisibility(View.VISIBLE);
-                    holder.connection_text.setText("Request sent");
+                    holder.connection_text.setText(context.getResources().getString(R.string.cht_comm_sent));
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.GONE);
                     holder.pendingButton.setVisibility(View.VISIBLE);
@@ -209,7 +214,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     holder.pendingButton.setVisibility(View.GONE);
                     break;
             }
-        }else {
+        } else {
             holder.add_contact_button.setVisibility(View.VISIBLE);
             holder.connection_text.setVisibility(View.GONE);
             holder.connectedButton.setVisibility(View.GONE);
@@ -219,48 +224,55 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     }
 
     @Override
-    protected void bindHolder(final CommunityWorldHolder holder, ChatActorCommunityInformation data, int position) {
+    protected void bindHolder(final CommunityWorldHolder holder, ChatActorCommunityInformation data, final int position) {
         final ConnectionState connectionState = data.getConnectionState();
+        int max = 10;
         updateConnectionState(connectionState, holder);
-        holder.name.setText(data.getAlias());
+        if(max > data.getAlias().length())
+            max = data.getAlias().length();
+        holder.name.setText(data.getAlias().substring(0, max));
         byte[] profileImage = data.getImage();
         if (profileImage != null && profileImage.length > 0) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-            bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
-            holder.thumbnail.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-        }else
+            try {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
+                holder.thumbnail.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+            }catch (Exception e){
+                Log.e(getClass().getName(),"Exception: "+e.getCause().toString()+", please check this..");
+            }
+        } else
             holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
 
-        if(data.getLocation() != null){
-            if (data.getState().equals("null") || data.getState().equals("")) stateAddress = "";
-            else stateAddress = data.getState() + " ";
-            if (data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
-            else cityAddress = data.getCity() + " ";
-            if (data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
-            else countryAddress = data.getCountry();
-            if(stateAddress == "" && cityAddress == "" && countryAddress == ""){
-                holder.location_text.setText("Searching...");
-            }else
-                holder.location_text.setText(cityAddress + stateAddress + countryAddress);
-        } else
-            holder.location_text.setText("Searching...");
+//            if (data.getState().equals("null") || data.getState().equals(""))
+        stateAddress = "";
+//            else stateAddress = data.getState() + " ";
+        if (data.getCity() == null || data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
+        else cityAddress = data.getCity() + ", ";
+        if (data.getCountry() == null || data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
+        else countryAddress = data.getCountry();
+        if (/*stateAddress.equalsIgnoreCase("") &&*/ cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
+            holder.location_text.setText(context.getResources().getString(R.string.cht_comm_not_found));
+        }else
+            holder.location_text.setText(cityAddress + countryAddress);//+ stateAddress
 
-        if(data.getProfileStatus()!= ProfileStatus.ONLINE)
+        if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+            holder.location_text.setTextColor(Color.parseColor("#47BF73"));
+        else
             holder.location_text.setTextColor(Color.RED);
 
-        final ChatActorCommunityInformation dat=data;
+        final ChatActorCommunityInformation dat = data;
         holder.add_contact_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonLogger.info(TAG, "User connection state " +
+                CommonLogger.info(TAG, context.getResources().getString(R.string.cht_comm_text_state) +
                         dat.getConnectionState());
                 ConnectDialog connectDialog;
                 try {
                     connectDialog =
                             new ConnectDialog(context, appSession, null,
                                     dat, moduleManager.getSelectedActorIdentity());
-                    connectDialog.setTitle("Connection Request");
-                    connectDialog.setDescription("Are you sure you want to send a connection request to this contact?");
+                    connectDialog.setTitle(context.getResources().getString(R.string.cht_comm_connection_request));
+                    connectDialog.setDescription(context.getResources().getString(R.string.cht_comm_text_connect));
                     connectDialog.setUsername(dat.getAlias());
 //                    connectDialog.setSecondDescription("a connection request?");
                     connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -270,13 +282,14 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                                 ConnectionState cState
                                         = moduleManager.getActorConnectionState(dat.getPublicKey());
                                 updateConnectionState(cState, holder);
+                                mAdapterCallbackList.onMethodCallbackConnectionStatus(position, cState);
                             } catch (CantValidateActorConnectionStateException e) {
                                 e.printStackTrace();
                             }
                         }
                     });
                     connectDialog.show();
-                } catch ( CantGetSelectedActorIdentityException
+                } catch (CantGetSelectedActorIdentityException
                         | ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
@@ -286,16 +299,16 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         holder.connectedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonLogger.info(TAG, "User connection state " +
+                CommonLogger.info(TAG, context.getResources().getString(R.string.cht_comm_text_state) +
                         dat.getConnectionState());
                 final DisconnectDialog disconnectDialog;
                 try {
                     disconnectDialog =
                             new DisconnectDialog(context, appSession, null,
                                     dat, moduleManager.getSelectedActorIdentity());
-                    disconnectDialog.setTitle("Disconnect");
-                    disconnectDialog.setDescription("Do you want to disconnect from");
-                    disconnectDialog.setUsername(dat.getAlias()+"?");
+                    disconnectDialog.setTitle(context.getResources().getString(R.string.cht_comm_disconnection_request));
+                    disconnectDialog.setDescription(context.getResources().getString(R.string.cht_comm_text_disconnect));
+                    disconnectDialog.setUsername(dat.getAlias() + "?");
                     disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
@@ -309,7 +322,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                         }
                     });
                     disconnectDialog.show();
-                } catch ( CantGetSelectedActorIdentityException
+                } catch (CantGetSelectedActorIdentityException
                         | ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
@@ -319,18 +332,18 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         holder.pendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonLogger.info(TAG, "User connection state "
+                CommonLogger.info(TAG, context.getResources().getString(R.string.cht_comm_text_state)
                         + dat.getConnectionState());
-                Toast.makeText(context, "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.cht_comm_text_resend_toast), Toast.LENGTH_SHORT).show();
                 ConnectDialog connectDialog;
                 try {
                     connectDialog =
                             new ConnectDialog(context, appSession, null,
                                     dat, moduleManager.getSelectedActorIdentity());
-                    connectDialog.setTitle("Resend Connection Request");
-                    connectDialog.setDescription("Do you want to resend ");
+                    connectDialog.setTitle( context.getResources().getString(R.string.cht_comm_resend_request));
+                    connectDialog.setDescription( context.getResources().getString(R.string.cht_comm_text_resend));
                     connectDialog.setUsername(dat.getAlias());
-                    connectDialog.setSecondDescription("a connection request?");
+                    //connectDialog.setSecondDescription(context.getResources().getString(R.string.cht_comm_text_resend2));
                     connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
@@ -344,7 +357,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                         }
                     });
                     connectDialog.show();
-                } catch ( CantGetSelectedActorIdentityException
+                } catch (CantGetSelectedActorIdentityException
                         | ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
@@ -354,9 +367,9 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         holder.blockedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonLogger.info(TAG, "User connection state "
+                CommonLogger.info(TAG, context.getResources().getString(R.string.cht_comm_text_state)
                         + dat.getConnectionState());
-                Toast.makeText(context, "The connection request has been rejected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.cht_comm_text_block_toast), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -381,7 +394,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     });
                     notificationAcceptDialog.show();
 
-                } catch ( CantGetSelectedActorIdentityException
+                } catch (CantGetSelectedActorIdentityException
                         | ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
@@ -395,37 +408,23 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return 0;
     }
 
+    public void refreshEvents(List<ChatActorCommunityInformation> chatHistory) {
+        for (int i = 0; i < chatHistory.size(); i++) {
+            ChatActorCommunityInformation message = chatHistory.get(i);
+            add(message);
+            changeDataSet(chatHistory);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void add(ChatActorCommunityInformation message) {
+        chatMessages.add(message);
+    }
+
     public void setData(List<ChatActorCommunityInformation> data) {
         this.filteredData = data;
     }
 
-//    @Override
-//    public int getItemCount() {
-//        if(filterString!=null)
-//            return filteredData == null ? 0 : filteredData.size();
-//        else
-//            return dataSet == null ? 0 : dataSet.size();
-//    }
-//
-//    @Override
-//    public ChatActorCommunityInformation getItem(int position) {
-//        if(filterString!=null)
-//            return filteredData != null ? (!filteredData.isEmpty()
-//                    && position < filteredData.size()) ? filteredData.get(position) : null : null;
-//        else
-//            return dataSet != null ? (!dataSet.isEmpty()
-//                    && position < dataSet.size()) ? dataSet.get(position) : null : null;
-//    }
-
-//    @Override
-//    public long getId(int position) {
-//        return position;
-//    }
-//
-//    public void changeDataSet(List<ChatActorCommunityInformation> data) {
-//        this.filteredData = data;
-//    }
-//
     public Filter getFilter() {
         return new CommunityFilter(dataSet, this);
     }

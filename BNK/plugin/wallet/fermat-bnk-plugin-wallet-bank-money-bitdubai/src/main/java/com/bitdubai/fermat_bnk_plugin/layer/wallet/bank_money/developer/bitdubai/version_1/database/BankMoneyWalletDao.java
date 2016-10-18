@@ -262,12 +262,15 @@ public class BankMoneyWalletDao {
     }
 
     public BigDecimal getBookBalance(String accountNumber) {
-        BigDecimal bookBalance;
+        BigDecimal bookBalance = BigDecimal.ZERO;
         List<DatabaseTableRecord> records;
         DatabaseTableRecord record;
         records = getBankMoneyTransactionList(accountNumber);
-        record = records.get(0);
-        bookBalance = new BigDecimal(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME));
+
+        if(!records.isEmpty()) {
+            record = records.get(0);
+            bookBalance = new BigDecimal(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME));
+        }
         return bookBalance;
     }
 

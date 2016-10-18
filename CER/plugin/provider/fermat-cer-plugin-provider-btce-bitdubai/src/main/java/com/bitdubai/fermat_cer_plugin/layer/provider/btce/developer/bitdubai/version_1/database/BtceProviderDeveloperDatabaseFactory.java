@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cer_plugin.layer.provider.btce.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -25,7 +23,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_cer_plugin.layer.provider.btce.developer.bitdubai.version_1.database.BtceProviderDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Alejandro Bicelis - (abicelis@gmail.com) on 27/04/16.
  *
  * @version 1.0
@@ -143,7 +141,6 @@ public class BtceProviderDeveloperDatabaseFactory {//implements DealsWithPluginD
          */
         DeveloperDatabaseTable currentExchangeRatesTable = developerObjectFactory.getNewDeveloperDatabaseTable(BtceProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, currentExchangeRatesColumns);
         tables.add(currentExchangeRatesTable);
-
 
 
         return tables;

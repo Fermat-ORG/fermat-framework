@@ -5,19 +5,17 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.ImageUtil;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.utils.LocationUtils;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestActorFullPhotoException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceActorLocationUpdaterAgent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorProfileRegisteredEventHandler;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorProfileUpdatedEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorNotRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantRegisterActorException;
@@ -26,9 +24,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.interfaces.ActorNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.utils.RefreshParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -50,7 +49,7 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
     private ConcurrentHashMap<ActorProfile, RefreshParameters> registeredActors;
 
-    private NetworkServiceActorLocationUpdaterAgent actorLocationUpdaterAgent;
+    private HashMap<UUID, ActorProfile> registeredActorsByPackageId;
 
     /**
      * Constructor with parameters
@@ -60,8 +59,8 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
      * @param networkServiceType
      */
     public AbstractActorNetworkService(final PluginVersionReference pluginVersionReference,
-                                       final EventSource            eventSource           ,
-                                       final NetworkServiceType     networkServiceType    ) {
+                                       final EventSource eventSource,
+                                       final NetworkServiceType networkServiceType) {
 
         super(
                 pluginVersionReference,
@@ -70,30 +69,31 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         );
 
         registeredActors = new ConcurrentHashMap<>();
+        registeredActorsByPackageId = new HashMap<>();
     }
 
     /**
      * Initializes all event listener and configure
      */
-    private void initializeActorNetworkServiceListeners() {
+   // private void initializeActorNetworkServiceListeners() {
 
         /*
          * 1. Listen and handle Network Client Actor Profile Registered Event
          */
-        FermatEventListener actorRegistered = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_ACTOR_PROFILE_REGISTERED);
+     /*   FermatEventListener actorRegistered = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_ACTOR_PROFILE_REGISTERED);
         actorRegistered.setEventHandler(new NetworkClientActorProfileRegisteredEventHandler(this));
         eventManager.addListener(actorRegistered);
         listenersAdded.add(actorRegistered);
-
+*/
         /*
          * 2. Listen and handle Network Client Actor Profile Updated Event
          */
-        FermatEventListener actorUpdated = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_ACTOR_PROFILE_UPDATED);
+  /*      FermatEventListener actorUpdated = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_ACTOR_PROFILE_UPDATED);
         actorUpdated.setEventHandler(new NetworkClientActorProfileUpdatedEventHandler(this));
         eventManager.addListener(actorUpdated);
         listenersAdded.add(actorUpdated);
 
-    }
+    }*/
 
     @Override
     public void registerActor(final String   publicKey      ,
@@ -107,103 +107,116 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
                               final long     accuracy       ) throws ActorAlreadyRegisteredException, CantRegisterActorException {
 
         System.out.println("******************* REGISTERING ACTOR: "+name+ " - type: "+type + "  ENTER METHOD");
+        try {
 
-        //validateImageSize(image.length); TODO COMMENTED UNTIL BETTER MANAGEMENT BE IMPLEMENTED
+                //validateImageSize(image.length); TODO COMMENTED UNTIL BETTER MANAGEMENT BE IMPLEMENTED
 
-        ActorProfile actorToRegister = new ActorProfile();
-        actorToRegister.setIdentityPublicKey(publicKey);
+                ActorProfile actorToRegister = new ActorProfile();
+                actorToRegister.setIdentityPublicKey(publicKey);
 
-        if (registeredActors.get(actorToRegister) != null)
-            throw new ActorAlreadyRegisteredException("publicKey: " + publicKey + " - name: " + name, "An actor is already registered with the given public key.");
+                if (registeredActors.get(actorToRegister) != null)
+                    throw new ActorAlreadyRegisteredException("publicKey: " + publicKey + " - name: " + name, "An actor is already registered with the given public key.");
 
-        actorToRegister.setActorType(type.getCode());
-        actorToRegister.setName(name);
-        actorToRegister.setAlias(alias);
-        actorToRegister.setPhoto(image);
+                actorToRegister.setActorType(type.getCode());
+                actorToRegister.setName(name);
+                actorToRegister.setAlias(alias);
+                actorToRegister.setPhoto(image);
 
-        System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  ASK ABOUT LOCATION");
+                System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  ASK ABOUT LOCATION");
 
-        if (location != null)
-            actorToRegister.setLocation(location);
-        else {
-            try {
+                if (location != null)
+                    actorToRegister.setLocation(location);
+                else {
+                    try {
 
-                Location location1 = locationManager.getLastKnownLocation();
-                location1 = LocationUtils.getRandomLocation(location1, accuracy);
-                actorToRegister.setLocation(location1);
+                        Location location1 = locationManager.getLastKnownLocation();
+                        location1 = LocationUtils.getRandomLocation(location1, accuracy);
+                        actorToRegister.setLocation(location1);
 
-            } catch (CantGetDeviceLocationException exception) {
+                    } catch (CantGetDeviceLocationException exception) {
 
-                exception.printStackTrace();
-            }
-        }
-        actorToRegister.setNsIdentityPublicKey(this.getPublicKey());
-        actorToRegister.setExtraData(extraData);
-
-        System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  LOCATION AND DATA SET");
-
-        registeredActors.put(
-                actorToRegister,
-                new RefreshParameters(
-                        1,
-                        refreshInterval,
-                        accuracy
-                )
-        );
-
-        if (getConnection() != null ) {
-            if(getConnection().isRegistered()) {
-                try {
-                    this.getConnection().registerProfile(actorToRegister);
-                    registeredActors.get(actorToRegister).setLastExecution(System.currentTimeMillis());
-                } catch (CantRegisterProfileException exception) {
-                    throw new CantRegisterActorException(exception, "publicKey: " + actorToRegister.getIdentityPublicKey() + " - name: " + actorToRegister.getName(), "There was an error trying to register the actor through the network service.");
+                        exception.printStackTrace();
+                    }
                 }
-            } else{
-                System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  getConnection().isRegistered(): " +getConnection().isRegistered());
-            }
-        } else {
-            System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  getConnection(): null");
-        }
+                actorToRegister.setExtraData(extraData);
 
-        System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  GO OUT METHOD");
-    }
+                System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  LOCATION AND DATA SET");
+
+                registeredActors.put(
+                        actorToRegister,
+                        new RefreshParameters(
+                                1,
+                                refreshInterval,
+                                accuracy
+                        )
+                );
+
+                if (getConnection() != null ) {
+
+                    try {
+                        UUID packageId = this.getConnection().register(actorToRegister, getProfile());
+                        if (packageId != null)
+                            registeredActorsByPackageId.put(packageId, actorToRegister);
+                    } catch (CantRegisterProfileException | CantSendMessageException e) {
+                        throw new CantRegisterActorException(e.getCause(), e.getContext(), e.getPossibleReason());
+                    }
+                    registeredActors.get(actorToRegister).setLastExecution(System.currentTimeMillis());
+
+                } else {
+                    System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  getConnection(): null");
+                }
+
+                System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  GO OUT METHOD");
+
+           } catch (Exception e) {
+                System.out.println("******************* ERROR REGISTERING ACTOR: " + e.getMessage());
+
+                e.printStackTrace();
+            }
+
+          }
 
     public void registerActor(final ActorProfile actorToRegister,
                               final long         refreshInterval,
                               final long         accuracy       ) throws ActorAlreadyRegisteredException, CantRegisterActorException {
 
-        System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  ENTER METHOD");
 
-        //validateImageSize(image.length); TODO COMMENTED UNTIL BETTER MANAGEMENT BE IMPLEMENTED
+        if (actorToRegister != null){
 
-        if (registeredActors.get(actorToRegister) != null)
-            throw new ActorAlreadyRegisteredException("publicKey: " + actorToRegister.getIdentityPublicKey() + " - name: " + actorToRegister.getName(), "An actor is already registered with the given public key.");
+            System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  ENTER METHOD");
 
-        registeredActors.put(
-                actorToRegister,
-                new RefreshParameters(
-                        1,
-                        refreshInterval,
-                        accuracy
-                )
-        );
+            //validateImageSize(image.length); TODO COMMENTED UNTIL BETTER MANAGEMENT BE IMPLEMENTED
 
-        if (this.getConnection() != null && this.getConnection().isRegistered()) {
+            if (registeredActors.get(actorToRegister) != null)
+                throw new ActorAlreadyRegisteredException("publicKey: " + actorToRegister.getIdentityPublicKey() + " - name: " + actorToRegister.getName(), "An actor is already registered with the given public key.");
+
+            registeredActors.put(
+                    actorToRegister,
+                    new RefreshParameters(
+                            1,
+                            refreshInterval,
+                            accuracy
+                    )
+            );
 
             try {
-
-                this.getConnection().registerProfile(actorToRegister);
-                registeredActors.get(actorToRegister).setLastExecution(System.currentTimeMillis());
-
-            } catch (CantRegisterProfileException exception) {
-
-                throw new CantRegisterActorException(exception, "publicKey: "+actorToRegister.getIdentityPublicKey()+" - name: "+actorToRegister.getName(), "There was an error trying to register the actor through the network service.");
+                UUID packageId = this.getConnection().register(actorToRegister, getProfile());
+                if (packageId != null)
+                    registeredActorsByPackageId.put(packageId, actorToRegister);
+            } catch (CantRegisterProfileException | CantSendMessageException e) {
+                throw new CantRegisterActorException(e.getCause(), e.getContext(), e.getPossibleReason());
             }
+            registeredActors.get(actorToRegister).setLastExecution(System.currentTimeMillis());
+
+            System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  GO OUT METHOD");
+
+        }else {
+
+            System.out.println("******************* REGISTERING ACTOR IS NULL ");
+
         }
 
-        System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  GO OUT METHOD");
-    }
+       }
 
     private ActorProfile getRegisteredActorByPublicKey(final String publicKey) {
 
@@ -215,13 +228,21 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         return null;
     }
 
+    private ActorProfile getRegisteredActorByPackageId(final UUID packageId) {
+
+        if (registeredActorsByPackageId != null)
+            return registeredActorsByPackageId.get(packageId);
+
+        return null;
+    }
+
     @Override
     public void updateRegisteredActor(final String   publicKey,
                                       final String   name     ,
                                       final String   alias    ,
                                       final Location location ,
                                       final String   extraData,
-                                      final byte[]   image    ) throws ActorNotRegisteredException, CantUpdateRegisteredActorException {
+                                      final byte[]   image    ) throws ActorNotRegisteredException, CantUpdateRegisteredActorException, CantUpdateRegisteredProfileException {
 
         //validateImageSize(image.length); TODO COMMENTED UNTIL BETTER MANAGEMENT BE IMPLEMENTED
 
@@ -245,35 +266,15 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         if (extraData != null)
             actorToUpdate.setExtraData(extraData);
 
-        if (this.getConnection() != null && this.getConnection().isRegistered()) {
-
-            try {
-
-                this.getConnection().updateRegisteredProfile(actorToUpdate, UpdateTypes.FULL);
-                registeredActors.get(actorToUpdate).setLastExecution(System.currentTimeMillis());
-
-            } catch (CantUpdateRegisteredProfileException exception) {
-
-                throw new CantUpdateRegisteredActorException(exception, "publicKey: "+publicKey+" - name: "+name, "There was an error trying to update a registered actor through the network service.");
-            }
-        }
+        this.getConnection().update(actorToUpdate, UpdateTypes.FULL, getNetworkServiceType());
+        registeredActors.get(actorToUpdate).setLastExecution(System.currentTimeMillis());
     }
 
     public void updateRegisteredActor(final ActorProfile actorToUpdate,
-                                      final UpdateTypes  type         ) throws CantUpdateRegisteredActorException {
+                                      final UpdateTypes  type         ) throws CantUpdateRegisteredActorException, CantUpdateRegisteredProfileException {
 
-        if (this.getConnection() != null && this.getConnection().isRegistered()) {
-
-            try {
-
-                this.getConnection().updateRegisteredProfile(actorToUpdate, type);
-                registeredActors.get(actorToUpdate).setLastExecution(System.currentTimeMillis());
-
-            } catch (CantUpdateRegisteredProfileException exception) {
-
-                throw new CantUpdateRegisteredActorException(exception, "publicKey: "+actorToUpdate.getIdentityPublicKey()+" - name: "+actorToUpdate.getName(), "There was an error trying to update a registered actor through the network service.");
-            }
-        }
+        this.getConnection().update(actorToUpdate, type,getNetworkServiceType());
+        registeredActors.get(actorToUpdate).setLastExecution(System.currentTimeMillis());
     }
 
     @Override
@@ -285,66 +286,48 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
         registeredActors.remove(actorToUnregister);
 
-        if (this.getConnection() != null && this.getConnection().isRegistered()) {
-
-            try {
-
-                this.getConnection().unregisterProfile(actorToUnregister);
-
-            } catch (CantUnregisterProfileException  exception) {
-
-                throw new CantUnregisterActorException(exception, "publicKey: "+publicKey, "There was an error trying to update a registered actor through the network service.");
-            }
-        }
     }
 
     @Override
-    public boolean isActorOnline(final String publicKey) {
+    public String getActorFullPhoto(final String publicKey) throws CantRequestActorFullPhotoException {
 
-        if (this.getConnection() != null)
-            return this.getConnection().isActorOnline(publicKey);
-        else
-            return false;
+        // TODO add full photo management
+        /*if (this.getConnection() != null)
+            return this.getConnection().getActorFullPhoto(publicKey);
+        else*/
+            return null;
     }
 
     protected final void onNetworkServiceRegistered() {
 
+        System.out.println(" ESTOY PASANDO POR ACA!");
+
         if (registeredActors != null) {
 
-            if (this.getConnection() != null && this.getConnection().isRegistered()) {
+            for (Map.Entry<ActorProfile, RefreshParameters> actorToRegister : registeredActors.entrySet()) {
 
-                for (Map.Entry<ActorProfile, RefreshParameters> actorToRegister : registeredActors.entrySet()) {
+                Location location = LocationUtils.getRandomLocation(actorToRegister.getKey().getLocation(), actorToRegister.getValue().getAccuracy());
 
-                    try {
+                actorToRegister.getKey().setLocation(location);
 
-                        Location location = LocationUtils.getRandomLocation(actorToRegister.getKey().getLocation(), actorToRegister.getValue().getAccuracy());
+                try {
 
-                        actorToRegister.getKey().setLocation(location);
+                    UUID packageId = this.getConnection().register(actorToRegister.getKey(), getProfile());
+                    if (packageId != null)
+                        registeredActorsByPackageId.put(packageId, actorToRegister.getKey());
 
-                        this.getConnection().registerProfile(actorToRegister.getKey());
-
-                    } catch (CantRegisterProfileException exception) {
-
-                        CantRegisterActorException cantRegisterActorException = new CantRegisterActorException(exception, "publicKey: "+actorToRegister.getKey().getIdentityPublicKey()+" - name: "+actorToRegister.getKey().getName(), "There was an error trying to register the actor through the network service.");
-
-                        this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRegisterActorException);
-                    }
+                } catch (CantRegisterProfileException | CantSendMessageException e) {
+                    e.printStackTrace();
                 }
             }
-        }
-
-        try {
-            actorLocationUpdaterAgent.start();
-        } catch (Exception exception) {
-            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
 
         onActorNetworkServiceRegistered();
     }
 
-    public final void onActorRegistered(String publicKey) {
+    public final void onActorRegistered(UUID packageId, String publicKey) {
 
-        ActorProfile registeredActor = (registeredActors != null ? getRegisteredActorByPublicKey(publicKey) : null);
+        ActorProfile registeredActor = (registeredActors != null ? getRegisteredActorByPackageId(packageId) : null);
 
         if (registeredActor != null)
             onActorRegistered(registeredActor);
@@ -371,13 +354,6 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
     protected final void onNetworkServiceStart() throws CantStartPluginException {
 
         try {
-
-            /*
-             * Initialize listeners
-             */
-            initializeActorNetworkServiceListeners();
-
-            actorLocationUpdaterAgent = new NetworkServiceActorLocationUpdaterAgent(this);
 
             onActorNetworkServiceStart();
 
@@ -415,12 +391,6 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
             for (Map.Entry<ActorProfile, RefreshParameters> actorToRegister : registeredActors.entrySet())
                 actorToRegister.getValue().setLastExecution(1);
 
-        try {
-            actorLocationUpdaterAgent.stop();
-        } catch (Exception exception) {
-            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-        }
-
         onActorNetworkServiceConnectionLost();
     }
 
@@ -429,12 +399,6 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         if (registeredActors != null)
             for (Map.Entry<ActorProfile, RefreshParameters> actorToRegister : registeredActors.entrySet())
                 actorToRegister.getValue().setLastExecution(1);
-
-        try {
-            actorLocationUpdaterAgent.stop();
-        } catch (Exception exception) {
-            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-        }
 
         onActorNetworkServiceConnectionClosed();
     }
@@ -455,8 +419,19 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
     }
 
+    @Override
+    public void handleProfileRegisteredSuccessfully(ProfileTypes types, UUID packageId, String profilePublicKey) {
+        if (types.equals(ProfileTypes.ACTOR)){
+            onActorRegistered(packageId,profilePublicKey);
+        }else {
+            super.handleProfileRegisteredSuccessfully(types, packageId, profilePublicKey);
+        }
+    }
+
     public ConcurrentHashMap<ActorProfile, RefreshParameters> getRegisteredActors() {
 
         return registeredActors;
     }
+
+
 }

@@ -18,9 +18,6 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
  */
 public class ProfileDialog extends FermatDialog implements View.OnClickListener {
 
-    private ImageView profilePhoto;
-    private ImageView chatButton;
-    private TextView profileName;
     String bodyName;
     Bitmap image;
     int BUTTON_TOUCH = 0;
@@ -32,11 +29,11 @@ public class ProfileDialog extends FermatDialog implements View.OnClickListener 
 
     }
 
-    public void setProfilePhoto (Bitmap photo){
+    public void setProfilePhoto(Bitmap photo) {
         image = photo;
     }
 
-    public void setProfileName (String name){
+    public void setProfileName(String name) {
         bodyName = name;
     }
 
@@ -44,6 +41,9 @@ public class ProfileDialog extends FermatDialog implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ImageView profilePhoto;
+        ImageView chatButton;
+        TextView profileName;
         profileName = (TextView) this.findViewById(R.id.contact_name_dialog);
         profilePhoto = (ImageView) this.findViewById(R.id.profile_image_dialog);
         chatButton = (ImageView) this.findViewById(R.id.chatContactButton);
@@ -77,7 +77,7 @@ public class ProfileDialog extends FermatDialog implements View.OnClickListener 
         BUTTON_TOUCH = touch;
     }
 
-    public int getButtonTouch(){
+    public int getButtonTouch() {
         return BUTTON_TOUCH;
     }
 }

@@ -21,7 +21,7 @@ apply from: 'WPD/settings.gradle'
 apply from: 'android_toolbox/settings.gradle'
 apply from: 'COR/settings.gradle'
 
-include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai', ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai', ':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai', ':transactions-fragment', ':fermat-ccp-android-wallet-fermat-wallet-bitdubai', ':fermat-ccp-plugin-wallet-module-fermat-wallet-bitdubai'
+include ':fermat-android-api', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':transactions-fragment'
 
 //include ':fermat-linux-core'
 include ':fermat-api'
@@ -30,25 +30,28 @@ include ':fermat-core-api'
 
 //include ':manifest_generator'
 
+//The following lines are projects probably deprecated or just abandoned, I removed to avoid the inclusion in the main build.
+//Some lines that represents a working project/plugin are included in the proper setting.gradle.
+
 //BNP Projects
 
-include ':fermat-bnp-plugin-network-service-bank-notes-bitdubai'
-project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai').projectDir = new File('BNP/plugin/network_service/fermat-bnp-plugin-network-service-bank-notes-bitdubai')
+//include ':fermat-bnp-plugin-network-service-bank-notes-bitdubai'
+//project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai').projectDir = new File('BNP/plugin/network_service/fermat-bnp-plugin-network-service-bank-notes-bitdubai')
 
 // identity
-include ':fermat-mkt-plugin-identity-marketer-bitdubai'
-project(':fermat-mkt-plugin-identity-marketer-bitdubai').projectDir = new File('MKT/plugin/identity/fermat-mkt-plugin-identity-marketer-bitdubai')
+//include ':fermat-mkt-plugin-identity-marketer-bitdubai'
+//project(':fermat-mkt-plugin-identity-marketer-bitdubai').projectDir = new File('MKT/plugin/identity/fermat-mkt-plugin-identity-marketer-bitdubai')
 
 // SHP Projects
 
 //module
-include ':fermat-shp-plugin-sub-app-module-brand-bitdubai'
-project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new File('SHP/plugin/sub-app-module/fermat-shp-plugin-sub-app-module-brand-bitdubai')
+//include ':fermat-shp-plugin-sub-app-module-brand-bitdubai'
+//project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new File('SHP/plugin/sub-app-module/fermat-shp-plugin-sub-app-module-brand-bitdubai')
 
 // identity
-include ':fermat-shp-plugin-identity-brand-bitdubai'
-project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
-project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')
+//include ':fermat-shp-plugin-identity-brand-bitdubai'
+//project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
+//project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')
 
 
 //include ':ApplicationSessionTest'

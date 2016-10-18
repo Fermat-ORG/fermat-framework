@@ -7,6 +7,7 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnect
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,13 +19,13 @@ import java.util.UUID;
 public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorCommunityInformation {
 
     private final String publicKey;
-    private final String alias    ;
-    private final byte[] image    ;
-    private final ConnectionState connectionState;
+    private final String alias;
+    private final byte[] image;
+    private ConnectionState connectionState;
     private final UUID connectionId;
-    private String country  ;
-    private String state    ;
-    private String city     ;
+    private String country;
+    private String state;
+    private String city;
     private final String status;
     private final Location location;
     private final ProfileStatus profileStatus;//online offline
@@ -41,25 +42,24 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
                                                          final Location location,
                                                          final ProfileStatus profileStatus) {
 
-        this.publicKey          = publicKey      ;
-        this.alias              = alias          ;
-        this.image              = image          ;
-        this.connectionState    = connectionState;
-        this.connectionId       = connectionId   ;
-        this.status             = status         ;
-        this.country             = country         ;
-        this.state             = state         ;
-        this.city             = city         ;
-        this.location             = location         ;
-        this.profileStatus             = profileStatus         ;
+        this.publicKey = publicKey;
+        this.alias = alias;
+        this.image = image;
+        this.connectionState = connectionState;
+        this.connectionId = connectionId;
+        this.status = status;
+        this.country = country;
+        this.state = state;
+        this.city = city;
+        this.location = location;
+        this.profileStatus = profileStatus;
     }
-
 
     public ChatActorCommunitySubAppModuleInformationImpl(final ChatActorConnection exposingData, Location location) {
 
         this.publicKey = exposingData.getPublicKey();
-        this.alias     = exposingData.getAlias()    ;
-        this.image     = exposingData.getImage()    ;
+        this.alias = exposingData.getAlias();
+        this.image = exposingData.getImage();
         this.connectionState = exposingData.getConnectionState();
         this.connectionId = exposingData.getConnectionId();
         this.status = exposingData.getStatus();
@@ -70,13 +70,29 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.profileStatus = ProfileStatus.ONLINE;
     }
 
+
+
+    public ChatActorCommunitySubAppModuleInformationImpl(ActorProfile ced) {
+        this.publicKey = ced.getIdentityPublicKey();
+        this.alias = ced.getName()+"("+ced.getAlias()+")";
+        this.image = ced.getPhoto();
+        this.connectionState = null;
+        this.connectionId = null;
+        this.status = null;
+        this.country = null;
+        this.state = null;
+        this.city = null;
+        this.location = ced.getLocation();
+        this.profileStatus = ced.getStatus();
+    }
+
     public ChatActorCommunitySubAppModuleInformationImpl(ChatExposingData ced) {
         this.publicKey = ced.getPublicKey();
         this.alias = ced.getAlias();
         this.image = ced.getImage();
-        this.connectionState= null;
-        this.connectionId=null;
-        this.status=ced.getStatus();
+        this.connectionState = null;
+        this.connectionId = null;
+        this.status = ced.getStatus();
         this.country = ced.getCountry();
         this.state = ced.getState();
         this.city = ced.getCity();
@@ -90,7 +106,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.image = record.getImage();
         this.connectionState = record.getConnectionState();
         this.connectionId = null;
-        this.status=record.getStatus();
+        this.status = record.getStatus();
         this.country = record.getCountry();
         this.state = record.getState();
         this.city = record.getCity();
@@ -112,7 +128,9 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     }
 
     @Override
-    public byte[] getImage() { return image; }
+    public byte[] getImage() {
+        return image;
+    }
 
     @Override
     public List listAlias() {
@@ -129,33 +147,54 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         return this.connectionId;
     }
 
+    @Override
     public String getStatus() {
         return status;
     }
+
+    @Override
     public String getCity() {
         return city;
     }
+
+    @Override
     public String getCountry() {
         return country;
     }
+
+    @Override
     public String getState() {
         return state;
     }
+
+    @Override
     public Location getLocation() {
         return location;
     }
+
+    @Override
     public ProfileStatus getProfileStatus() {
         return profileStatus;
     }
 
+    @Override
+    public void setConnectionState(ConnectionState connectionState) {
+        this.connectionState=connectionState;
+    }
+
+    @Override
     public void setCity(String city) {
-        this.city=city;
+        this.city = city;
     }
+
+    @Override
     public void setCountry(String country) {
-        this.country=country;
+        this.country = country;
     }
+
+    @Override
     public void setState(String state) {
-        this.state=state;
+        this.state = state;
     }
 
     @Override

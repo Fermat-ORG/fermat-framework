@@ -3,7 +3,6 @@ apply plugin: 'maven'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
-apply plugin: 'eclipse'
 apply plugin: 'jacoco'
 
 group = "com.bitdubai.fermat.cry"
@@ -37,8 +36,8 @@ pmd {
 }
 
 dependencies {
-    compile project(':fermat-api')
-    compile project(':fermat-pip-api')
+    //compile project(':fermat-api')
+    //compile project(':fermat-pip-api')
     deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'

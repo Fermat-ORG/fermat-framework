@@ -6,7 +6,7 @@
     android:id="@android:id/text1"
     android:gravity="start"
     android:text="LOW"
-    android:textColor="#666666"
+    android:textColor="#616161"
     android:background="#EAEAEA"
     android:textColorHighlight="#CFCFCF"
     android:paddingLeft="10dip"

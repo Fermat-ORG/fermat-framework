@@ -2,15 +2,21 @@ package com.bitdubai.sub_app.intra_user_community.common.popups;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
@@ -18,11 +24,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.R;
-
 import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
-
 /**
  * Created by Joaquin C on 12/11/15.
  * Modified by Jose Manuel De Sousa 08/12/2015
@@ -36,11 +39,19 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
     private final IntraUserInformation   intraUserInformation;
     private final IntraUserLoginIdentity identity            ;
 
+    private final Activity                       activity;
+    private final ReferenceAppFermatSession intraUserSubAppSession;
+    private final SubAppResourcesProviderManager subAppResources ;
+
     private FermatTextView title      ;
     private FermatTextView description;
     private FermatTextView userName   ;
     private FermatButton   positiveBtn;
     private FermatButton   negativeBtn;
+
+    private FermatTextView textConnectionSuccess;
+    private View ConnectionSuccess;
+    private boolean result = false;
 
     public AcceptDialog(final Activity                       activity              ,
                         final ReferenceAppFermatSession intraUserSubAppSession,
@@ -50,8 +61,13 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
 
         super(activity, intraUserSubAppSession, subAppResources);
 
+
+
         this.intraUserInformation = intraUserInformation;
         this.identity             = identity            ;
+        this.activity = activity;
+        this.intraUserSubAppSession = intraUserSubAppSession;
+        this.subAppResources = subAppResources;
     }
 
 
@@ -59,25 +75,37 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try{
+            title       = (FermatTextView) findViewById(R.id.title);
+            description = (FermatTextView) findViewById(R.id.description);
+            userName    = (FermatTextView) findViewById(R.id.second_description);
+            positiveBtn = (FermatButton)   findViewById(R.id.positive_button);
+            negativeBtn = (FermatButton)   findViewById(R.id.negative_button);
 
-        title       = (FermatTextView) findViewById(R.id.title          );
-        description = (FermatTextView) findViewById(R.id.description    );
-        userName    = (FermatTextView) findViewById(R.id.user_name      );
-        positiveBtn = (FermatButton)   findViewById(R.id.positive_button);
-        negativeBtn = (FermatButton)   findViewById(R.id.negative_button);
+            positiveBtn.setOnClickListener(this);
+            negativeBtn.setOnClickListener(this);
 
-        positiveBtn.setOnClickListener(this);
-        negativeBtn.setOnClickListener(this);
+            title.setText(this.activity.getResources().getString(R.string.confirmation_notification_dialog_title));
+            title.setTextColor(Color.BLACK);
+            description.setText( this.activity.getResources().getString(R.string.confirmation_notification_dialog_description));
+            description.setTextColor(Color.parseColor("#5ddad1"));
+            userName.setText(intraUserInformation.getName() + " "+ this.activity.getResources().getString(R.string.confirmation_notification_dialog_message));
+            userName.setTextColor(Color.parseColor("#3f3f3f"));
+            userName.setVisibility(View.VISIBLE);
+            userName.setTextSize(14);
+            //userName.addRule(RelativeLayout.BELOW, R.id.below_id)
+            positiveBtn.setTextColor(Color.BLACK);
+            negativeBtn.setTextColor(Color.parseColor("#3f3f3f"));
+        }catch(Exception exc){
+            Toast.makeText(getContext(), "Whoops! an unespected error has ocurred!", Toast.LENGTH_SHORT).show();
+        }
 
-        title.setText("Connect");
-        description.setText("Do you want to accept");
-        userName.setText(intraUserInformation.getName());
 
     }
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_builder;
+        return R.layout.ccp_comm_dialog_builder;
     }
 
     @Override
@@ -95,8 +123,30 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
             try {
                 if (intraUserInformation != null && identity != null) {
                     getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(), intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
-                    getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED,Boolean.TRUE);
-                    Toast.makeText(getContext(), intraUserInformation.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                    getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED, Boolean.TRUE);
+
+
+                    //Toast.makeText(getContext(), intraUserInformation.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                    //Crear un nuevo intent
+                    //Intent intent = new Intent(AccpetMessage);
+                    //startActivity(intent);
+                    Toast CustomToast = new Toast(getContext());
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    View layout = inflater.inflate(R.layout.ccp_connection_accepted,
+                            (ViewGroup) findViewById(R.id.layout_connection_success));
+
+
+                    TextView txtMsg = (TextView)layout.findViewById(R.id.text_connection_success);
+                    txtMsg.setText("\n"+getContext().getResources().getString(R.string.connected)+" "+intraUserInformation.getName()+"\n");
+                    int offsetX = 0;
+                    int offsetY = 0;
+                    CustomToast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, offsetX, offsetY);
+                    CustomToast.setDuration(Toast.LENGTH_SHORT);
+                    CustomToast.setView(layout);
+                    CustomToast.show();
+
+                    result = true;
                 } else {
                     super.toastDefaultError();
                 }
@@ -122,6 +172,15 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
                 super.toastDefaultError();
             }
             dismiss();
+
         }
+    }
+
+    public boolean getResultado(){
+        return result;
+    }
+
+    public void setResultado(boolean resultado){
+        result = resultado;
     }
 }

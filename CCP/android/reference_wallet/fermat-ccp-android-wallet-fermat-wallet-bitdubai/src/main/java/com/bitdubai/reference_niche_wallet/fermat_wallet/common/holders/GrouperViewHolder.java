@@ -94,7 +94,7 @@ public class GrouperViewHolder extends ParentViewHolder {
                 bitmapWorkerTask.execute(photo);
             }else if(fermatWalletTransaction.getActorToType().equals(Actors.BITCOIN_BASIC_USER)){
 
-                    Picasso.with(contactIcon.getContext()).load(R.drawable.bitcoin_wallet_2).transform(new CircleTransform()).into(contactIcon);
+                Picasso.with(contactIcon.getContext()).load(R.drawable.bitcoin_wallet_2).transform(new CircleTransform()).into(contactIcon);
 
             }else if(fermatWalletTransaction.getActorToType().equals(Actors.LOSS_PROTECTED_USER)){
 
@@ -114,7 +114,7 @@ public class GrouperViewHolder extends ParentViewHolder {
 
 
         txt_contactName.setText(contactName);
-        txt_amount.setText(formatBalanceString(fermatWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");
+        txt_amount.setText(formatBalanceString(fermatWalletTransaction.getAmount(), ShowMoneyType.FRMT.getCode())+ " btc");
 
         txt_notes.setText(fermatWalletTransaction.getMemo());
 

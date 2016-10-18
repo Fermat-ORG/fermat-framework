@@ -37,9 +37,9 @@ public class CreateNewLocationFragment
     // Data
     private Country[] countries;
     private Country selectedCountry;
-    private static int MAX_LENGHT_STATE = 30;
-    private static int MAX_LENGHT_CITY = 30;
-    private static int MAX_LENGHT_ADDRESS = 100;
+    private static int MAX_LENGTH_STATE = 30;
+    private static int MAX_LENGTH_CITY = 30;
+    private static int MAX_LENGTH_ADDRESS = 100;
 
 
     // UI
@@ -53,24 +53,48 @@ public class CreateNewLocationFragment
     private CryptoCustomerWalletModuleManager moduleManager;
 
     private final TextWatcher cityTextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {cityTextCount.setText(String.valueOf(MAX_LENGHT_CITY - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            cityTextCount.setText(String.valueOf(MAX_LENGTH_CITY - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher stateTextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {stateTextCount.setText(String.valueOf(MAX_LENGHT_STATE - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            stateTextCount.setText(String.valueOf(MAX_LENGTH_STATE - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher address1TextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {address1TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            address1TextCount.setText(String.valueOf(MAX_LENGTH_ADDRESS - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher address2TextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {address2TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            address2TextCount.setText(String.valueOf(MAX_LENGTH_ADDRESS - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
 
 
@@ -104,34 +128,32 @@ public class CreateNewLocationFragment
 
 
         //Limit max length, add textWatchers
-        cityTextView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_CITY)});
-        stateEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_STATE)});
-        addressLineOneEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_ADDRESS)});
-        addressLineTwoEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_ADDRESS)});
+        cityTextView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGTH_CITY)});
+        stateEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGTH_STATE)});
+        addressLineOneEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGTH_ADDRESS)});
+        addressLineTwoEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGTH_ADDRESS)});
 
         cityTextView.addTextChangedListener(cityTextWatcher);
         stateEditText.addTextChangedListener(stateTextWatcher);
         addressLineOneEditText.addTextChangedListener(address1TextWatcher);
         addressLineTwoEditText.addTextChangedListener(address2TextWatcher);
 
-        cityTextCount.setText(String.valueOf(MAX_LENGHT_CITY));
-        stateTextCount.setText(String.valueOf(MAX_LENGHT_STATE));
-        address1TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS));
-        address2TextCount.setText(String.valueOf(MAX_LENGHT_ADDRESS));
-
-
-
+        cityTextCount.setText(String.valueOf(MAX_LENGTH_CITY));
+        stateTextCount.setText(String.valueOf(MAX_LENGTH_STATE));
+        address1TextCount.setText(String.valueOf(MAX_LENGTH_ADDRESS));
+        address2TextCount.setText(String.valueOf(MAX_LENGTH_ADDRESS));
 
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
-        moduleManager =appSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
 
         configureToolbar();
 
         return layout;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -153,6 +175,7 @@ public class CreateNewLocationFragment
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onClick(View view) {
         StringBuilder location = new StringBuilder();
@@ -178,42 +201,43 @@ public class CreateNewLocationFragment
 
         if (location.length() > 0) {
             List<String> locations = (List<String>) appSession.getData(FragmentsCommons.LOCATION_LIST);
-            int pos = locations.size()-1;
-            if(locations.get(pos).equals("settings")){
+            int pos = locations.size() - 1;
+            if (locations.get(pos).equals("settings")) {
                 locations.remove(pos);
                 locations.add(location.toString());
 
                 for (String loc : locations) {
                     try {
                         moduleManager.createNewLocation(loc, appSession.getAppPublicKey());
-                    } catch (CantCreateLocationPurchaseException e) {}
+                    } catch (CantCreateLocationPurchaseException ignore) {
+                    }
                 }
 
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
             }
-            if(locations.get(pos).equals("wizard")){
+            if (locations.get(pos).equals("wizard")) {
                 locations.remove(pos);
                 locations.add(location.toString());
 
                 for (String loc : locations) {
                     try {
                         moduleManager.createNewLocation(loc, appSession.getAppPublicKey());
-                    } catch (CantCreateLocationPurchaseException e) {}
+                    } catch (CantCreateLocationPurchaseException ignore) {
+                    }
                 }
 
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
             }
         } else {
-            Toast.makeText(getActivity(), "Need to set the fields", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.ccw_need_to_set_the_fields, Toast.LENGTH_LONG).show();
         }
     }
 
     private List<String> getListOfCountryNames(Country[] countries) {
         List<String> data = new ArrayList<>();
 
-        for (int i = 0; i < countries.length; i++)
-            if(countries[i] != Country.NONE)
-                data.add(countries[i].getCountry());
+        for (Country country : countries)
+            if (country != Country.NONE) data.add(country.getCountry());
 
         return data;
     }

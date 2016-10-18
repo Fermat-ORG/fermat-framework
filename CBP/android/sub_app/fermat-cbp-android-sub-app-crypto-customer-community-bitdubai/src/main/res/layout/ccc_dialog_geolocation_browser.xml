@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,7 +19,7 @@
             android:layout_marginLeft="13dp"
             android:layout_marginStart="13dp"
             android:background="#F9F9F9"
-            android:src="@drawable/ccc_close_icon_gray"/>
+            android:src="@drawable/ccc_close_icon_gray" />
 
         <EditText
             android:id="@+id/ccc_geolocation_input"
@@ -36,8 +35,7 @@
             android:hint="@string/description_search"
             android:textColor="@color/color_black"
             android:textColorHint="#848484"
-            android:textSize="14sp"
-            />
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/lupita_button"
@@ -47,14 +45,13 @@
             android:layout_marginEnd="13dp"
             android:layout_marginRight="13dp"
             android:background="#f9f9f9"
-            android:src="@drawable/ccc_search_icon_gray"
-            />
+            android:src="@drawable/ccc_search_icon_gray" />
     </LinearLayout>
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -65,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible"
-            tools:listitem="@layout/ccc_dialog_geolocation_browser_results_item"/>
+            tools:listitem="@layout/ccc_dialog_geolocation_browser_results_item" />
 
         <TextView
             android:id="@+id/ccc_no_data_geo"
@@ -75,15 +72,15 @@
             android:text="@string/ccc_no_data_available"
             android:textColor="#BCBEC0"
             android:textSize="24sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <ProgressBar
             android:id="@+id/ccc_geolocation_progress_bar"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:indeterminate="true"
             android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:indeterminate="true"
+            android:visibility="gone" />
     </FrameLayout>
 
 

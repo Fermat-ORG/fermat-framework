@@ -120,7 +120,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database, pluginRoot);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
-        return cryptoBrokerWalletDatabaseDao.getCryptoBrokerStockTransactionsByMerchandise(merchandise, moneyType, transactionType, balanceType);
+        return cryptoBrokerWalletDatabaseDao.getStockTransactionsByMerchandise(merchandise, moneyType, transactionType, balanceType);
     }
 
     @Override

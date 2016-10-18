@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
+
+//import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
+
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -40,10 +42,12 @@ public abstract class Fermat_Stocks_Statistics_Fragment extends AbstractFermatFr
 
     private NumberFormat numberFormat = DecimalFormat.getInstance();
     private Currency currency;
-    private List<CryptoBrokerStockTransaction> stockTransactions;
+
+//    private List<CryptoBrokerStockTransaction> stockTransactions;
     private float limitVal = 0.4f * 100;
     private int lastItemPosition;
-    private Map<Integer, CryptoBrokerStockTransaction> map = new HashMap<>();
+//    private Map<Integer, CryptoBrokerStockTransaction> map = new HashMap<>();
+
     private TextView startIndicator;
     private TextView endIndicator;
     private float balance;
@@ -114,7 +118,11 @@ public abstract class Fermat_Stocks_Statistics_Fragment extends AbstractFermatFr
 
         if (data != null) {
             currency = data.getCurrency();
-            stockTransactions = data.getStockTransactions();
+<<<<<<< HEAD
+           // stockTransactions = data.getStockTransactions();
+=======
+//            stockTransactions = data.getStockTransactions();
+>>>>>>> 4e17147d69dd7732115f8b4dc8b6de8c5e7a9900
             balance = data.getBalance();
         }
     }
@@ -136,8 +144,9 @@ public abstract class Fermat_Stocks_Statistics_Fragment extends AbstractFermatFr
         }
 
         // poniendo los valores en los dias adecuados
-        if (stockTransactions != null) {
-            for (CryptoBrokerStockTransaction transaction : stockTransactions) {
+<<<<<<< HEAD
+       // if (stockTransactions != null) {
+           /* for (CryptoBrokerStockTransaction transaction : stockTransactions) {
                 calendar.setTimeInMillis(transaction.getTimestamp());
 
                 lastItemPosition = calendar.get(Calendar.DAY_OF_MONTH);
@@ -150,8 +159,26 @@ public abstract class Fermat_Stocks_Statistics_Fragment extends AbstractFermatFr
 
                 if (runningAvailableBalance > limitVal)
                     colors.set(index, Color.parseColor("#FF3E4664"));
-            }
-        }
+            }*/
+        //}
+=======
+//        if (stockTransactions != null) {
+//            for (CryptoBrokerStockTransaction transaction : stockTransactions) {
+//                calendar.setTimeInMillis(transaction.getTimestamp());
+//
+//                lastItemPosition = calendar.get(Calendar.DAY_OF_MONTH);
+//                float runningAvailableBalance = transaction.getRunningAvailableBalance().floatValue();
+//                int index = lastItemPosition - 1;
+//
+//                entries.get(index).setVal(runningAvailableBalance);
+//
+//                map.put(lastItemPosition, transaction);
+//
+//                if (runningAvailableBalance > limitVal)
+//                    colors.set(index, Color.parseColor("#FF3E4664"));
+//            }
+//        }
+>>>>>>> 4e17147d69dd7732115f8b4dc8b6de8c5e7a9900
 
         putDataInIndicators(lastItemPosition);
 
@@ -183,11 +210,20 @@ public abstract class Fermat_Stocks_Statistics_Fragment extends AbstractFermatFr
 
 
     private void putDataInIndicators(int xIndex) {
-        CryptoBrokerStockTransaction transaction = map.get(xIndex);
+<<<<<<< HEAD
+       /* CryptoBrokerStockTransaction transaction = map.get(xIndex);
 
         if (transaction != null) {
             startIndicator.setText(numberFormat.format(transaction.getPreviousAvailableBalance()));
             endIndicator.setText(numberFormat.format(transaction.getRunningAvailableBalance()));
-        }
+        }*/
+=======
+        //CryptoBrokerStockTransaction transaction = map.get(xIndex);
+
+//        if (transaction != null) {
+//            startIndicator.setText(numberFormat.format(transaction.getPreviousAvailableBalance()));
+//            endIndicator.setText(numberFormat.format(transaction.getRunningAvailableBalance()));
+//        }
+>>>>>>> 4e17147d69dd7732115f8b4dc8b6de8c5e7a9900
     }
 }

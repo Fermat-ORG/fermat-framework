@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,12 +8,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantInitializeExtraUserActorDatabaseException;
 
 import java.util.ArrayList;
@@ -32,20 +30,13 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class ExtraUserActorDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class ExtraUserActorDeveloperDatabaseFactory {
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
-    /**
-     * DealsWithPluginIdentity Interface member variables.
-     */
-    UUID pluginId;
+    private UUID pluginId;
 
-
-    Database database;
+    private Database database;
 
     /**
      * Constructor
@@ -127,13 +118,4 @@ public class ExtraUserActorDeveloperDatabaseFactory {//implements DealsWithPlugi
         return returnedRecords;
     }
 
-//    @Override
-//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-//        this.pluginDatabaseSystem = pluginDatabaseSystem;
-//    }
-//
-//    @Override
-//    public void setPluginId(UUID pluginId) {
-//        this.pluginId = pluginId;
-//    }
 }

@@ -127,6 +127,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             adapter = new ContractHistoryAdapter(getActivity(), contractHistoryList);
@@ -163,6 +164,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -208,16 +210,14 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
                     CommonLogger.exception(TAG, ex.getMessage(), ex);
             }
         } else {
-            Toast.makeText(getActivity(),
-                    "Sorry, an error happened in ContractHistoryActivityFragment (Module == null)",
-                    Toast.LENGTH_SHORT).
-                    show();
+            Toast.makeText(getActivity(), R.string.ccw_error_happened_in_ContractHistoryActivityFragment, Toast.LENGTH_SHORT).show();
         }
 
         return data;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {

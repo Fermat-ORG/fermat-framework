@@ -14,7 +14,7 @@
     <color name="cbw_list_divider">#a7a7a7</color>
     <color name="cbw_grouper_text">#343434</color>
     <color name="cbw_contract_history_background">#ffffff</color>
-    <color name="cbw_contract_history_customer_name_text">#6b7378</color>
+    <color name="cbw_contract_history_broker_name_text">#6b7378</color>
     <color name="cbw_contract_history_sold_text">#00b3dc</color>
     <color name="cbw_contract_history_exchange_rate_text">#6b7378</color>
     <color name="cbw_contract_history_date_text">#6b7378</color>
@@ -56,6 +56,8 @@
     <color name="text_value_status_accepted">#0e0e0e</color>
     <color name="activity_background">#222</color>
 
+    <color name="cbw_provider_is_down">#CC0000</color>
+
     <color name="cbw_setting_item_color">#dbdbdb</color>
 
     <color name="cbw_wizard_color">#1270A6</color>
@@ -76,6 +78,12 @@
     <color name="card_background_status_inactive">#a4a4a4</color>
 
     <color name="cbw_wizard_merchandises_wallet_button_color">#12aca0</color>
+
+
+    <color name="cbw_simple_spinner_item_text_color">@color/dark_grey</color>
+    <color name="cbw_simple_spinner_item_background_color">@color/white</color>
+    <color name="cbw_simple_spinner_item_divider_color">#a4a4a4</color>
+
 
 
 </resources>

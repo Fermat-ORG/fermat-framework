@@ -29,23 +29,27 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.lang.ref.WeakReference;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 
 /**
  * Created by mati on 2015.11.24..
  */
-public class CustomerNavigationViewPainter implements NavigationViewPainter {
+public class CustomerNavigationViewPainter extends NavigationViewPainter {
 
     private static final String TAG = "CustomerNavigationView";
 
     private CryptoCustomerIdentity actorIdentity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
     private CryptoCustomerWalletModuleManager moduleManager;
-    private WeakReference<Context> activity;
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
     public CustomerNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> session,
                                          FermatApplicationCaller applicationsHelper) {
-        this.activity = new WeakReference<>(activity);
+        super(activity);
 
         ErrorManager errorManager = session.getErrorManager();
 
@@ -66,8 +70,8 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     @Override
     public View addNavigationViewHeader() {
         try {
-            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity, applicationsHelper.get());
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), getContext(), actorIdentity, applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -77,7 +81,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            return new CryptoCustomerWalletNavigationViewAdapter(activity.get());
+            return new CryptoCustomerWalletNavigationViewAdapter(getContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,8 +100,8 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
         long satoshisFER = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode());
         double fermats = BitcoinConverter.convert(satoshisFER, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.FERMAT);
 
-        bitcoinBalance.setText(String.format("%1$s %2$s", bitcoins, CryptoCurrency.BITCOIN.getCode()));
-        fermatBalance.setText(String.format("%1$s %2$s", fermats, CryptoCurrency.FERMAT.getCode()));
+        bitcoinBalance.setText(String.format("%1$s %2$s", fixFormat(bitcoins), CryptoCurrency.BITCOIN.getCode()));
+        fermatBalance.setText(String.format("%1$s %2$s", fixFormat(fermats), CryptoCurrency.FERMAT.getCode()));
 
         return layout;
     }
@@ -110,7 +114,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.get().getResources(), R.drawable.ccw_navigation_drawer_background, options);
+                    getContext().getResources(), R.drawable.ccw_navigation_drawer_background, options);
         } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
@@ -136,4 +140,29 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     public boolean hasClickListener() {
         return false;
     }
+
+
+    private String fixFormat(Double value) {
+
+
+        if (compareLessThan1(value)) {
+            numberFormat.setMaximumFractionDigits(8);
+        } else {
+            numberFormat.setMaximumFractionDigits(2);
+        }
+
+        return String.valueOf(numberFormat.format(new BigDecimal(value)));
+
+    }
+
+    private Boolean compareLessThan1(Double value) {
+        Boolean lessThan1 = true;
+
+        lessThan1 = BigDecimal.valueOf(value).compareTo(BigDecimal.ONE) == -1;
+
+
+        return lessThan1;
+    }
+
+
 }

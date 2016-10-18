@@ -16,7 +16,7 @@
             android:text="CHOOSE BROADCAST TYPE"
             android:id="@+id/textView2"
             android:layout_gravity="center_horizontal"
-            android:textColor="#000"
+            android:textColor="@color/cht_broadcaster_type_title"
             android:layout_marginTop="52dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
@@ -24,43 +24,45 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="BROADCAST SIMPLE"
+            android:text="@string/cht_broadcaster_simple_text"
             android:id="@+id/radioButton"
             android:layout_marginTop="71dp"
-            android:textColor="#808080"
+            android:textColor="@color/cht_broadcaster_text"
             android:layout_below="@+id/textView2"
-            android:layout_alignStart="@+id/textView2" />
+            android:layout_alignStart="@+id/textView2"
+            android:layout_alignLeft="@+id/textView2"/>
         <TextView
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="220dp"
             android:layout_height="1dp"
             android:id="@+id/textView5"
-            android:textColor="@color/gray_1"
+            android:textColor="@color/cht_broadcaster_separator"
             android:layout_below="@+id/radioButton"
             android:layout_centerHorizontal="true" />
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="BROADCAST SCHEDULED"
+            android:text="@string/cht_broadcaster_scheduled_text"
             android:id="@+id/radioButton2"
-            android:textColor="#808080"
-            android:textColorHint="#000"
-
+            android:textColor="@color/cht_broadcaster_text"
+            android:textColorHint="@color/cht_broadcaster_hint"
             android:layout_alignTop="@+id/textView5"
             android:layout_alignStart="@+id/radioButton"
+            android:layout_alignLeft="@+id/radioButton"
             android:checked="false" />
 
         <Button
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="Create"
+            android:text="@string/cht_broadcaster_button_text"
             android:id="@+id/btncreate"
             android:layout_marginBottom="112dp"
-            android:background="#47BF73"
+            android:background="@color/cht_broadcaster_button_background"
             android:padding="10dp"
             android:paddingLeft="40dp"
             android:paddingRight="20dp"
             android:textAlignment="center"
+            android:gravity="center"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" />
 

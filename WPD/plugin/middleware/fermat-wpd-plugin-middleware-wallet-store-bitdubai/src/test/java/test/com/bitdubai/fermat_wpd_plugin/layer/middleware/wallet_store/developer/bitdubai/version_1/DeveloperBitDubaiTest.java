@@ -14,13 +14,13 @@ public class DeveloperBitDubaiTest {
 
     // TODO PLEASE DON'T COPY AND PASTE WITHOUT CHECK AFTER...
     @Test
-    public void constructorTest (){
+    public void constructorTest() {
         DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
         Assert.assertNotNull(developerBitDubai.getPlugin());
     }
 
     @Test
-    public void getterTest(){
+    public void getterTest() {
         DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
 
         Assert.assertEquals(developerBitDubai.getAddress(), "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv");

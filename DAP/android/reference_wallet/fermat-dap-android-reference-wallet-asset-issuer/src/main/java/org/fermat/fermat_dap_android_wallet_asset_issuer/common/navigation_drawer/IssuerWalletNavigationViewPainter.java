@@ -22,7 +22,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by frank on 12/9/15.
  */
-public class IssuerWalletNavigationViewPainter implements NavigationViewPainter {
+public class IssuerWalletNavigationViewPainter extends NavigationViewPainter {
 
     private static final String TAG = "IssuerNavigationView";
 
@@ -33,6 +33,7 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
     public IssuerWalletNavigationViewPainter(Context activity,
                                              ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager> assetIssuerSession,
                                              FermatApplicationCaller applicationsHelper) {
+        super(activity);
 
         this.activity = new WeakReference<>(activity);
         this.assetIssuerSession = assetIssuerSession;

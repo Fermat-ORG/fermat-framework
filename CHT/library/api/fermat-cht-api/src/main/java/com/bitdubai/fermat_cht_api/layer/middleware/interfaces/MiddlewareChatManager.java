@@ -1,27 +1,17 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteGroupMemberException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
-import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,74 +19,179 @@ import java.util.UUID;
  * Created by miguel payarez (miguel_payarez@hotmail.com) on 29/12/15.
  * Update by Manuel Perez on 08/01/2016 (fix naming conventions)
  */
-public interface MiddlewareChatManager extends FermatManager{
+public interface MiddlewareChatManager extends FermatManager {
 
-    //Documentar
-    List<Chat> getChats() throws CantGetChatException;
+    /**
+     * List all the chat instances with status "VISIBLE" || see ChatStatus enum
+     *
+     * @return a list of chat instances
+     *
+     * @throws CantGetChatException if something goes wrong.
+     */
+    List<Chat> listVisibleChats() throws CantGetChatException;
 
+    /**
+     * Check in database if there are available visible chats.
+     *
+     * @return a boolean value
+     *
+     * @throws CantGetChatException if something goes wrong.
+     */
+    Boolean existAnyVisibleChat() throws CantGetChatException;
+
+    /**
+     * Bring a chat instance searching it by its id.
+     *
+     * @param chatId UUID representing the id of the searched chat
+     *
+     * @return an instance of chat
+     *
+     * @throws CantGetChatException if something goes wrong.
+     */
     Chat getChatByChatId(UUID chatId) throws CantGetChatException;
 
-    Chat newEmptyInstanceChat() throws CantNewEmptyChatException;
-
+    /**
+     * Create or update a chat instance // todo change to not to update through the same method
+     *
+     * @param chat an instance of the chat to create or update
+     *
+     * @throws CantSaveChatException
+     */
     void saveChat(Chat chat) throws CantSaveChatException;
 
-    void deleteChat(Chat chat) throws CantDeleteChatException;
+    /**
+     * Change the ChatStatus of a chat to the given
+     * see ChatStatus enum
+     *
+     * @param chatId       id of the chat
+     * @param chatStatus   status to change
+     *
+     * @throws CantSaveChatException if something goes wrong.
+     */
+    void markChatAs(UUID chatId, ChatStatus chatStatus) throws CantSaveChatException;
 
-    void deleteChats() throws CantDeleteChatException;
+    /**
+     * Delete all messages and change the chat status to INVISIBLE if isDeleteChat value is false if not delete the record
+     * see ChatStatus enum
+     *
+     * @param chatId id of the chat
+     *
+     * @throws CantDeleteChatException if something goes wrong.
+     */
+    void deleteChat(UUID chatId, boolean isDeleteChat) throws CantDeleteChatException;
 
-    void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException;
+    /**
+     * Delete all messages of the chats and set all the chat status to INVISIBLE
+     * see ChatStatus enum
+     *
+     * @throws CantDeleteChatException if something goes wrong.
+     */
+    void deleteAllChats() throws CantDeleteChatException;
 
-    List<Message> getMessages() throws CantGetMessageException;
-
+    /**
+     * List all the messages related to a given chat id.
+     *
+     * @param chatId id of the chat
+     *
+     * @return a list of Message instances
+     *
+     * @throws CantGetMessageException if something goes wrong.
+     */
     List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException;
 
-    Message getMessageByChatId(UUID chatId) throws CantGetMessageException;
+    /**
+     * Bring the last message in a chat conversation (SENT or RECEIVED)
+     * Return null if there isn't one.
+     *
+     * @param chatId id of the chat
+     *
+     * @return a Message instance.
+     *
+     * @throws CantGetMessageException if something goes wrong.
+     */
+    Message getLastMessageByChatId(UUID chatId) throws CantGetMessageException;
 
-    int getCountMessageByChatId(UUID chatId) throws CantGetMessageException;
+    /**
+     * Check how many unread messages are in a chat.
+     *
+     * @param chatId id of the chat
+     *
+     * @return a long instance
+     *
+     * @throws CantGetMessageException if something goes wrong.
+     */
+    long getUnreadCountMessageByChatId(UUID chatId) throws CantGetMessageException;
 
+    /**
+     * Bring a chat instance searching it by the remote actor public key
+     * Return a null value if there isn't one.
+     *
+     * @param publicKey of the remote actor.
+     *
+     * @return a Chat instance
+     *
+     * @throws CantGetChatException if something goes wrong.
+     */
     Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException;
 
-    Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
-
-    Message newEmptyInstanceMessage() throws CantNewEmptyMessageException;
-
+    /**
+     * Create a message instance, if there is one with the same id no action is made
+     *
+     * @param message a Message instance
+     *
+     * @throws CantSaveMessageException if something goes wrong.
+     */
     void saveMessage(Message message) throws CantSaveMessageException;
 
-    void deleteMessage(Message message) throws CantDeleteMessageException;
+    /**
+     * Change the MessageStatus of a message to READ
+     * See MessageStatus enum
+     *
+     * @param messageId id of the message
+     *
+     * @throws CantSaveMessageException if something goes wrong.
+     */
+    void markAsRead(UUID messageId) throws CantSaveMessageException;
 
-    void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
+    /**
+     * Send a read message notification to the counter-part.
+     * use @chatId to get the public keys of the actors involved
+     *
+     * @param messageId  id of the message
+     * @param chatId     id of the chat
+     *
+     * @throws SendStatusUpdateMessageNotificationException if something goes wrong.
+     */
+    void sendReadMessageNotification(UUID messageId, UUID chatId) throws SendStatusUpdateMessageNotificationException;
 
-    void sendDeliveredMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
+    /**
+     * Send a writing status notification to the counter-part.
+     * use @chatId to get the public keys of the actors involved
+     *
+     * @param chatId id of the chat
+     *
+     * @throws SendWritingStatusMessageNotificationException if something goes wrong.
+     */
+    void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
 
-    public void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
-
-    public boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus;
-
-    public boolean checkOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus;
-
-    public String checkLastConnection(String remotePublicKey) throws CantGetOnlineStatus;
-
-    public void activeOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus;
-
-    void notificationNewIncomingMessage(
-            String publicKey,
-            String tittle,
-            String body) throws CantSendNotificationNewIncomingMessageException;
-
-    String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
-
-    List<ChatActorConnection> getChatActorConnections(String localPublicKey);
+    /**
+     * Bring the date of the last message received in a specific chat
+     *
+     * @param chatId id of the chat
+     *
+     * @return a Timestamp instance
+     *
+     * @throws CantGetChatException if something goes wrong.
+     */
+    Timestamp getLastMessageReceivedDate(UUID chatId) throws CantGetChatException;
 
     /**
      * This method sends the message through the Chat Network Service
-     * @param createdMessage
-     * @throws CantSendChatMessageException
+     *
+     * @param createdMessage an instance of the message
+     *
+     * @throws CantSendChatMessageException if something goes wrong.
      */
     void sendMessage(Message createdMessage) throws CantSendChatMessageException;
 
-    void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException;
-
-    void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;
-
-    List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException;
 }

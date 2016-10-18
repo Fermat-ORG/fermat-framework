@@ -175,7 +175,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
+            makeText(getActivity(),getResources().getString(R.string.system_error),
                     LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
@@ -202,17 +202,17 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
 
         try {
             if (accuracy.getText().length() == 0) {
-                Toast.makeText(getActivity(), "Accuracy is empty, please add a value", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),getResources().getString(R.string.empty_accuracy), Toast.LENGTH_SHORT).show();
             } else {
                 acurracydata = Long.parseLong(accuracy.getText().toString());
                 moduleManager.updateIntraUserIdentity(identity.getPublicKey(), identity.getAlias(),identity.getPhrase(),
                         identity.getImage(),acurracydata,frecuencydata , moduleManager.getLocationManager());
 
-                Toast.makeText(getActivity(), "Wallet User Identity Geolocation Updated OK.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.geolocation_identity_updated), Toast.LENGTH_LONG).show();
 
             }
         }catch(Exception e){
-            Toast.makeText(getActivity(), "Wallet User Identity Geolocation Updated Error.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.geolocation_identity_not_updated), Toast.LENGTH_LONG).show();
 
             if(errorManager != null)
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

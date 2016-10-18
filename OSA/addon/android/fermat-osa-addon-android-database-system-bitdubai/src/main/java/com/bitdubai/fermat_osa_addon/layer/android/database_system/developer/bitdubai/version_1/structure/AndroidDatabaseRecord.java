@@ -111,6 +111,11 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
         }
     }
 
+    @Override
+    public Boolean getBooleanValue(String columnName) {
+        return null;
+    }
+
     /**
      * <p>Set String field record value
      *
@@ -134,9 +139,12 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
     @Override
     public void setUUIDValue(String columnName, UUID value) {
 
-        DatabaseRecord record = new AndroidRecord(columnName, value.toString(), true);
+        if (value != null) {
 
-        values.put(columnName, record);
+            DatabaseRecord record = new AndroidRecord(columnName, value.toString(), true);
+
+            values.put(columnName, record);
+        }
     }
 
     /**
@@ -206,6 +214,11 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
         DatabaseRecord record = new AndroidRecord(columnName, fermatEnum.getCode(), true);
 
         values.put(columnName, record);
+    }
+
+    @Override
+    public void setBooleanValue(String columnName, Boolean value) {
+
     }
 
     public void addValue(DatabaseRecord databaseRecord) {

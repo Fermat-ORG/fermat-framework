@@ -1,7 +1,9 @@
 package com.juaco.fermat_statistics.models;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
+
+//import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
+
 
 import java.util.List;
 
@@ -10,24 +12,26 @@ import java.util.List;
  */
 public class StockStatisticsData {
 
-    private List<CryptoBrokerStockTransaction> stockTransactions;
+   // private List<CryptoBrokerStockTransaction> stockTransactions;
     private Currency currency;
     private float balance;
 
-    public StockStatisticsData(List<CryptoBrokerStockTransaction> stockTransactions, Currency currency, float balance) {
-        this.stockTransactions = stockTransactions;
-        this.currency = currency;
-        this.balance = balance;
-    }
+
+//    public StockStatisticsData(List<CryptoBrokerStockTransaction> stockTransactions, Currency currency, float balance) {
+//        this.stockTransactions = stockTransactions;
+//        this.currency = currency;
+//        this.balance = balance;
+//    }
 
 
-    public List<CryptoBrokerStockTransaction> getStockTransactions() {
-        return stockTransactions;
-    }
 
-    public void setStockTransactions(List<CryptoBrokerStockTransaction> stockTransactions) {
-        this.stockTransactions = stockTransactions;
-    }
+//    public List<CryptoBrokerStockTransaction> getStockTransactions() {
+//        return stockTransactions;
+//    }
+
+//    public void setStockTransactions(List<CryptoBrokerStockTransaction> stockTransactions) {
+//        this.stockTransactions = stockTransactions;
+//    }
 
     public Currency getCurrency() {
         return currency;

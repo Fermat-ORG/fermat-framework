@@ -300,7 +300,6 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
                 .setBannerRes(R.drawable.banner_asset_issuer_community)
                 .setIconRes(R.drawable.asset_issuer_comunity)
                 .setVIewColor(R.color.dap_community_issuer_view_color)
-                .setTitleTextColor(R.color.dap_community_issuer_view_color)
                 .setSubTitle(R.string.dap_issuer_community_welcome_subTitle)
                 .setBody(R.string.dap_issuer_community_welcome_body)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)

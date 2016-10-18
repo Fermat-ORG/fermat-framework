@@ -106,7 +106,7 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.FILTER)
     private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
+    @NeededPluginReference(platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     WalletManagerManager walletManagerManager;
 
    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.TRANSFER_INTRA_WALLET)
@@ -266,7 +266,6 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
             throw new CantGetModuleManagerException(CantGetCryptoWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e).toString());
         }
     }
-
    /* @Override
     public SettingsManager<LossProtectedWalletSettings> getSettingsManager() {
         if (this.settingsManager != null)
@@ -279,10 +278,5 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
 
         return this.settingsManager;
     }
-
-
-
-
     */
-
 }

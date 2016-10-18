@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
-import android.hardware.camera2.CameraManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -21,12 +20,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,24 +35,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.settings.ChatIdentitySettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.DialogCropImage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.DialogSelectCamOrPic;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.EditIdentityExecutor;
+import com.bitdubai.fermat_android_api.utils.KeyboardUtil;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
@@ -66,12 +62,14 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.makeText;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
+
 /**
  * FERMAT-ORG
  * Developed by Lozadaa on 04/04/16.
@@ -93,13 +91,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     TextView textViewChtTitle;
     byte[] fanImageByteArray;
     Context context;
-    Toolbar toolbar;
     TextView statusView;
     ImageView placeholdImg;
     Button btnRotate;
     int ROTATE_VALUE = 0;
     private Uri imageToUploadUri;
-    private SettingsManager<ChatIdentitySettings> settingsManager;
     private ChatIdentityPreferenceSettings chatIdentitySettings;
     ChatIdentity identity;
     Location location;
@@ -112,12 +108,16 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            setHasOptionsMenu(true);
+            //Get managers
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+
+            //Obtain Settings or create new Settings if first time opening subApp
             chatIdentitySettings = null;
             try {
                 chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-            }catch(Exception e){
+            } catch (Exception e) {
                 chatIdentitySettings = null;
             }
             if (chatIdentitySettings == null) {
@@ -131,22 +131,22 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             }
 
             //Check if GPS is on and coordinate are fine
-            try{
+            try {
                 location = moduleManager.getLocation();
-            }catch (Exception e){
-                if (errorManager!=null)
+            } catch (Exception e) {
+                if (errorManager != null)
                     errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             }
 
             //Check if a default identity is configured
-            try{
+            try {
                 identity = moduleManager.getIdentityChatUser();
-            }catch (Exception e){
+            } catch (Exception e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             }
             turnGPSOn();
         } catch (Exception e) {
-            if(errorManager!=null)
+            if (errorManager != null)
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
     }
@@ -166,15 +166,29 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     private void initViews(View layout) {
         actualizable = true;
         mChatName = (EditText) layout.findViewById(R.id.editTextName);
-        mChatConnectionState = (EditText) layout.findViewById(R.id.editTextStatus);
-        final Button botonG = (Button) layout.findViewById(R.id.cht_button);
-        statusView = (TextView) layout.findViewById(R.id.statusView);
+        //uncomment when this status or user phrase is visible or available in back end to show it
+        //statusView = (TextView) layout.findViewById(R.id.statusView);
+        //mChatConnectionState = (EditText) layout.findViewById(R.id.editTextStatus);
+        final ImageView botonG = (ImageView) layout.findViewById(R.id.cht_button);//Button
         mChatImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
         placeholdImg = (ImageView) layout.findViewById(R.id.placeholdImg);
         Bitmap bitmap = null;
         checkGPSOn();
         try {
+            if (Build.VERSION.SDK_INT > 18 && Build.VERSION.SDK_INT < 21) {
+                mChatName.setPadding(0, 0, 0, 20);
+            }
+            mChatName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    KeyboardUtil keyboardUtil = new KeyboardUtil(getActivity(), v, 20);
+                    if(hasFocus) {
+                        keyboardUtil.enable();
+                    }else
+                        keyboardUtil.disable();
+                }
+            });
             if (ExistIdentity() == false) {
                 botonG.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -209,9 +223,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
                 mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
                 mChatName.setText(identity.getAlias().toString());
-                String state = identity.getConnectionState();
-                mChatConnectionState.setText(state);
-                botonG.setText("Save Changes");
+                //uncomment when this status or user phrase is visible or available in back end to show it
+                /*String state = identity.getConnectionState();
+                mChatConnectionState.setText(state);*/
+                //botonG.setText("Save Changes");
                 botonG.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -244,29 +259,29 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 });
             }
         } catch (CHTException e) {
-            if(errorManager!=null)
+            if (errorManager != null)
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     public void setUpDialog() {
         try {
             PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTitle(R.string.cht_identity_welc)
                     .setSubTitle(R.string.cht_chat_identity_subtitle)
                     .setBody(R.string.cht_chat_identity_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIconRes(R.drawable.chat_identity_subapp)
                     .setBannerRes(R.drawable.banner_identity_chat)
+                    .setVIewColor(R.color.cht_color_dialog_identity)
+                    .setTextCloseButton(R.string.cht_identity_close)
+                    .setCheckboxText(R.string.cht_identity_dont_show_again)
                     .setIsCheckEnabled(false)
-                    .setTextFooter(R.string.cht_chat_footer).build();
+                    .setTextFooter(R.string.cht_chat_footer)
+                    .build();
             pd.show();
         } catch (Exception e) {
-            if(errorManager!=null)
+            if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
@@ -274,6 +289,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     public void turnOnGPSDialog() {
         try {
             PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTitle(R.string.cht_identity_welc)
                     .setSubTitle(R.string.cht_chat_identity_subtitle)
                     .setBody(R.string.cht_chat_identity_gps)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
@@ -281,12 +297,18 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                     .setCheckButtonAndTextVisible(0)
                     .setIsCheckEnabled(false)
                     .setBannerRes(R.drawable.banner_identity_chat)
+                    .setTextCloseButton(R.string.cht_identity_close)
+                    .setVIewColor(R.color.cht_color_dialog_identity)
                     .setTextFooter(R.string.cht_chat_footer).build();
             pd.show();
         } catch (Exception e) {
-            if(errorManager!=null)
+            if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
+    }
+
+    public void onOptionMenuPrepared(Menu menu) {
+
     }
 
     @Override
@@ -298,13 +320,13 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                     setUpDialog();
                     break;
                 case 1:
-                    if(identity!=null)
+                    if (identity != null)
                         changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
                     else {
                         if (Build.VERSION.SDK_INT < 23) {
-                            Toast.makeText(getActivity(), "You must create an identity to open this menu option", Toast.LENGTH_SHORT);
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_menu_option), Toast.LENGTH_SHORT).show();
                         }else{
-                            Toast.makeText(getContext(), "You must create an identity to open this menu option", Toast.LENGTH_SHORT);
+                            Toast.makeText(getContext(), getActivity().getResources().getString(R.string.cht_identity_menu_option), Toast.LENGTH_SHORT).show();
                         }
                         setUpDialog();
                     }
@@ -312,7 +334,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
+            Toast.makeText(getActivity(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
@@ -351,25 +373,26 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                         if (checkCameraPermission()) {
                             if (checkWriteExternalPermission()) {
                                 if (chatBitmap != null) {
-                                    if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
-                                        final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
-                                        dialogCropImage.show();
-                                        dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                            @Override
-                                            public void onDismiss(DialogInterface dialog) {
-                                                if (dialogCropImage.getCroppedImage() != null) {
-                                                    chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
-                                                    mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
-                                                } else {
-                                                    chatBitmap = null;
-                                                }
+                                    //if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
+                                    final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
+                                    dialogCropImage.show();
+                                    dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            if (dialogCropImage.getCroppedImage() != null) {
+                                                chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                                mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
+                                            } else {
+                                                chatBitmap = null;
                                             }
-                                        });
-                                    } else {
-                                        Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
-                                    }
+                                        }
+                                    });
+//                                    } else {
+//                                       Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
+//                                    }
+                                    saveCameraCapture(chatBitmap);
                                 } else {
-                                    Toast.makeText(getActivity(), "Error on upload image", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_error_image), Toast.LENGTH_LONG).show();
                                 }
                             } else {
                                 Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
@@ -387,26 +410,23 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             chatBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
-                                final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
-                                dialogCropImagee.show();
-                                dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-                                        if (dialogCropImagee.getCroppedImage() != null) {
-                                            chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
-                                            mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
-                                        } else {
-                                            chatBitmap = null;
-                                        }
+//                            if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
+                            final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
+                            dialogCropImagee.show();
+                            dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    if (dialogCropImagee.getCroppedImage() != null) {
+                                        chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                        mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
+                                    } else {
+                                        chatBitmap = null;
                                     }
-                                });
-                            } else {
-                                Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
-                                // cryptoBrokerBitmap = null;
-                                // Toast.makeText(getActivity(), "The image selected is too small", Toast.LENGTH_SHORT).show();
-                            }
-
+                                }
+                            });
+//                            } else {
+//                                Toast.makeText(getActivity(), getContext().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
+//                            }
                         }
                     } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -436,27 +456,23 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                     try {
                         if (isAttached) {
                             chatBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImagee);
-                            //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-                            if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
-                                //cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
-                                final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
-                                dialogCropImagee.show();
-                                dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-                                        if (dialogCropImagee.getCroppedImage() != null) {
-                                            chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
-                                            mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
-                                        } else {
-                                            chatBitmap = null;
-                                        }
+//                            if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
+                            final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
+                            dialogCropImagee.show();
+                            dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    if (dialogCropImagee.getCroppedImage() != null) {
+                                        chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                        mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
+                                    } else {
+                                        chatBitmap = null;
                                     }
-                                });
-                            } else {
-                                Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
-                                //cryptoBrokerBitmap = null;
-                                // Toast.makeText(getActivity(), "The image selected is too small", Toast.LENGTH_SHORT).show();
-                            }
+                                }
+                            });
+//                            } else {
+//                                Toast.makeText(getActivity(), getContext().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
+//                            }
                         }
                     } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -469,12 +485,32 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
 
     }
 
-    public void saveAndGoBack(){
+    public void saveCameraCapture(Bitmap photo){
         try {
-            if(ExistIdentity()){
+            File outFile = new File(Environment.getExternalStorageDirectory(), UUID.randomUUID().toString()+".jpeg");
+            FileOutputStream fos = new FileOutputStream(outFile);
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        }catch (IOException e){
+            if (Build.VERSION.SDK_INT >= 23)
+                Toast.makeText(getActivity().getApplicationContext(), getContext().getResources().getString(R.string.cht_identity_picture_canbesave), Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getActivity().getApplicationContext(), getActivity().getResources().getString(R.string.cht_identity_picture_canbesave), Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            if (Build.VERSION.SDK_INT >= 23)
+                Toast.makeText(getActivity().getApplicationContext(), getContext().getResources().getString(R.string.cht_identity_picture_canbesave), Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getActivity().getApplicationContext(), getActivity().getResources().getString(R.string.cht_identity_picture_canbesave), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void saveAndGoBack() {
+        try {
+            if (ExistIdentity()) {
                 updateIdentityInBackDevice("onBack");
-            }else{
-                if(!mChatName.getText().toString().equals("")) {
+            } else {
+                if (!mChatName.getText().toString().equals("")) {
                     createNewIdentityInBackDevice("onBack");
                 }
             }
@@ -486,6 +522,22 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
         int width = bm.getWidth();
         int height = bm.getHeight();
+        int limitSize = 400;
+
+        if (newHeight > limitSize || newWidth > limitSize) {
+            if (height > width) {
+                if (height > limitSize) {
+                    newHeight = limitSize;
+                    newWidth = width * limitSize / height;
+                }
+            } else {
+                if (width > limitSize) {
+                    newWidth = limitSize;
+                    newHeight = height * limitSize / width;
+                }
+            }
+        }
+
         float scaleWidth = ((float) newWidth) / width;
         float scaleHeight = ((float) newHeight) / height;
         Matrix matrix = new Matrix();
@@ -549,14 +601,16 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
 
     private void updateIdentityInBackDevice(String donde) throws CantGetChatIdentityException {
         String chatNameText = mChatName.getText().toString();
-        String state = mChatConnectionState.getText().toString();
+        String state = "";//uncomment and replace when this status or user phrase is visible or available in back end to show it
+        //mChatConnectionState.getText().toString();
 
         if (chatNameText.trim().equals("")) {
-            Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_enter_name), Toast.LENGTH_LONG).show();
         }
         if (chatBitmap == null) {
             chatBitmap = BitmapFactory.decodeByteArray(identity.getImage(), 0, identity.getImage().length);
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
+            int imgInByteslen=imgInBytes.length;
             EditIdentityExecutor executor = null;
             try {
                 executor = new EditIdentityExecutor(appSession, identity.getPublicKey(), chatNameText, identity.getImage(), state);
@@ -564,7 +618,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_updated_toast), Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                         }
                         break;
@@ -574,41 +628,41 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             }
         } else {
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
+            Log.i("imagen pesa ="+imgInBytes.length, "true");
             EditIdentityExecutor executor = null;
             try {
                 executor = new EditIdentityExecutor(appSession, identity.getPublicKey(), chatNameText, imgInBytes,
                         identity.getConnectionState());
-
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_updated_toast), Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                         }
                         break;
                 }
             } catch (Exception e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-
             }
         }
     }
 
     private void createNewIdentityInBackDevice(String donde) {
         String chatNameText = mChatName.getText().toString();
-        String identityConnectionNameText = mChatConnectionState.getText().toString();
+        String identityConnectionNameText = "";//uncomment and replace when this status or user phrase is visible or available in back end to show it
+        //mChatConnectionState.getText().toString();
         if (chatBitmap == null) {
             chatBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.cht_id_image_profile);
         }
         if (identityConnectionNameText.length() == 0) {
-            identityConnectionNameText = "Available";
+            identityConnectionNameText = getActivity().getResources().getString(R.string.cht_identity_available);
         }
         if (chatNameText.trim().equals("")) {
-            Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_enter_name), Toast.LENGTH_LONG).show();
         } else {
-
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
+            Log.i("imagen pesa ="+imgInBytes.length, "true");
             CreateChatIdentityExecutor executor = null;
             try {
                 executor = new CreateChatIdentityExecutor(appSession, chatNameText, imgInBytes, identityConnectionNameText);
@@ -617,7 +671,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), "Chat Identity Created.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(),  getActivity().getResources().getString(R.string.cht_identity_created_toast), Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                         }
                         break;
@@ -641,14 +695,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         return false;
     }
 
-    private boolean availableCameras(){
+    private boolean availableCameras() {
         int numberOfCameras = Camera.getNumberOfCameras();
         for (int i = 0; i < numberOfCameras; i++) {
             Camera.CameraInfo info = new Camera.CameraInfo();
             Camera.getCameraInfo(i, info);
             if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                 return true;
-            }else if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            } else if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 return true;
             }
         }
@@ -659,11 +713,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     private void dispatchTakePictureIntent() {
         // Check available cameras
         PackageManager pm = getActivity().getPackageManager();
-        boolean frontCam=false, rearCam= false;
+        boolean frontCam = false, rearCam = false;
         //Must have a targetSdk >= 9 defined in the AndroidManifest
         frontCam = pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
         rearCam = pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
-        if((frontCam || rearCam) && availableCameras()) {
+        if ((frontCam || rearCam) && availableCameras()) {
             // Check permission for CAMERA
             if (Build.VERSION.SDK_INT >= 23) {
                 if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
@@ -695,11 +749,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 imageToUploadUri = Uri.fromFile(f);
                 startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
             }
-        }else {
+        } else {
             if (Build.VERSION.SDK_INT >= 23) {
-                Toast.makeText(getContext(), "there is no cameras available", Toast.LENGTH_SHORT);
+                Toast.makeText(getContext(), getContext().getResources().getString(R.string.cht_identity_no_camera), Toast.LENGTH_SHORT).show();
             }else {
-                Toast.makeText(getActivity(), "there is no cameras available", Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_no_camera), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -708,7 +762,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         Uri uri = Uri.fromFile(new File(path));
         InputStream in = null;
         try {
-            final int IMAGE_MAX_SIZE = 3000000; // 1.2MP
+            final int IMAGE_MAX_SIZE = 40000; // 1.2MP
             in = getActivity().getContentResolver().openInputStream(uri);
 
             // Decode image size
@@ -753,8 +807,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             }
             in.close();
 
-            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " +
-                    b.getHeight());
+            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " + b.getHeight());
             return b;
         } catch (IOException e) {
             Log.e("", e.getMessage(), e);
@@ -799,8 +852,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    private void deleteImageUri(Uri uri){
-        getActivity().getContentResolver().delete(uri,null,null);
+    private void deleteImageUri(Uri uri) {
+        getActivity().getContentResolver().delete(uri, null, null);
     }
 
     private boolean checkCameraPermission() {
@@ -810,21 +863,20 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     }
 
     public void turnGPSOn() {
-        try{
-            if(!checkGPSFineLocation() || !checkGPSCoarseLocation()){ //if gps is disabled
+        try {
+            if (!checkGPSFineLocation() || !checkGPSCoarseLocation()) { //if gps is disabled
                 if (Build.VERSION.SDK_INT < 23) {
-                    if (ActivityCompat.checkSelfPermission(this.getActivity(),Manifest.permission.ACCESS_FINE_LOCATION)
+                    if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this.getActivity(),
                                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                     }
-                    if (ActivityCompat.checkSelfPermission(this.getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION)
+                    if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this.getActivity(),
                                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
                     }
-                }
-                else{
+                } else {
                     if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {
                         getActivity().requestPermissions(
@@ -837,32 +889,32 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                     }
                 }
             }
-        }catch (Exception e){
-            try{
+        } catch (Exception e) {
+            try {
                 Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
                 intent.putExtra("enabled", true);
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_turn_gps), Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
-                }else {
+                } else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        Toast.makeText(getContext(), getContext().getResources().getString(R.string.cht_identity_turn_gps), Toast.LENGTH_SHORT).show();
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
                 }
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 if (Build.VERSION.SDK_INT < 23) {
-                    Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_turn_gps), Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.cht_identity_turn_gps), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -880,19 +932,18 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    private void checkGPSOn(){
-        if(location!= null){
-            if(location.getLongitude()==0 || location.getLatitude()==0){
+    private void checkGPSOn() {
+        if (location != null) {
+            if (location.getLongitude() == 0 || location.getLatitude() == 0) {
                 //if (chatIdentitySettings.isHomeTutorialDialogEnabled()) {
-                    turnOnGPSDialog();
-               // }
-            }else
-            {
+                turnOnGPSDialog();
+                // }
+            } else {
                 if (chatIdentitySettings.isHomeTutorialDialogEnabled()) {
                     setUpDialog();
                 }
             }
-        }else
+        } else
             turnOnGPSDialog();
     }
 }

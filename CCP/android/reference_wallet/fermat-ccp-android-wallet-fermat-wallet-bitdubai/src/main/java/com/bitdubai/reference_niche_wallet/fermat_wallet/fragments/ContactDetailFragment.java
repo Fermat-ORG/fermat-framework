@@ -126,38 +126,16 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
             errorManager = appSession.getErrorManager();
             cryptoWallet = appSession.getModuleManager();
 
-            FermatWalletSettings fermatWalletSettings = null;
-
-            fermatWalletSettings = fermatWalletSessionReferenceApp.getModuleManager().loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
-
-            if(fermatWalletSettings != null) {
-
-                if (fermatWalletSettings.getBlockchainNetworkType() == null) {
-                    fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                fermatWalletSessionReferenceApp.getModuleManager().persistSettings(fermatWalletSessionReferenceApp.getAppPublicKey(), fermatWalletSettings);
-
-            }
-
-            blockchainNetworkType = fermatWalletSessionReferenceApp.getModuleManager().loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             makeText(getActivity(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
         }
-//        /* Load Wallet Contact */
-//        walletContact = CollectionUtils.find(getWalletContactList(), new Predicate<WalletContact>() {
-//            @Override
-//            public boolean evaluate(WalletContact walletContact) {
-//                try {
-//                    return walletContact.name.equalsIgnoreCase(accountName);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//                return false;
-//            }
-//        });
+
     }
 
     @Nullable
@@ -330,8 +308,6 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
             if (text_view_address != null) {
                 if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
 
-
-
                        try {
 
 
@@ -435,20 +411,23 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
         {
             if(!code.equals("BlockchainDownloadComplete"))
             {
-                //update contact address
-                cryptoWalletWalletContact = cryptoWallet.findWalletContactById(UUID.fromString(code), cryptoWallet.getSelectedActorIdentity().getPublicKey());
+                //check contact to show is de same to update
+                if (cryptoWalletWalletContact.getContactId().equals(UUID.fromString(code))) {
+                    //update contact address
+                    FermatWalletWalletContact fermatWalletContactUpdate = cryptoWallet.findWalletContactById(UUID.fromString(code), cryptoWallet.getSelectedActorIdentity().getPublicKey());
+
+                    if(fermatWalletContactUpdate.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+                    {    cryptoWalletWalletContact = fermatWalletContactUpdate;
+                        text_view_address.setText(fermatWalletContactUpdate.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
+                        img_update.setVisibility(View.GONE);
+                        receive_button.setVisibility(View.VISIBLE);
+                        send_button.setVisibility(View.VISIBLE);
+
+                    }
 
 
-                if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
-                {
-                    text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
-                    img_update.setVisibility(View.GONE);
-                    receive_button.setVisibility(View.VISIBLE);
-                    send_button.setVisibility(View.VISIBLE);
-
+                    fermatWalletSessionReferenceApp.setData(SessionConstant.LAST_SELECTED_CONTACT, cryptoWalletWalletContact);
                 }
-
-                fermatWalletSessionReferenceApp.setData(SessionConstant.LAST_SELECTED_CONTACT, cryptoWalletWalletContact);
 
             }
 

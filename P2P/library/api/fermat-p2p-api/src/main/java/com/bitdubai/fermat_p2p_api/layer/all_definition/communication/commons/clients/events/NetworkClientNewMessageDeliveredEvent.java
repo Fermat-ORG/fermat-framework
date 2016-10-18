@@ -1,13 +1,7 @@
-/*
-* @#NetworkClientNewMessageDeliveredEvent.java - 2016
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 /**
@@ -24,11 +18,7 @@ public class NetworkClientNewMessageDeliveredEvent extends AbstractEvent<P2pEven
      * Represent the content value
      */
     private String id;
-
-    /**
-     * Represent the networkServiceTypeSource value
-     */
-    private NetworkServiceType networkServiceTypeSource;
+    private STATUS status;
 
     /**
      * Constructor with parameters
@@ -47,19 +37,19 @@ public class NetworkClientNewMessageDeliveredEvent extends AbstractEvent<P2pEven
         this.id = id;
     }
 
-    public NetworkServiceType getNetworkServiceTypeSource() {
-        return networkServiceTypeSource;
+    public STATUS getStatus() {
+        return status;
     }
 
-    public void setNetworkServiceTypeSource(NetworkServiceType networkServiceTypeSource) {
-        this.networkServiceTypeSource = networkServiceTypeSource;
+    public void setStatus(STATUS status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
-        return "NetworkClientNewMessageTransmitEvent{" +
+        return "NetworkClientNewMessageDeliveredEvent{" +
                 "id='" + id + '\'' +
-                ", networkServiceTypeSource=" + networkServiceTypeSource +
+                ", status=" + status +
                 '}';
     }
 }

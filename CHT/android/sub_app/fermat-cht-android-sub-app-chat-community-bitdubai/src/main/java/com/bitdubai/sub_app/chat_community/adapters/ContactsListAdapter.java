@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -14,13 +15,12 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.sub_app.chat_community.R;
-import com.bitdubai.sub_app.chat_community.filters.CommunityFilter;
+import com.bitdubai.sub_app.chat_community.common.popups.ContactDialog;
 import com.bitdubai.sub_app.chat_community.filters.ContactsFilter;
 import com.bitdubai.sub_app.chat_community.holders.ContactsListHolder;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 /**
@@ -46,8 +46,8 @@ public class ContactsListAdapter
                                ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
                                ChatActorCommunitySubAppModuleManager moduleManager) {
         super(context, dataSet);
-        this.appSession=appSession;
-        this.moduleManager=moduleManager;
+        this.appSession = appSession;
+        this.moduleManager = moduleManager;
     }
 
     @Override
@@ -62,31 +62,69 @@ public class ContactsListAdapter
 
     @Override
     protected void bindHolder(ContactsListHolder holder, ChatActorCommunityInformation data, int position) {
+        int max = 10;
+        if(max > data.getAlias().length())
+            max = data.getAlias().length();
         if (data.getPublicKey() != null) {
-            holder.friendName.setText(data.getAlias());
+            holder.friendName.setText(data.getAlias().substring(0, max));
             if (data.getImage() != null && data.getImage().length > 0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
                 holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-            }else
+            } else
                 holder.friendAvatar.setImageResource(R.drawable.cht_comm_icon_user);
 
-            if(data.getLocation() != null ){
-                if (data.getState().equals("null") || data.getState().equals("") || data.getState().equals("state")) stateAddress = "";
-                else stateAddress = data.getState() + " ";
-                if (data.getCity().equals("null") || data.getState().equals("") || data.getCity().equals("city")) cityAddress = "";
-                else cityAddress = data.getCity() + " ";
-                if (data.getCountry().equals("null")  || data.getState().equals("") || data.getCountry().equals("country")) countryAddress = "";
+//            if (data.getLocation() != null) {
+//                if (data.getState().equals("null") || data.getState().equals("") || data.getState().equals("state"))
+//                    stateAddress = "";
+//                else stateAddress = new StringBuilder().append(data.getState()).append(" ").toString();
+                if (data.getCity().equals("null") || data.getState().equals("") || data.getCity().equals("city"))
+                    cityAddress = "";
+                else cityAddress = new StringBuilder().append(data.getCity()).append(" ").toString();
+                if (data.getCountry().equals("null") || data.getState().equals("") || data.getCountry().equals("country"))
+                    countryAddress = "";
                 else countryAddress = data.getCountry();
-                if(stateAddress == "" && cityAddress == "" && countryAddress == ""){
-                    holder.location.setText("Searching...");
-                }else
-                    holder.location.setText(cityAddress + stateAddress + countryAddress);
-            } else
-                holder.location.setText("Searching...");
+                if (/*stateAddress.equalsIgnoreCase("") && */cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
+                    holder.location.setText(context.getResources().getString(R.string.cht_comm_not_found));
+                } else
+                    holder.location.setText(new StringBuilder().append(cityAddress).append(" ").append(countryAddress).toString());
+//            } else
+//                holder.location.setText(R.string.cht_comm_not_found);
 
-            if(data.getProfileStatus()!= ProfileStatus.ONLINE)
+            if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+                holder.location.setTextColor(Color.parseColor("#47BF73"));
+            else
                 holder.location.setTextColor(Color.RED);
+
+            final ChatActorCommunityInformation dat = data;
+            holder.friendAvatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ContactDialog contact = new ContactDialog(context, appSession, null);
+                    contact.setProfileName(dat.getAlias());
+//                    if (dat.getLocation() != null) {
+                        /*if (dat.getState().equals("null") || dat.getState().equals(""))
+                            stateAddress = "";
+                        else stateAddress = new StringBuilder().append(dat.getState()).append(" ").toString();*/
+                        if (dat.getCity().equals("null") || dat.getCity().equals(""))
+                            cityAddress = "";
+                        else cityAddress = new StringBuilder().append(dat.getCity()).append(" ").toString();
+                        if (dat.getCountry().equals("null") || dat.getCountry().equals(""))
+                            countryAddress = "";
+                        else countryAddress = dat.getCountry();
+                        if (/*stateAddress.equalsIgnoreCase("") &&*/ cityAddress.equalsIgnoreCase("") && countryAddress.equalsIgnoreCase("")) {
+                            contact.setCountryText(context.getResources().getString(R.string.cht_comm_not_found));
+                        } else
+                            contact.setCountryText(new StringBuilder().append(cityAddress).append(" ").append(countryAddress).toString());
+//                    } else
+//                        contact.setCountryText("Not Found");
+
+                    ByteArrayInputStream bytes = new ByteArrayInputStream(dat.getImage());
+                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                    contact.setProfilePhoto(bmd.getBitmap());
+                    contact.show();
+                }
+            });
         }
     }
 

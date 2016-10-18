@@ -27,8 +27,6 @@ import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
-import com.bitdubai.fermat_bnk_core.BNKPlatform;
-import com.bitdubai.fermat_cbp_core.CBPPlatform;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
 import com.bitdubai.fermat_cer_core.CERPlatform;
 import com.bitdubai.fermat_cht_core.CHTPlatform;
@@ -37,7 +35,6 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantR
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSystemException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PlatformNotFoundException;
-import com.bitdubai.fermat_csh_core.CSHPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
@@ -51,6 +48,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * starts all the component of the platform and manage it.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/10/2015.
+ * Modified by Matias Furszyfer
  */
 public final class FermatSystem {
 
@@ -88,7 +86,8 @@ public final class FermatSystem {
      * @throws CantStartSystemException if something goes wrong.
      */
     public void start(final Object osContext,
-                      final AbstractPlatform osaPlatform) throws CantStartSystemException {
+                      final AbstractPlatform osaPlatform,
+                      boolean isPlatformStart) throws CantStartSystemException {
 
         this.fermatSystemContext = new FermatSystemContext(osContext, fermatContext);
         this.fermatAddonManager = new FermatAddonManager(fermatSystemContext);
@@ -105,21 +104,32 @@ public final class FermatSystem {
 
         try {
 
-           // fermatSystemContext.registerPlatform(new ARTPlatform());
-            fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
-            fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
-            fermatSystemContext.registerPlatform(new CBPPlatform());
-            fermatSystemContext.registerPlatform(new CCPPlatform());
-            fermatSystemContext.registerPlatform(new CERPlatform());
-            fermatSystemContext.registerPlatform(new CHTPlatform());
-            fermatSystemContext.registerPlatform(new CSHPlatform());
-            //fermatSystemContext.registerPlatform(new DAPPlatform());
-            fermatSystemContext.registerPlatform(new P2PPlatform());
-            fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
-           // fermatSystemContext.registerPlatform(new TKYPlatform());
-            fermatSystemContext.registerPlatform(new WPDPlatform());
+            //if(isPlatformStart) {
+                // fermatSystemContext.registerPlatform(new ARTPlatform());
+                fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
+//                fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
+//                fermatSystemContext.registerPlatform(new CBPPlatform());
+               fermatSystemContext.registerPlatform(new CCPPlatform());
+                fermatSystemContext.registerPlatform(new CERPlatform());
+                fermatSystemContext.registerPlatform(new CHTPlatform());
+//                fermatSystemContext.registerPlatform(new CSHPlatform());
+                //fermatSystemContext.registerPlatform(new DAPPlatform());
+                fermatSystemContext.registerPlatform(new P2PPlatform());
+                fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
+                // fermatSystemContext.registerPlatform(new TKYPlatform());
+                fermatSystemContext.registerPlatform(new WPDPlatform());
+         /*   }else{
+//                fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
+//                fermatSystemContext.registerPlatform(new CBPPlatform());
+                fermatSystemContext.registerPlatform(new CCPPlatform());
+//                fermatSystemContext.registerPlatform(new CHTPlatform());
+//                fermatSystemContext.registerPlatform(new CSHPlatform());
+                fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
+                // fermatSystemContext.registerPlatform(new TKYPlatform());
+                fermatSystemContext.registerPlatform(new WPDPlatform());
+            }*/
 
-        } catch(CantRegisterPlatformException e) {
+        } catch (CantRegisterPlatformException e) {
             throw new CantStartSystemException(e, "", "There was a problem registering a Platform.");
         } catch (Exception e) {
 
@@ -437,7 +447,7 @@ public final class FermatSystem {
         final ConcurrentHashMap<AddonVersionReference, AbstractAddon> addonList = this.fermatSystemContext.listAddonVersions();
         final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> pluginList = this.fermatSystemContext.listPluginVersions();
 
-        for(final ConcurrentHashMap.Entry<AddonVersionReference, AbstractAddon> addon : addonList.entrySet()) {
+        for (final ConcurrentHashMap.Entry<AddonVersionReference, AbstractAddon> addon : addonList.entrySet()) {
             try {
                 fermatAddonManager.startAddonAndReferences(addon.getValue());
             } catch (Exception e) {
@@ -520,5 +530,17 @@ public final class FermatSystem {
 
     public void setFermatContext(FermatContext fermatContext) {
         this.fermatContext = fermatContext;
+    }
+
+    public void onDestroy() {
+        final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> pluginList = this.fermatSystemContext.listPluginVersions();
+        for (ConcurrentHashMap.Entry<PluginVersionReference, AbstractPlugin> plugin : pluginList.entrySet()) {
+            try {
+                plugin.getValue().stop();
+            } catch (Exception e) {
+                System.err.println(e.toString());
+            }
+        }
+
     }
 }

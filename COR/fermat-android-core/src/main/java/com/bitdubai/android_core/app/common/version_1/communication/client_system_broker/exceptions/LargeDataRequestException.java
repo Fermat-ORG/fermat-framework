@@ -8,13 +8,11 @@ import java.lang.reflect.Method;
 public class LargeDataRequestException extends RuntimeException {
 
     public LargeDataRequestException(Object object, Method method) {
-        super("LargeDataRequestException in:"+object.getClass().getInterfaces()[0].getName()+"\n" +
-                "Method: "+ method+ "\n");
+        super("LargeDataRequestException in:" + object.getClass().getInterfaces()[0].getName() + "\n" + "Method: " + method + "\n");
     }
 
-    public LargeDataRequestException(Object object, Method method,Exception e) {
-        super("LargeDataRequestException in:"+object.getClass().getInterfaces()[0].getName()+"\n" +
-                "Method: "+ method+ "\n",e);
+    public LargeDataRequestException(Object object, Method method, Exception e) {
+        super("LargeDataRequestException in:" + object.getClass().getInterfaces()[0].getName() + "\n" + "Method: " + method + "\n", e);
     }
 
 

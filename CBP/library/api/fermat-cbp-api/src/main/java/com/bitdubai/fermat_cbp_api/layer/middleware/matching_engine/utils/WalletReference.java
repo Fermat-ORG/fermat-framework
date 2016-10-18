@@ -24,9 +24,7 @@ public final class WalletReference implements Serializable {
 
     @Override
     public String toString() {
-        return "WalletReference{" +
-                "publicKey='" + publicKey + '\'' +
-                '}';
+        return "WalletReference{" + "publicKey='" + publicKey + '\'' + '}';
     }
 
 }

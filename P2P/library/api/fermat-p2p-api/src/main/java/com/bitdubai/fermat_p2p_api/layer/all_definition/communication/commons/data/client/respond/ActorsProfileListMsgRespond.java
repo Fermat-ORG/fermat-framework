@@ -1,9 +1,12 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.MsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorsProfileListMsgRespond</code>
@@ -33,8 +36,8 @@ public class ActorsProfileListMsgRespond extends MsgRespond {
      * @param profileList
      * @param networkServiceTypeIntermediate
      */
-    public ActorsProfileListMsgRespond(STATUS status, String details, List<ResultDiscoveryTraceActor> profileList, NetworkServiceType networkServiceTypeIntermediate) {
-        super(status, details);
+    public ActorsProfileListMsgRespond(UUID packageId, STATUS status, String details, List<ResultDiscoveryTraceActor> profileList, NetworkServiceType networkServiceTypeIntermediate) {
+        super(packageId,status, details);
         this.profileList = profileList;
         this.networkServiceTypeIntermediate = networkServiceTypeIntermediate;
     }

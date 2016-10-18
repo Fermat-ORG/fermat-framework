@@ -25,7 +25,7 @@ public class CryptoNetworkLayer extends AbstractLayer {
         try {
 
             registerPlugin(new BitcoinNetworkPluginSubsystem());
-            //registerPlugin(new FermatNetworkPluginSubsystem(getFermatContext()));
+           // registerPlugin(new FermatNetworkPluginSubsystem(getFermatContext()));
 
         } catch(CantRegisterPluginException e) {
 

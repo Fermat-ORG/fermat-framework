@@ -136,29 +136,13 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
-            if(lossProtectedWalletSettings != null) {
 
-                if (lossProtectedWalletSettings.getBlockchainNetworkType() == null) {
-                    lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                lossProtectedWalletManager.persistSettings(appSession.getAppPublicKey(), lossProtectedWalletSettings);
-
-            }
-
-            blockchainNetworkType = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
-
-       } catch (CantGetSettingsException e) {
-            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            WalletUtils.showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
-
-        } catch (SettingsNotFoundException e) {
-            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            WalletUtils.showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
-
-        } catch (CantPersistSettingsException e) {
+        } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             WalletUtils.showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
 

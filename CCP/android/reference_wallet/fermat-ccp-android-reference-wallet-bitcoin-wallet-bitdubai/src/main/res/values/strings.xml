@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- balance_header.xml -->
-    <string name="available_balance_text">Available balance</string>
-    <string name="touch_to_change_text">Touch to change</string>
+    <string name="available_balance_text">Current balance</string>
+    <string name="touch_to_change_text">Tap to change</string>
     <!-- ccp_grouper_list_item.xml -->
-    <string name="txt_total_balance_15_btc_text">15 BTC</string>
-    <!-- ccp_transaction_list_item.xml -->
-    <string name="txt_amount_btc_text">1.4 BTC</string>
+    <string name="txt_total_balance_15_btc_text" translatable="false">15 BTC</string>
+    <!-- ccp_transaction_list_item11.xml -->
+    <string name="txt_amount_btc_text" translatable="false">1.4 BTC</string>
     <string name="txt_conference_ticket_text">Conference ticket</string>
-    <string name="txt_time_date_text">03 Feb 2014</string>
+    <string name="txt_time_date_text" translatable="false">03 Feb 2014</string>
     <!-- connection_with_community_dialog.xml -->
     <string name="new_user_text">New User</string>
     <string name="add_user_in_your_contact_list_text">Add user to your contact list or\nlook for it in the community section</string>
     <string name="cancel_text">Cancel</string>
     <string name="search_text">Search</string>
     <!-- contact_detail_base.xml -->
-    <string name="matias_furszyfer_text">Matias Furszyfer</string>
+    <string name="matias_furszyfer_text" translatable="false">Matias Furszyfer</string>
     <string name="name_text">Name</string>
     <string name="address_text">Address</string>
     <string name="waiting_text">Waiting...</string>
@@ -28,24 +28,27 @@
     <string name="no_id_Users_of_other_text_Fermat_wallets">Users of other Fermat wallets: you don\'t need to manually exchange addresses with them</string>
     <string name="no_id_Users_of_other_text_wallets_outside">Users of other wallets outside Fermat: You need to exchange addresses manually</string>
     <string name="no_id_Select_below_which_text">Select below which type of contact you want to add:</string>
-    <string name="no_id_dont_show_this_again_text">Don\'t show this again</string>
+
     <string name="add_fermat_user_text">Fermat Contact</string>
     <string name="add_extra_user_text">External Contact</string>
     <!-- create_contact_dialog.xml -->
     <string name="create_external_contact_text">Create External Contact</string>
-    <string name="set_name_text">Type name</string>
-    <string name="set_address_text">Paste address</string>
+    <string name="set_name_text">Enter name</string>
+    <string name="set_address_text">Enter address</string>
     <string name="save_text">Save</string>
+    <string name="contact_created_msg">Contact Created</string>
+    <string name="contact_failed_msg">Please try again later</string>
+
     <!-- dialog_error_conecting_fermat_network.xml -->
     <string name="fermat_network_offline_text">Fermat Network Offline</string>
-    <string name="description_text">You are not connected to</string>
+    <string name="description_text">You are not connected to the fermat network.</string>
     <string name="second_description_text">the fermat network.</string>
     <string name="connect_text">Connect</string>
     <!-- donut_header.xml -->
-    <string name="txt_balance_amount_29_text">0.00</string>
-    <string name="balance_amount_type_text">btc</string>
+    <string name="txt_balance_amount_29_text" translatable="false">0.00</string>
+    <string name="balance_amount_type_text" translatable="false">btc</string>
     <!-- fragment_add_connections_list.xml -->
-    <string name="click_me_to_search_text">Touch me\nto look for contacts</string>
+    <string name="click_me_to_search_text">Tap me\nto look for contacts</string>
     <!-- fragment_base_bitcoin_wallet_receive.xml -->
     <string name="receive_text">Receive</string>
     <string name="give_me_an_address_address_text">Give me an Address!</string>
@@ -53,18 +56,19 @@
     <string name="you_dont_have_transactions_received_text">You don\'t have\n any received transactions</string>
     <!-- fragment_transaction_main_send.xml -->
     <string name="you_dont_have_transactions_sent_text">You don\'t have\n any transaction sent</string>
-    <string name="balance_amount_0_bits_text">0 bits</string>
+    <string name="balance_amount_0_bits_text" translatable="false">0 bits</string>
     <string name="notes_text">Notes</string>
     <!-- fragment_transaction_main.xml -->
-    <string name="no_history_send_or_receive">No history\nsend or receive\nto fill this!!</string>
+    <string name="no_history_send_or_receive">No history</string>
     <!-- header.xml -->
     <string name="header_text">Header</string>
     <!-- history_request_row.xml -->
     <string name="accepted_text">Accepted</string>
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
-    <!-- home_receive_main.xml -->
-    <string name="no_transactions_text">No transactions</string>
+    <!-- home_receive_main11.xml -->
+
+    <string name="no_transactions_text">No transactions yet</string>
     <!-- home_request_fragment_main.xml -->
     <string name="reason_text">Reason</string>
     <string name="you_dont_have_requests_text">You don\'t have\n requests</string>
@@ -75,55 +79,51 @@
     <string name="you_need_an_identity_before_you_can_enter_text">You need an identity before\nyou can enter</string>
     <string name="create_text">Create</string>
     <!-- pending_request_row.xml -->
-    <string name="balance_amount_25_btc_text">25 btc</string>
+    <string name="balance_amount_25_btc_text" translatable="false">25 btc</string>
     <string name="refuse_text">Refuse</string>
-
-    <!-- dialog_blockchain_download.xml-->
-    <string name="advertisement_text">Advertisement!</string>
-    <string name="the_process_of_downloading_text">The process of downloading blocks \nfrom the Blockchain is in progress.\n  As this occurs, the action bar is shown in red.</string>
+    <string name="confirm_text">Your Send</string>
 
     <!-- presentation_bitcoin_wallet_without_identities.xml -->
     <string name="welcome_text">Welcome!</string>
-    <string name="this_is_a_simple_bitcoin_only_wallet_text">This is a simple bitcoin only wallet.\nIt\'s main features are:</string>
+    <string name="this_is_a_simple_bitcoin_only_wallet_text">This is a simple bitcoin wallet.\nIt\'s main features are:</string>
 
     <!-- contacts_tutorial_part1_v2.xml -->
     <string name="in_this_wallet_you_can_have_text">In this wallet you can have two different types of contacts:</string>
 
-    <string name="close_text">Close</string>
     <!-- presentation_wallet.xml -->
     <string name="to_begin_choose_an_avatar_below_text">To begin, choose an avatar below. You might change it later with any picture and your own alias.</string>
     <string name="be_john_doe_text">Be John Doe</string>
     <string name="be_jane_doe__text">Be Jane Doe</string>
     <string name="back_text">Back</string>
-    <string name="mnrr3141fa124_text">mnrr3141fa124</string>
+    <string name="mnrr3141fa124_text" translatable="false">mnrr3141fa124</string>
     <!-- refresh_footer.xml -->
-    <string name="footer_message_text">Footer Message</string>
+    <string name="footer_message_text" translatable="false">Footer Message</string>
     <!-- refresh_header.xml -->
     <string name="loading_text">Loading..........</string>
     <!-- request_form_base.xml -->
     <string name="confirm_request_text">Confirm request</string>
     <!-- send_form_base.xml -->
     <string name="enter_name_here_text">Enter name here</string>
-    <string name="bits_text">[bits]</string>
-    <string name="btc_text">[btc]</string>
-    <string name="balance_amount_0_text">0</string>
+    <string name="bits_text" translatable="false">[bits]</string>
+    <string name="btc_text" translatable="false">[btc]</string>
+    <string name="balance_amount_0_text" translatable="false">0</string>
     <string name="amount_text">Amount</string>
-    <string name="feed_amount_text">Feed</string>
-    <string name="feed_option_text">Substract Fee from Amount</string>
-    <string name="feed_advances_text">Advanced configuration</string>
+    <string name="fee_amount_text">Fee</string>
+    <string name="fee_option_text">Substract Fee from Amount</string>
+    <string name="fee_advances_text">Advanced configuration</string>
     <!-- setting_base.xml -->
     <string name="empty_transactions_text">Empty transactions</string>
     <!-- wallet_manager_transaction_view.xml -->
     <string name="txtLastTransactions_text">Last transactions</string>
-    <string name="no_id_pipe_text">|</string>
+    <string name="no_id_pipe_text" translatable="false">|</string>
     <string name="txtSeeAlltransactions_text">See all</string>
-    <string name="txtViewTitleTransaction_text">Transaccion hacia Starbuck 480 btc</string>
-    <string name="txtViewDetailTransaction_text">Taza de café</string>
+    <string name="txtViewTitleTransaction_text" translatable="false">Transaccion hacia Starbuck 480 btc</string>
+    <string name="txtViewDetailTransaction_text" translatable="false">Taza de café</string>
     <!-- wallets_bitcoin_fragment_create_contact.xml -->
-    <string name="name_prefix_text">name prefix</string>
+    <string name="name_prefix_text" translatable="false">name prefix</string>
     <string name="middle_name_text">middle name</string>
     <string name="last_name_text">last name</string>
-    <string name="name_suffix_text">name suffix</string>
+    <string name="name_suffix_text" translatable="false">name suffix</string>
     <string name="alias_text">alias suffix</string>
     <string name="type_text">type</string>
     <string name="swype_refresh">Swype down to refresh</string>
@@ -136,7 +136,7 @@
     <string name="action_disable">Disable / Enable</string>
     <string name="action_edit">Edit</string>
     <string name="action_wallet_store">Wallet Store</string>
-    <string name="title_section1">Luis Fernando Molina</string>
+    <string name="title_section1" translatable="false">Luis Fernando Molina</string>
     <string name="title_section2">Contacts</string>
     <string name="title_section3">Accounts</string>
     <string name="title_section4">Banks</string>
@@ -156,7 +156,7 @@
     <string name="app_name">Fermat Bitcoin Wallet</string>
     <string name="button_send">Send</string>
     <string name="title_activity_main">Young Wallet</string>
-    <string name="action_search">Buscar</string>
+    <string name="action_search">Search</string>
     <string name="kid_wallet">Kids</string>
     <string name="young_wallet">Young</string>
     <string name="professional_wallet">Professional</string>
@@ -179,21 +179,21 @@
         <item>Hockey</item>
     </string-array>
     <string name="action_contact">Wallets</string>
-    <string name="title_activity_app_desktop">AppDesktop</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_app_desktop" translatable="false">AppDesktop</string>
+    <string name="dummy_button" translatable="false">Dummy Button</string>
+    <string name="dummy_content" translatable="false">DUMMY\nCONTENT</string>
     <string name="title_activity_navegation_drawler">Smart Wallets</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="title_activity_blank">Wallet Manager</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="icono1">Carrefour</string>
-    <string name="icono2">Banco Itau</string>
-    <string name="icono3">Banco Popular</string>
-    <string name="icono4">Boca Juniors</string>
-    <string name="icono5">Barcelona</string>
-    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="hello_world" translatable="false">Hello world!</string>
+    <string name="icono1" translatable="false">Carrefour</string>
+    <string name="icono2" translatable="false">Banco Itau</string>
+    <string name="icono3" translatable="false">Banco Popular</string>
+    <string name="icono4" translatable="false">Boca Juniors</string>
+    <string name="icono5" translatable="false">Barcelona</string>
+    <string name="lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_contacts">Contacts Activity</string>
     <string name="title_activity_requests_sent">Requests Sent Activity</string>
@@ -211,8 +211,8 @@
     <string name="title_activity_received_detail">ReceivedDetailActivity</string>
     <string name="title_activity_receive_from_new_contact">ReceiveFromNewContactActivity</string>
     <string name="title_activity_receive_from_contact">Receive From Contact Activity</string>
-    <string name="title_activity_chat_over_trx">Chat Over Trx Activity</string>
-    <string name="title_activity_blank_activity_with_fragment">BlankActivityWithFragment</string>
+    <string name="title_activity_chat_over_trx" translatable="false">Chat Over Trx Activity</string>
+    <string name="title_activity_blank_activity_with_fragment" translatable="false">BlankActivityWithFragment</string>
     <string name="title_activity_balance_available">BalanceAvailableActivity</string>
     <string name="title_activity_wallet">Wallet Activity</string>
     <string-array name="account_name">
@@ -230,7 +230,7 @@
     <string name="title_activity_activity_main">Main Activity</string>
     <string name="empty_view">Empty List view</string>
     <!-- TAB BALANCE STRINGS -->
-    <string name="available_balance">available balance</string>
+    <string name="available_balance">Current balance</string>
     <string name="book_balance">book balance</string>
     <string name="search_hint">Contact name</string>
     <string name="empty_list_msg">No contacts</string>
@@ -248,20 +248,107 @@
     <string name="fragment_send_notes_hint">Notes (optional)</string>
     <string name="clear_text_button">Clear</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="see_your_balance_text">* Checking your balance.\n* Sending/receiving bitcoins.\n* Requesting bitcoins.\n* Browsing your transaction history.</string>
     <!-- Custom Dialog Fragment -->
     <string name="title_label">Network Settings</string>
-    <string name="title_Feed">Fee Level Settings</string>
+    <string name="title_Fee">Fee Level Settings</string>
     <string name="ok_label">OK</string>
     <string name="cancel_label">Cancel</string>
     <array name="items" translatable="false">
         <item>MainNet</item>
         <item>TestNet</item>
-        <item>RegTest</item>
     </array>
     <string name="fee_low">Slow</string>
     <string name="fee_Medium">Normal</string>
     <string name="fee_High">Fast</string>
+
+    <string name="request_sent">Request sent</string>
+    <string name="denied">Denied</string>
+    <string name="accepted">Accepted</string>
+    <string name="error_msg_no_address">You don\'t have address to send\nplease wait to get it or touch the refresh button</string>
+    <string name="error_msg_loading_img">Loading image error</string>
+    <string name="error_msg_insufficient_funds">Insufficient Funds</string>
+    <string name="error_msg_invalid_amount">Invalid amount, must be greater than</string>
+    <string name="error_msg_invalid_amount_2">Invalid amount</string>
+    <string name="error_msg_trying_to_reconnect">Please wait a minute, trying to reconnect...</string>
+    <string name="error_msg_invalid_address">Contact doesn\'t have a valid address</string>
+    <string name="error_msg_getting_contact_list">Unexpected error get Contact list - </string>
+    <string name="error_std_message">Sorry, there\'s been an error. Please try again later</string>
+    <string name="error_msg_cannot_find_address_clipboard">Cannot find an address in the clipboard</string>
+    <string name="error_msg_mnemonic_text">Error getting mnemonic text</string>
+    <string name="error_msg_contact_not_found">Contact not found, please add it first</string>
+    <string name="error_msg_incompatible_wallet">This user doesn\'t have a compatible wallet</string>
+    <string name="error_msg_address_not_found">Address for this contact not found yet</string>
+    <string name="success_msg_address_sent_wait">Address exchange sent, wait 2 minutes please</string>
+    <string name="success_msg_address_copied_clipboard">Address copied to clipbooard</string>
+
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_select_network">Select a Network</string>
+    <string name="settings_fee_level">Fee Level</string>
+    <string name="settings_send_error_report">Send Error Report</string>
+    <string name="advertisement_text">Advertisement!</string>
+    <string name="wallet_type">This wallet allows for two different types of contacts:</string>
+    <string name="btc_loss">Enter the BTC amount that you want send to Loss Protected Wallet</string>
+    <string name="phone_notifications">Phone notifications</string>
+    <string name="close_text">Close</string>
+
+    <string name="pr_status_1">Waiting for response</string>
+    <string name="pr_status_2">Accepted</string>
+    <string name="pr_status_3">Paid</string>
+    <string name="pr_status_4">Pending response</string>
+    <string name="pr_status_5">Error</string>
+    <string name="pr_status_6">Not sent yet</string>
+    <string name="pr_status_7">Payment process started</string>
+    <string name="pr_status_8">Denied by incompatibility</string>
+    <string name="pr_status_9">In approving process</string>
+    <string name="pr_status_10">Denied</string>
+    <string name="pr_status_11">Error, contact with support</string>
+
+    <string name="notification_receive_btc_1">Received money</string>
+    <string name="notification_receive_btc_2">BTC Arrived</string>
+    <string name="notification_reversed_1">Sent Transaction reversed</string>
+    <string name="notification_reversed_2">Sending</string>
+    <string name="notification_reversed_3">BTC could not be completed.</string>
+
+
+    <string name="notification_receive_payment_1">Received new Payment Request</string>
+    <string name="notification_receive_payment_2">You have received a Payment Request, for </string>
+    <string name="notification_payment_denied">Payment Request deny</string>
+    <string name="notification_payment_denied_2">Your Payment Request, for </string>
+    <string name="notification_payment_denied_3"> BTC was deny.</string>
+    <string name="notification_payment_error">Payment Request reverted</string>
+    <string name="notification_payment_error_2">Your Payment Request, for </string>
+    <string name="notification_payment_error_3"> BTC was reverted.</string>
+
+
+    <!--Texto de Dialogs Movidos para RES de fermat-android-api para su uso general con traduccion incluida.-->
+
+    <!-- Dialogs Text -->
+    <!--<string name="see_you_title">Welcome!</string>-->
+    <!--<string name="see_you_subtitle">This is a basic bitcoin wallet. Its main features include:</string>-->
+    <!--<string name="see_your_balance_text">* Checking your balance.\n* Sending/receiving bitcoins.\n* Requesting bitcoins.\n* Browsing your transaction history.</string>-->
+    <!--<string name="see_you_footer">To begin pick an avatar from below. You can  customize it later with your own name and image.</string>-->
+    <!--<string name="no_id_dont_show_this_again_text">Don\'t show this again</string>-->
+    <!--<string name="close_text">Close</string>-->
+
+    <!--&lt;!&ndash; dialog_blockchain_download.xml&ndash;&gt;-->
+    <!--<string name="advertisement_text">Advertisement!</string>-->
+    <!--<string name="the_process_of_downloading_text">The process of downloading blocks \nfrom the Blockchain is in progress.\n  As this occurs, the action bar is shown in red.</string>-->
+
+
+    <!--Generic messages -->
+    <string name="msg_report_send">Report sent</string>
+    <!--System Error-->
+    <string name="system_error">recovering from system error</string>
+    <!--Fragments-->
+    <!--Request Form Fragment-->
+    <string name="error_connecting_to_fermat_network">Wait a minute please, trying to reconnect...</string>
+
+    <!--Delete Wallet Contact Dialog-->
+    <string name="delete_title">Delete Contact</string>
+    <string name="delete_sub_title">Do you want delete this contact from your wallet?</string>
+    <string name="deleted_toast">Contact Deleted</string>
+
 </resources>
 

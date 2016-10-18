@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:background="@drawable/circleuser_icon"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp">
+
+        <com.bitdubai.fermat_android_api.ui.Views.SquareImageView
+            android:id="@+id/profile_image"
+            android:layout_marginTop="1.5dp"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:background="@drawable/photocontact_icon"
+            android:scaleType="centerCrop"
+            android:layout_centerHorizontal="true"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:paddingRight="9dp"
+            android:indeterminateDrawable="@drawable/circle_progress" >
+        </ProgressBar>
+
+    </RelativeLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/community_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="#424242"
+        android:textSize="16sp"
+        tools:text="@string/username"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:src="@drawable/geolocalitationblue_icon" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="@string/no_location"
+            android:maxLines="1"
+            android:textColor="#7DD5CA"
+            android:textSize="12sp"
+            android:layout_marginTop="0dp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/connection_state_user"
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            android:background="#0072bb"
+            android:gravity="center_vertical"
+            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
+            android:text="Online"
+            android:textColor="#ffffff"
+            android:textSize="10sp"
+            tools:ignore="HardcodedText,RtlSymmetry,SmallSp"
+            android:visibility="gone"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#b7b7b7"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/response"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Connectio State"
+        android:textSize="12dp"
+        android:gravity="center"
+        android:layout_marginTop="12dp"
+        android:textColor="#21386D"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/button_add"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="102dp"
+        android:layout_height="24dp"
+        android:background="#21386D"
+        android:layout_marginTop="16dp"
+        android:text="@string/add_user"
+        android:textSize="10dp"
+        android:textColor="#FFF"
+        />
+
+</LinearLayout>

@@ -7,9 +7,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -59,6 +61,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.CryptoWallet</code>
@@ -81,7 +84,7 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
      * @throws CantGetAllLossProtectedWalletContactsException if something goes wrong
      */
 
-
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
     List<LossProtectedWalletContact> listWalletContacts(String walletPublicKey, String intraUserLoggedInPublicKey) throws CantGetAllLossProtectedWalletContactsException;
 
 
@@ -291,8 +294,7 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
      * @param cryptoAddress to validate
      * @return boolean value, true if positive, false if negative.
      */
-    boolean isValidAddress(CryptoAddress cryptoAddress);
-    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
+    boolean isValidAddress(CryptoAddress cryptoAddress,BlockchainNetworkType blockchainNetworkType);
 
 
     CryptoAddress requestAddressToKnownUser(String deliveredByActorPublicKey,
@@ -318,7 +320,8 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
 
     void send(long cryptoAmount,
               CryptoAddress destinationAddress,
-              String notes, String walletPublicKey,
+              String notes,
+              String walletPublicKey,
               String deliveredByActorPublicKey,
               Actors deliveredByActorType,
               String deliveredToActorPublicKey,
@@ -525,6 +528,7 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
      * @param walletPublicKey
      * @return List of PaymentRequest object
      */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
     List<LossProtectedPaymentRequest> listReceivedPaymentRequest(String  walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset)throws CantListLossProtectedReceivePaymentRequestException;
 
 
@@ -658,6 +662,7 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
      * @throws CantListLossProtectedTransactionsException
      */
 
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
     List<LossProtectedWalletTransaction> listAllActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                    final TransactionType transactionType,
                                                                                    String walletPublicKey,
@@ -665,4 +670,6 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
                                                                                    BlockchainNetworkType blockchainNetworkType,
                                                                                    int max,
                                                                                    int offset) throws CantListLossProtectedTransactionsException;
+
+    void testNetGiveMeCoins(BlockchainNetworkType blockchainNetworkType, CryptoAddress cryptoAddress) throws CantGetCoinsFromFaucetException;
 }

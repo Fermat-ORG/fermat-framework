@@ -30,7 +30,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingStart="8dp"
-            android:text="Youre GPS is OFF"
+            android:text="@string/gps_off"
             android:textColor="#ffffff"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
@@ -57,7 +57,7 @@
                 android:gravity="center"
                 android:padding="12dp"
                 android:singleLine="true"
-                android:text="Connect"
+                android:text="@string/connect_text"
                 android:textColor="#ffffff"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />

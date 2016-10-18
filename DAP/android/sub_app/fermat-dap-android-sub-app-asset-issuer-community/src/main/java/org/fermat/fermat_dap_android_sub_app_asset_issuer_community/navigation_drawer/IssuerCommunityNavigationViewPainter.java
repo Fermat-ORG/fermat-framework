@@ -20,7 +20,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Nerio on 24/12/15.
  */
-public class IssuerCommunityNavigationViewPainter implements NavigationViewPainter {
+public class IssuerCommunityNavigationViewPainter extends NavigationViewPainter {
 
     private static final String TAG = "Iss-ComunNavigationView";
 
@@ -31,6 +31,7 @@ public class IssuerCommunityNavigationViewPainter implements NavigationViewPaint
     public IssuerCommunityNavigationViewPainter(Context activity,
                                                 ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager> assetIssuerCommunitySubAppSession,
                                                 FermatApplicationCaller applicationsHelper) {
+        super(activity);
 
         this.activity = new WeakReference<>(activity);
         this.assetIssuerCommunitySubAppSession = assetIssuerCommunitySubAppSession;

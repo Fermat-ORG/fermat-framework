@@ -49,8 +49,20 @@ public final class EventManagerPlatformServiceManager implements EventManager {
     }
 
     @Override
+    public <T extends FermatEventListener> T getNewListenerMati(FermatEventEnum eventType, Class<T> tClass) {
+        //this is not necessary but... no tengo ganas de cambiar todas las cosas y hacerlo bien..
+        return (T) eventType.getNewListener(fermatEventMonitor);
+    }
+
+    @Override
     public final FermatEvent getNewEvent(final FermatEventEnum eventType) {
         return eventType.getNewEvent();
+    }
+
+    @Override
+    public <T extends FermatEvent> T getNewEventMati(FermatEventEnum eventEnum, Class<T> tClass) {
+        //this is not necessary but... no tengo ganas de cambiar todas las cosas y hacerlo bien..
+        return (T) eventEnum.getNewEvent();
     }
 
     @Override
@@ -94,26 +106,26 @@ public final class EventManagerPlatformServiceManager implements EventManager {
         final List<FermatEventListener> listenersList = listenersMap.get(eventKey);
 
         if (listenersList != null) {
-            for (final FermatEventListener fermatEventListener : listenersList) {
-                execute(fermatEventListener, fermatEvent);
-            }
+                execute(listenersList, fermatEvent);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void execute(final FermatEventListener fermatEventListener,
-                         final FermatEvent fermatEvent) {
+    private void execute(final List<FermatEventListener> listenersList, final FermatEvent fermatEvent) {
 
         executorService.submit(new
-
-                                       Runnable() {
-                                           @Override
-                                           public void run() {
-
-                                               fermatEventListener.raiseEvent(fermatEvent);
-                                           }
-                                       }
-
+                           Runnable() {
+                               @Override
+                               public void run() {
+                                   try{
+                                   for (FermatEventListener fermatEventListener : listenersList) {
+                                       fermatEventListener.raiseEvent(fermatEvent);
+                                   }
+                                   }catch (Exception e){
+                                       e.printStackTrace();
+                                   }
+                               }
+                           }
         );
     }
 

@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawSelectorOnTop="true"
-                android:text="Country:"
+                android:text="@string/country"
                 android:textColor="@color/cbw_wizard_color"
                 />
 
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawSelectorOnTop="true"
-                android:text="Zip Code:"
+                android:text="@string/zip_code"
                 android:textColor="@color/cbw_wizard_color"
                 />
 
@@ -78,7 +78,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="State/Province:"
+            android:text="@string/state_province"
             android:textColor="@color/cbw_wizard_color"
             />
 
@@ -119,7 +119,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="City:"
+            android:text="@string/city"
             android:textColor="@color/cbw_wizard_color"
             />
 
@@ -161,7 +161,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Address Line 1:"
+            android:text="@string/address_line_1"
             android:textColor="@color/cbw_wizard_color"
             />
         <RelativeLayout
@@ -202,7 +202,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Address Line 2:"
+            android:text="@string/address_line_2"
             android:textColor="@color/cbw_wizard_color"
             />
 
@@ -247,7 +247,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="#42ba70"
+        android:background="@color/cbw_wizard_color"
         android:text="@string/cbw_create"
         android:textAllCaps="true"
         android:textColor="@color/white"/>

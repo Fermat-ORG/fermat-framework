@@ -5,6 +5,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.en
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
+
 /**
  * The Class <code>ActorProfile</code>
  * <p/>
@@ -13,7 +15,7 @@ import com.google.gson.JsonObject;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ActorProfile extends Profile {
+public class ActorProfile extends Profile implements Serializable {
 
     /**
      * Represent the actorType
@@ -41,14 +43,9 @@ public class ActorProfile extends Profile {
     private byte[] photo;
 
     /**
-     * Represent the nsIdentityPublicKey
+     * Home node identifier
      */
-    private String nsIdentityPublicKey;
-
-    /**
-     * Represent the clientIdentityPublicKey
-     */
-    private String clientIdentityPublicKey;
+    private String homeNodeIdentifier;
 
     /**
      * Constructor
@@ -147,40 +144,13 @@ public class ActorProfile extends Profile {
         this.photo = photo;
     }
 
-    /**
-     * Gets the value of nsIdentityPublicKey and returns
-     *
-     * @return nsIdentityPublicKey
-     */
-    public String getNsIdentityPublicKey() {
-        return nsIdentityPublicKey;
+
+    public String getHomeNodePublicKey() {
+        return homeNodeIdentifier;
     }
 
-    /**
-     * Sets the nsIdentityPublicKey
-     *
-     * @param nsIdentityPublicKey to set
-     */
-    public void setNsIdentityPublicKey(String nsIdentityPublicKey) {
-        this.nsIdentityPublicKey = nsIdentityPublicKey;
-    }
-
-    /**
-     * Get the ClientIdentityPublicKey
-     *
-     * @return String
-     */
-    public String getClientIdentityPublicKey() {
-        return clientIdentityPublicKey;
-    }
-
-    /**
-     * Sets the clientIdentityPublicKey
-     *
-     * @param clientIdentityPublicKey to set
-     */
-    public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
-        this.clientIdentityPublicKey = clientIdentityPublicKey;
+    public void setHomeNodeIdentifier(String homeNodeIdentifier) {
+        this.homeNodeIdentifier = homeNodeIdentifier;
     }
 
     public static Profile deserialize(final JsonObject jsonObject) {
@@ -211,14 +181,11 @@ public class ActorProfile extends Profile {
         if (jsonObject.get("exd") != null)
             actorProfile.setExtraData(jsonObject.get("exd").getAsString());
 
-        if (jsonObject.get("nspk") != null)
-        actorProfile.setNsIdentityPublicKey(jsonObject.get("nspk").getAsString());
-
-        if (jsonObject.get("clpk") != null)
-            actorProfile.setClientIdentityPublicKey(jsonObject.get("clpk").getAsString());
-
         if (jsonObject.get("photo") != null)
             actorProfile.setPhoto(Base64.decode(jsonObject.get("photo").getAsString(), Base64.DEFAULT));
+
+        if (jsonObject.get("hni") != null)
+            actorProfile.setHomeNodeIdentifier(jsonObject.get("homeNodeIdentifier").getAsString());
 
         actorProfile.setLocation(latitude, longitude);
 
@@ -242,14 +209,13 @@ public class ActorProfile extends Profile {
         if (extraData != null)
             jsonObject.addProperty("exd", extraData);
 
-        if (nsIdentityPublicKey != null)
-            jsonObject.addProperty("nspk", nsIdentityPublicKey);
-
-        if (clientIdentityPublicKey != null)
-            jsonObject.addProperty("clpk", clientIdentityPublicKey);
 
         if (photo != null)
             jsonObject.addProperty("photo", Base64.encodeToString(photo, Base64.DEFAULT));
+
+        if (homeNodeIdentifier!=null){
+            jsonObject.addProperty("hni", homeNodeIdentifier);
+        }
 
         return jsonObject;
     }
@@ -282,8 +248,7 @@ public class ActorProfile extends Profile {
                 ", extraData='" + extraData + '\'' +
                 ", name='" + name + '\'' +
                 ", photo=" + (photo != null ? "true" : "false") +
-                ", nsIdentityPublicKey ='" + nsIdentityPublicKey + '\'' +
-                ", clientIdentityPublicKey ='" + clientIdentityPublicKey + '\'' +
+                ", status ='"+getStatus() + '\'' +
                 '}';
     }
 }

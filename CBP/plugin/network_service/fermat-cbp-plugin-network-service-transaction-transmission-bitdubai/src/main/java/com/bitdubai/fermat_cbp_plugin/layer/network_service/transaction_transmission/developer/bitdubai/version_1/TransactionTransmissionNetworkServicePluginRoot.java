@@ -53,6 +53,10 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
      */
     private Database database;
 
+//    Timer timer = new Timer();
+
+//    private long reprocessTimer = 600000; //Ten minutes
+
     public TransactionTransmissionNetworkServicePluginRoot() {
         super(
                 new PluginVersionReference(new Version()),
@@ -76,23 +80,14 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(final DeveloperObjectFactory developerObjectFactory) {
-
-        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(
-                pluginDatabaseSystem,
-                pluginId
-        ).getDatabaseList(
-                developerObjectFactory
-        );
+        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory,
                                                              DeveloperDatabase developerDatabase) {
 
-        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(
-                pluginDatabaseSystem,
-                pluginId
-        ).getDatabaseTableList(
+        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(
                 developerObjectFactory,
                 developerDatabase
         );
@@ -103,10 +98,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                                                                       DeveloperDatabase developerDatabase,
                                                                       DeveloperDatabaseTable developerDatabaseTable) {
 
-        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(
-                pluginDatabaseSystem,
-                pluginId
-        ).getDatabaseTableContent(
+        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(
                 developerObjectFactory,
                 developerDatabase,
                 developerDatabaseTable
@@ -120,8 +112,53 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     protected void onNetworkServiceRegistered() {
-
+//        reprocessPendingMessage();
     }
+
+//    private void reprocessPendingMessage() {
+//        try {
+//            //Check if nay message not sent
+//            Map<String, Object> filters = new HashMap<>();
+//            filters.put(
+//                    CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME,
+//                    MessagesStatus.PENDING_TO_SEND.getCode());
+//            List<NetworkServiceMessage> networkServiceMessages = getNetworkServiceConnectionManager()
+//                    .getOutgoingMessagesDao()
+//                    .findAll(filters);
+//            System.out.println(new StringBuilder().append("Transaction Transmission found ").append(networkServiceMessages.size()).append(" for sending").toString());
+//            for (NetworkServiceMessage networkServiceMessage : networkServiceMessages) {
+//                try {
+//                    System.out.println(new StringBuilder().append("Trying to send pending message to ").append(networkServiceMessage.getReceiverPublicKey()).toString());
+//                    networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.DELIVERED);
+//                    getNetworkServiceConnectionManager()
+//                            .getOutgoingMessagesDao().update(networkServiceMessage);
+//                    final ActorProfile sender = new ActorProfile();
+//                    sender.setIdentityPublicKey(networkServiceMessage.getSenderPublicKey());
+//                    final ActorProfile receiver = new ActorProfile();
+//                    receiver.setIdentityPublicKey(networkServiceMessage.getReceiverPublicKey())
+//                    sendNewMessage(sender, receiver, networkServiceMessage.getContent());
+//                } catch (Exception e) {
+//                    System.out.println("Transaction Transmission found an exception sending pending messages");
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Transaction Transmission cannot check if there's sending pending messages");
+//            e.printStackTrace();
+//        }
+//
+//    }
+
+//    private void startTimer() {
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                // change message state to process retry later
+////                reprocessPendingMessage();
+//            }
+//        }, 0, reprocessTimer);
+//    }
 
     @Override
     public void onNetworkServiceStart() throws CantStartPluginException {
@@ -152,10 +189,13 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                     transactionTransmissionContractHashDao
             );
 
+            //declare a schedule to process waiting request message
+//            this.startTimer();
+
         } catch (Exception exception) {
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            String context = contextBuffer.toString();
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Plugin ID: ").append(pluginId);
+            String context = stringBuilder.toString();
             String possibleCause = "The plugin was unable to start";
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), context, possibleCause);
         }
@@ -294,5 +334,16 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(NetworkServiceMessage fermatMessage) {
+        System.out.println("Transaction Transmission just sent :" + fermatMessage.getId());
+        try {
+            getNetworkServiceConnectionManager()
+                    .getOutgoingMessagesDao().markAsDelivered(fermatMessage);
+
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity
+                            .DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+        }
+
     }
 }

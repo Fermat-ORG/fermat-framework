@@ -77,6 +77,7 @@ public class DeviceUserUserManager implements DeviceUserManager {
     // TODO DELETE AFTER CREATING CORRECTLY A DEVICE USER
     String userPublicKey = "a423701d8fcee339376a0c055c9cd80506f71f789b3fc3125b3c7f01c27cc12d";
 
+    boolean flag = false;
 
     @Override
     public DeviceUser getLoggedInDeviceUser() throws CantGetLoggedInDeviceUserException {
@@ -85,10 +86,9 @@ public class DeviceUserUserManager implements DeviceUserManager {
             throw new CantGetLoggedInDeviceUserException(CantGetLoggedInDeviceUserException.DEFAULT_MESSAGE, null, "There's no device user logged in.", "");
         return mLoggedInDeviceUser;*/
         try {
-            userPublicKey = createNewDeviceUser("test1", "test1");
-            DeviceUser deviceUser = getDeviceUser(userPublicKey);
+            if (!flag) userPublicKey = createNewDeviceUser("test1", "test1");
 
-            return deviceUser;
+            return getDeviceUser(userPublicKey);
         } catch (Exception e) {
             try {
                 return getDeviceUser(userPublicKey);
@@ -110,6 +110,7 @@ public class DeviceUserUserManager implements DeviceUserManager {
                 //persistNewUserInDeviceUserPublicKeysFile(deviceUser.getPublicKey());
                 persistNewUserInDeviceUserPublicKeysFile(userPublicKey);
                 persistUser(deviceUser);
+                flag = true;
             } catch (CantPersistDeviceUserException e) {
                 errorManager.reportUnexpectedAddonsException(addonVersionReference, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, e);
                 throw new CantCreateNewDeviceUserException(CantCreateNewDeviceUserException.DEFAULT_MESSAGE, e, "Cannot persist the device user information file.", null);

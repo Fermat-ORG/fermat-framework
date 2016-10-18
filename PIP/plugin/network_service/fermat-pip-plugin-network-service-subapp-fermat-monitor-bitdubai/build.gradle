@@ -15,7 +15,7 @@ repositories {
 
 
 dependencies {
-    compile project(':fermat-api')
+    //compile project(':fermat-api')
     compile project(':fermat-pip-api')
     compile 'org.bouncycastle:bcprov-jdk15on:1.52'
     compile('com.thoughtworks.xstream:xstream:1.4.7') {

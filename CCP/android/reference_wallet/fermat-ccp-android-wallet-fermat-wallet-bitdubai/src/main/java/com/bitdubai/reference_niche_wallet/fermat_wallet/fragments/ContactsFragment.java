@@ -37,7 +37,9 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -146,10 +148,9 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private FrameLayout contacts_container;
     private boolean connectionDialogIsShow = false;
     private boolean isScrolled = false;
+    FermatWorker fermatWorker;
 
-    private ExecutorService _executor;
-
-    public static ContactsFragment newInstance() {
+ public static ContactsFragment newInstance() {
 
         ContactsFragment f = new ContactsFragment();
 
@@ -167,8 +168,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
         errorManager = appSession.getErrorManager();
 
-        _executor = Executors.newFixedThreadPool(2);
-        try {
+          try {
         fermatWallet = appSession.getModuleManager();
 
 
@@ -198,7 +198,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
-                            boolean isHelpEnabled = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
+                            boolean isHelpEnabled = (Boolean)appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED);
 
                             if (isHelpEnabled)
                                 setUpTutorial(true);
@@ -250,7 +250,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setSize(65)
                 .setPadding(0,0,padding,0)
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_extra_user_buttom))
-                .setText("External User")
+                .setText(getResources().getString(R.string.add_extra_user_text))
                 .setTextColor(Color.BLACK)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_fermat_contacts))
                 .build();
@@ -261,7 +261,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setSize(65)
                 .setPadding(0,0,padding,0)
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_fermat_user_buttom))
-                .setText("Fermat User")
+                .setText(getResources().getString(R.string.add_fermat_user_text))
                 .setTextColor(Color.BLACK)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_fermat_contacts))
                 .build();
@@ -308,8 +308,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         mSearchView.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 String str = s.toString();
-                final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
-                mClearSearchImageButton.setVisibility(visibility);
+                //    final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
+                //    mClearSearchImageButton.setVisibility(visibility);
                 if (mPinnedHeaderAdapter != null) {
                     mPinnedHeaderAdapter.getFilter().filter(str);
                     mPinnedHeaderAdapter.notifyDataSetChanged();
@@ -325,6 +325,15 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         });
 
         // Apply any required UI change now that the Fragment is visible.
+    }
+
+    @Override
+    public void onStop() {
+
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+
+        super.onStop();
     }
 
     @Override
@@ -357,31 +366,51 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void onRefresh() {
 
-        _executor.submit(new Runnable() {
+        fermatWorker = new FermatWorker(getActivity()) {
             @Override
-            public void run() {
+            protected Object doInBackground()  {
 
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            walletContactRecords = fermatWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), fermatWallet.getSelectedActorIdentity().getPublicKey());
-                            if (walletContactRecords.isEmpty()) {
-                                mEmptyView.setVisibility(View.VISIBLE);
-                                mListView.setVisibility(View.GONE);
-                            } else {
-                                mListView.setVisibility(View.VISIBLE);
-                                mEmptyView.setVisibility(View.GONE);
-                                rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
-                            }
-                            refreshAdapter();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                try {
+                    walletContactRecords = fermatWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), fermatWallet.getSelectedActorIdentity().getPublicKey());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return walletContactRecords;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+
+                    if (walletContactRecords.isEmpty()) {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        mListView.setVisibility(View.GONE);
+                    } else {
+                        mListView.setVisibility(View.VISIBLE);
+                        mEmptyView.setVisibility(View.GONE);
+                        rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
-                });
+                    refreshAdapter();
+
+                }
+                else {
+                    makeText(getActivity(), "Cant't Get Contact List.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+
+                makeText(getActivity(), "Cant't Get Contact List. " + ex.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
+
+        fermatWorker.execute();
 
     }
 
@@ -431,19 +460,19 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void setupViews(View rootView) {
         mSearchView = (EditText) rootView.findViewById(R.id.search_view);
-        mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+       mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
         contacts_container = (FrameLayout) rootView.findViewById(R.id.contacts_container);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
 
-        mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
+/*        mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSearchView.getText().clear();
             }
-        });
+        });*/
 
         mEmptyView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -615,6 +644,9 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         dialog = new CreateContactFragmentDialog(
                 getActivity(),
                 referenceWalletSession,
+                null,
+                fermatWallet,
+                referenceWalletSession.getAppPublicKey(),
                 walletContact,
                 user_id,
                 ((withImage) ? contactImageBitmap : null),
@@ -711,6 +743,34 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         return super.onContextItemSelected(item);
     }
 
+
+
+    @Override
+    public void onDestroy() {
+        try {
+
+            actionButton.setVisibility(View.GONE);
+            button1.setVisibility(View.GONE);
+            button2.setVisibility(View.GONE);
+
+            actionButton.detach();
+            actionButton.removeAllViewsInLayout();
+
+            button1.removeAllViewsInLayout();
+            button2.removeAllViewsInLayout();
+
+            actionButton = null;
+            button1 = null;
+            button2 = null;
+
+            actionMenu = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+//        ((ViewGroup)button1.getParent()).removeView(button1);
+        super.onDestroy();
+    }
+
     private void loadImageFromGallery() {
         Intent intentLoad = new Intent(
                 Intent.ACTION_PICK,
@@ -756,7 +816,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             mListSectionPos.clear();
 
             ArrayList<FermatWalletWalletContact> items = params[0];
-
+            Map<Integer, FermatWalletWalletContact> numberPositions = new HashMap<>();
             Map<Integer, FermatWalletWalletContact> positions = new HashMap<>();
 
             if (items != null)
@@ -791,19 +851,30 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         final String letterRegex = HeaderTypes.LETTER.getRegex();
 
                         // for each item in the list look if is number, symbol o letter and put it in the corresponding list
-                        for (int i = 0; i < items.size(); i++) {//) {
+                        for (int i = 0; i < items.size(); i++) {
                             FermatWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
-                            if (currentSection.matches(numberRegex))
+                            if (currentSection.matches(numberRegex)) {
                                 // is Digit
                                 numbers.add(cryptoWalletWalletContact.getActorName());
-                            else if (currentSection.matches(letterRegex)) {
+                                numberPositions.put(i, cryptoWalletWalletContact);
+
+                            }
+                        }
+
+                        int pos= 0;
+
+                        for (int i = 0; i < items.size(); i++) {
+
+                            FermatWalletWalletContact cryptoWalletWalletContact = items.get(i);
+                            String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
+                            if (currentSection.matches(letterRegex)) {
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
-                                positions.put(i, cryptoWalletWalletContact);
-                            } else
-                                // Is other symbol
-                                symbols.add(cryptoWalletWalletContact.getActorName());
+                                positions.put(pos, cryptoWalletWalletContact);
+                                pos++;
+                            }
+
                         }
 
                         final String symbolCode = HeaderTypes.SYMBOL.getCode();
@@ -818,10 +889,14 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                         final String numberCode = HeaderTypes.NUMBER.getCode();
                         if (!numbers.isEmpty()) {
-                            mListItems.add(numberCode);
+                            //mListItems.add(numberCode);
+
+
                             mListSectionPos.add(mListItems.indexOf(numberCode));
-                            mListItems.addAll(numbers);
+                            mListItems.addAll(numberPositions.values());
                         }
+
+
 
                         // add the letters items in the list and his corresponding sections based on its first letter
                         String prevSection = "";

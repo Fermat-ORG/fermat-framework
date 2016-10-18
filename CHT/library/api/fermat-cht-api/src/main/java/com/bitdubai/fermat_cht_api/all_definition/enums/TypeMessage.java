@@ -10,8 +10,8 @@ public enum TypeMessage implements FermatEnum {
     /**
      * Definition types
      */
-    INCOMMING ("INC"),
-    OUTGOING  ("OUT");
+    INCOMING("INC"),
+    OUTGOING("OUT");
 
     /**
      * Represent the code of the message status
@@ -26,6 +26,7 @@ public enum TypeMessage implements FermatEnum {
     TypeMessage(String code) {
         this.code = code;
     }
+
     /**
      * Throw the method <code>getCode</code> you can get the code of the specific element of the enum.
      *
@@ -33,7 +34,7 @@ public enum TypeMessage implements FermatEnum {
      */
     @Override
     public String getCode() {
-        return this.code ;
+        return this.code;
     }
 
     /**
@@ -47,7 +48,7 @@ public enum TypeMessage implements FermatEnum {
 
         switch (code) {
             case "INC":
-                return TypeMessage.INCOMMING;
+                return TypeMessage.INCOMING;
             case "OUT":
                 return TypeMessage.OUTGOING;
         }

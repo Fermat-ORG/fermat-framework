@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_o
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -63,7 +64,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_on
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.exceptions.IncomingOnlineMerchandiseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -367,26 +367,20 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                 long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
                 if (incomingCryptoAmount != contractCryptoAmount)
                     throw new IncomingOnlineMerchandiseException(
-                            "The incoming crypto amount received is " + incomingCryptoAmount +
-                                    "\nThe excepted amount in contract " + contractHash +
-                                    "\nis " + contractCryptoAmount);
+                            "The incoming crypto amount received is " + incomingCryptoAmount + "\nThe excepted amount in contract " + contractHash + "\nis " + contractCryptoAmount);
 
                 // TODO probar esto
                 final CryptoCurrency incomingCryptoCurrency = incomingMoneyEventWrapper.getCryptoCurrency();
                 final CryptoCurrency contractCryptoCurrency = businessTransactionRecord.getCryptoCurrency();
                 if (incomingCryptoCurrency != contractCryptoCurrency)
                     throw new IncomingOnlineMerchandiseException(
-                            "The incoming crypto currency received is " + incomingCryptoCurrency.getFriendlyName() +
-                                    "\nThe excepted crypto currency in contract " + contractHash +
-                                    "\nis " + contractCryptoCurrency.getFriendlyName());
+                            "The incoming crypto currency received is " + incomingCryptoCurrency.getFriendlyName() + "\nThe excepted crypto currency in contract " + contractHash + "\nis " + contractCryptoCurrency.getFriendlyName());
 
                 String receiverActorPublicKey = incomingMoneyEventWrapper.getReceiverPublicKey();
                 String expectedActorPublicKey = businessTransactionRecord.getCustomerPublicKey();
                 if (!receiverActorPublicKey.equals(expectedActorPublicKey))
                     throw new IncomingOnlineMerchandiseException(
-                            "The actor public key that receive the money is " + receiverActorPublicKey +
-                                    "\nThe broker public key in contract " + contractHash +
-                                    "\nis " + expectedActorPublicKey);
+                            "The actor public key that receive the money is " + receiverActorPublicKey + "\nThe broker public key in contract " + contractHash + "\nis " + expectedActorPublicKey);
 
                 businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.PENDING_ACK_ONLINE_MERCHANDISE_NOTIFICATION);
                 dao.updateBusinessTransactionRecord(businessTransactionRecord);
@@ -539,7 +533,6 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
          *
          * @param cryptoAmountString the crypto amount in String
          * @param currencyCode       the crypto currency code
-         *
          * @return the crypto amount in satoshi
          */
         private long getCryptoAmount(String cryptoAmountString, String currencyCode) {

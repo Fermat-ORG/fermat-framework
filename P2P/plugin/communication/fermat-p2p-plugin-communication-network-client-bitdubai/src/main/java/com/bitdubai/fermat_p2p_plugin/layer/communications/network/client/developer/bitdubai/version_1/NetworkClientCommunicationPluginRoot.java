@@ -13,8 +13,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_api.layer.osa_android.ConnectionType;
+import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
+import com.bitdubai.fermat_api.layer.osa_android.DeviceNetwork;
+import com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -57,6 +62,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -87,6 +93,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
     private LocationManager locationManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_CONNECTIVITY)
+    private ConnectivityManager connectivityManager;
+
     //todo: esto va por ahora, más adelante se saca si o si
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.P2P_LAYER)
     private P2PLayerManager p2PLayerManager;
@@ -110,6 +119,11 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
      * Represent the SERVER_IP by default conexion to request nodes list
      */
     public static final String SERVER_IP = HardcodeConstants.SERVER_IP_DEFAULT;
+
+    /**
+     * Holds the listeners references
+     */
+    protected List<FermatEventListener> listenersAdded;
 
     /*
      * Represent the networkClientCommunicationConnection
@@ -140,7 +154,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
     @Override
     public FermatManager getManager() {
-        return null;
+        return this;
     }
 
     /**
@@ -148,7 +162,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
      */
     public NetworkClientCommunicationPluginRoot() {
         super(new PluginVersionReference(new Version()));
-        this.scheduledExecutorService = Executors.newScheduledThreadPool(2);
+        this.listenersAdded        = new CopyOnWriteArrayList<>();
     }
 
     @Override
@@ -176,7 +190,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             /*
              * Initialize the networkClientConnectionsManager to the Connections
              */
-            networkClientConnectionsManager = new NetworkClientConnectionsManager(identity, eventManager, locationManager, this);
+            networkClientConnectionsManager = new NetworkClientConnectionsManager(identity, eventManager, locationManager, this,connectivityManager,p2PLayerManager);
 
             /*
              * Add references to the node context
@@ -190,7 +204,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             /*
              * get NodesProfile List From NodesProfileConnectionHistory table
              */
-            nodesProfileList = getNodesProfileFromConnectionHistory();
+//            nodesProfileList = getNodesProfileFromConnectionHistory();
 
             if(nodesProfileList != null && nodesProfileList.size() >= 1){
 
@@ -202,16 +216,18 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                         this,
                         0,
                         Boolean.FALSE,
-                        nodesProfileList.get(0)
+                        nodesProfileList.get(0),
+                        connectivityManager,
+                        p2PLayerManager
                 );
 
 
             }else {
 
-                /*
+                 /*
                 * get NodesProfile List From Restful in Seed Node
                 */
-                nodesProfileList = getNodesProfileList();
+//                nodesProfileList = getNodesProfileList();
 
                 if (nodesProfileList != null && nodesProfileList.size() > 0) {
 
@@ -223,7 +239,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                             this,
                             0,
                             Boolean.FALSE,
-                            nodesProfileList.get(0)
+                            nodesProfileList.get(0),
+                            connectivityManager,
+                            p2PLayerManager
                     );
 
                 } else {
@@ -236,13 +254,60 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                             this,
                             -1,
                             Boolean.FALSE,
-                            null
+                            null,
+                            connectivityManager,
+                            p2PLayerManager
                     );
 
                 }
+
             }
 
             p2PLayerManager.register(this);
+//            FermatEventListener networkClientConnected = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNNECTED_TO_NODE);
+//            networkClientConnected.setEventHandler(new NetworkClientConnectedToNodeEventHandler(this));
+//            eventManager.addListener(networkClientConnected);
+//            listenersAdded.add(networkClientConnected);
+
+            connectivityManager.registerListener(new NetworkStateReceiver() {
+                @Override
+                public void networkAvailable(DeviceNetwork deviceNetwork) {
+                    System.out.println("########################################\n");
+                    System.out.println("Netowork available!!!!\n+" + "NetworkType: " + deviceNetwork);
+                    System.out.println("########################################\n");
+                    if(deviceNetwork.getType() == ConnectionType.WI_FI || deviceNetwork.getType() == ConnectionType.MOBILE_DATA )
+                        try {
+                            networkClientCommunicationConnection.setTryToReconnect(Boolean.TRUE);
+                            connect();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                }
+
+                @Override
+                public void networkUnavailable() {
+                    System.out.println("########################################\n");
+                    System.out.println("Netowork UNAVAILABLE!!!!\n");
+                    System.out.println("########################################\n");
+                    if (executorService==null) executorService = Executors.newSingleThreadExecutor();
+                        executorService.submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    networkClientCommunicationConnection.setTryToReconnect(Boolean.FALSE);
+                                    disconnect();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+
+                }
+
+            });
+
+//            connectivityManager.isConnectedToAnyProvider()
 
 
         } catch (Exception exception){
@@ -427,8 +492,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
      */
     public void intentToConnectToOtherNode(Integer i){
 
-        if(executorService != null)
-            executorService.shutdownNow();
+//        if(executorService != null)
+//            executorService.shutdownNow();
 
         /*
          * if is the last index then connect to networkNode Harcoded
@@ -444,7 +509,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     this,
                     i+1,
                     Boolean.FALSE,
-                    nodesProfileList.get(i+1)
+                    nodesProfileList.get(i+1),
+                    connectivityManager,
+                    p2PLayerManager
             );
 
         }else{
@@ -457,20 +524,20 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     this,
                     -1,
                     Boolean.FALSE,
-                    null
+                    null,
+                    connectivityManager,
+                    p2PLayerManager
             );
 
         }
 
-        Thread thread = new Thread(){
+        if(executorService==null) executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(new Runnable() {
             @Override
-            public void run(){
+            public void run() {
                 networkClientCommunicationConnection.initializeAndConnect();
             }
-        };
-
-        executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(thread);
+        });
 
     }
 
@@ -593,22 +660,12 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     }
 
     @Override
-    public void connect() {
+    public synchronized void connect() {
 
         try {
-
-            networkClientCommunicationConnection.initializeAndConnect();
-
-
-
-             /*
-            * Create and Scheduled the supervisorConnectionAgent
-            */
-            final NetworkClientCommunicationSupervisorConnectionAgent supervisorConnectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
-            scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 20, TimeUnit.SECONDS);
-
-//            executorService = Executors.newSingleThreadExecutor();
-//            executorService.submit(thread);
+            if (!networkClientCommunicationConnection.isConnected()) {
+                networkClientCommunicationConnection.initializeAndConnect();
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -617,7 +674,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     @Override
     public void disconnect() {
         try {
-            scheduledExecutorService.shutdownNow();
+            stopConnectionSuperVisorAgent();
         }catch (Exception e){
 
         }
@@ -628,6 +685,39 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
         }
 
 
+    }
+
+    public void stopConnectionSuperVisorAgent(){
+        if(scheduledExecutorService != null){
+            scheduledExecutorService.shutdownNow();
+            scheduledExecutorService = null;
+        }
+
+    }
+
+    public void startConnectionSuperVisorAgent(){
+        final NetworkClientCommunicationSupervisorConnectionAgent supervisorConnectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
+        if (scheduledExecutorService == null){
+            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+            scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 7, TimeUnit.SECONDS);
+        }
+    }
+    @Override
+    public void stop() {
+        if(executorService != null)
+            try {
+                executorService.shutdownNow();
+                executorService = null;
+            }catch (Exception ignore){
+
+            }
+
+        if(scheduledExecutorService != null){
+            scheduledExecutorService.shutdownNow();
+            scheduledExecutorService = null;
+        }
+
+        super.stop();
     }
 
     @Override

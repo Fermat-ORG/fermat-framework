@@ -1,108 +1,58 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection;
 
-import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListReceivePaymentRequestException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import android.content.Context;
 
-import java.util.UUID;
+import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_ccp_api.all_definition.constants.CCPBroadcasterConstants;
+
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
+
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 
 /**
  * Created by natalia on 22/02/16.
  */
 public class BitcoinWalletBuildNotificationPainter {
 
-    public static NotificationPainter getNotification(CryptoWallet moduleManager,String code,String walletPublicKey, String codeReturn )
+    public static NotificationPainter getNotification(int code,String involvedActor, long amount, Context context )
     {
         NotificationPainter notification = null;
         try {
 
 
+            //find last transaction
+            switch (code){
+                case CCPBroadcasterConstants.TRANSACTION_ARRIVE:
+                    notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_receive_btc_1),  WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode(),4,7) + " " + context.getResources().getString(R.string.notification_receive_btc_2),"","",true, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
 
-                CryptoWalletTransaction transaction;
-                PaymentRequest paymentRequest;
-                String loggedIntraUserPublicKey;
+                    break;
+                case CCPBroadcasterConstants.TRANSACTION_REVERSE:
+                    notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_reversed_1), context.getResources().getString(R.string.notification_reversed_2) + " " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode(),4,6) + " " + context.getResources().getString(R.string.notification_reversed_3), "", "",true,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
 
-                String[] params = code.split("_");
-                String notificationType = params[0];
-                String transactionId = params[1];
-                //find last transaction
-                switch (notificationType){
-                    case "TRANSACTIONARRIVE":
-                        if(moduleManager != null){
-                            loggedIntraUserPublicKey = moduleManager.getSelectedActorIdentity().getPublicKey();
-                            try{
-                                transaction= moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey,loggedIntraUserPublicKey);
-                                notification = new BitcoinWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true,codeReturn);
-
-                            }catch(Exception ex) {
-                                notification = new BitcoinWalletNotificationPainter("Received money", "BTC Arrived","","",true,codeReturn);
-                            }
+                    break;
 
 
-                        }else{
-                            notification = new BitcoinWalletNotificationPainter("Received money", "BTC Arrived","","",true,codeReturn);
-                        }
-                        break;
-                    case "TRANSACTIONREVERSE":
-                        if(moduleManager != null) {
-                            loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
+                case CCPBroadcasterConstants.PAYMENT_REQUEST_ARRIVE:
+                    notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_receive_payment_1),context.getResources().getString(R.string.notification_receive_payment_2) +  " " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode(),4,6) + " BTC","","",true,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
 
-                            try{
-                                 transaction = moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey, loggedIntraUserPublicKey);
-                                 notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true,codeReturn);
+                    break;
 
-                             }catch(Exception ex) {
-                                notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true,codeReturn);
-                            }
-                        }else
-                        {
-                            notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true,codeReturn);
-                        }
-                        break;
+                case CCPBroadcasterConstants.PAYMENT_DENIED:
+                    notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_payment_denied),context.getResources().getString(R.string.notification_payment_denied_2) +  " " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode(),4,6) + context.getResources().getString(R.string.notification_payment_denied_3),"","",true,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                    break;
+
+                case CCPBroadcasterConstants.PAYMENT_ERROR:
+
+                    notification = new BitcoinWalletNotificationPainter(context.getResources().getString(R.string.notification_payment_error),context.getResources().getString(R.string.notification_payment_error_2) +  " " + WalletUtils.formatBalanceString(amount, ShowMoneyType.BITCOIN.getCode(),4,6) + context.getResources().getString(R.string.notification_payment_error_3),"","",true,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+
+                    break;
+
+            }
 
 
-                    case "PAYMENTREQUEST":
-                        if(moduleManager != null){
 
-                            paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new BitcoinWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC","","",true,codeReturn);
-                        }
-                        else
-                        {
-                            notification = new BitcoinWalletNotificationPainter("Received new Payment Request","You have received a new Payment Request.","","",true,codeReturn);
-                        }
-                        break;
-
-                    case "PAYMENTDENIED":
-                        if(moduleManager != null){
-                            paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new BitcoinWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was deny.","","",true,codeReturn);
-                        }
-                        else
-                        {
-                            notification = new BitcoinWalletNotificationPainter("Payment Request deny","Your Payment Request was deny.","","",true,codeReturn);
-                        }
-                        break;
-
-                    case "PAYMENTERROR":
-                        if(moduleManager != null){
-                            paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new BitcoinWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was reverted.","","",true,codeReturn);
-                        }
-                        else
-                        {
-                            notification = new BitcoinWalletNotificationPainter("Payment Request reverted","Your Last Payment Request was reverted.","","",true,codeReturn);
-                        }
-                        break;
-
-                }
-
-
-        } catch (CantListReceivePaymentRequestException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,3 +60,4 @@ public class BitcoinWalletBuildNotificationPainter {
         return notification;
     }
 }
+

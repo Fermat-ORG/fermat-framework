@@ -52,11 +52,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.CreateContactDialogCallback;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.SubActionButton;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.views_contacts_fragment.PinnedHeaderAdapter;
@@ -66,8 +64,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.He
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ContactsTutorialPart1V2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.CreateContactFragmentDialog;
-
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
@@ -80,8 +76,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 
@@ -128,6 +122,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     LinearLayout mEmptyView;
     Bundle mSavedInstanceState;
     String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
+
+    FermatWorker fermatWorker;
     /**
      * Resources
      */
@@ -141,12 +137,12 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private Bitmap contactImageBitmap;
     private WalletContact walletContact;
 
-    LossProtectedWalletSettings lossProtectedWalletSettings;
+
     private boolean isScrolled = false;
     private FrameLayout contacts_container;
     private boolean connectionDialogIsShow = false;
     private boolean isRefreshing = false;
-    private ExecutorService _executor;
+
 
     public static ContactsFragment newInstance() {
 
@@ -161,19 +157,15 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         super.onCreate(savedInstanceState);
 
         try {
-            _executor = Executors.newFixedThreadPool(2);
+
             lossWalletSession =  appSession;
             setHasOptionsMenu(true);
             tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
             errorManager = appSession.getErrorManager();
             lossProtectedWalletManager = lossWalletSession.getModuleManager();
 
-            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossWalletSession.getAppPublicKey());
 
-
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -199,7 +191,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
-                            boolean isHelpEnabled = lossProtectedWalletSettings.isContactsHelpEnabled();
+                            boolean isHelpEnabled = (Boolean) appSession.getData(SessionConstant.PRESENTATION_HELP_ENABLED);
 
                             if (isHelpEnabled)
                                 setUpTutorial(true);
@@ -296,7 +288,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             super.onActivityCreated(new Bundle());
             hideSoftKeyboard(getActivity());
         } catch (Exception e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+//            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), getResources().getString(R.string.Whooops_text), Toast.LENGTH_SHORT).show();
             lossWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
@@ -367,7 +360,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     }
 
     private void onRefresh() {
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+      fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
                 try {
@@ -788,7 +781,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             mListSectionPos.clear();
 
             ArrayList<LossProtectedWalletContact> items = params[0];
-
+            Map<Integer, LossProtectedWalletContact> numberPositions = new HashMap<>();
             Map<Integer, LossProtectedWalletContact> positions = new HashMap<>();
 
             if (items != null)
@@ -823,25 +816,36 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         final String letterRegex = HeaderTypes.LETTER.getRegex();
 
                         // for each item in the list look if is number, symbol o letter and put it in the corresponding list
-                        for (int i = 0; i < items.size(); i++) {//) {
+                        for (int i = 0; i < items.size(); i++) {
                             LossProtectedWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
-                            if (currentSection.matches(numberRegex))
+                            if (currentSection.matches(numberRegex)) {
                                 // is Digit
                                 numbers.add(cryptoWalletWalletContact.getActorName());
-                            else if (currentSection.matches(letterRegex)) {
+                                numberPositions.put(i, cryptoWalletWalletContact);
+
+                            }
+                        }
+
+                        int pos= 0;
+
+                        for (int i = 0; i < items.size(); i++) {
+
+                            LossProtectedWalletContact cryptoWalletWalletContact = items.get(i);
+                            String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
+                            if (currentSection.matches(letterRegex)) {
                                 // is Letter
                                 letters.add(cryptoWalletWalletContact.getActorName());
-                                positions.put(i, cryptoWalletWalletContact);
-                            } else
+                                positions.put(pos, cryptoWalletWalletContact);
+                                pos++;
+                            }
 
-                                symbols.add(cryptoWalletWalletContact.getActorName());
                         }
 
                         final String symbolCode = HeaderTypes.SYMBOL.getCode();
                         if (!symbols.isEmpty()) {
                             // add the section in the list of items
-                            mListItems.add(symbolCode);
+                            //mListItems.add(symbolCode);
                             // add the section position in the list section positions
                             mListSectionPos.add(mListItems.indexOf(symbolCode));
                             // add all the items in this group
@@ -850,9 +854,9 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                         final String numberCode = HeaderTypes.NUMBER.getCode();
                         if (!numbers.isEmpty()) {
-                            mListItems.add(numberCode);
+                            //mListItems.add(numberCode);
                             mListSectionPos.add(mListItems.indexOf(numberCode));
-                            mListItems.addAll(numbers);
+                            mListItems.addAll(numberPositions.values());
                         }
 
                         // add the letters items in the list and his corresponding sections based on its first letter
@@ -919,6 +923,43 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onStop() {
+
+
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+
+
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        try {
+
+            actionButton.setVisibility(View.GONE);
+            button1.setVisibility(View.GONE);
+            button2.setVisibility(View.GONE);
+
+            actionButton.detach();
+            actionButton.removeAllViewsInLayout();
+
+            button1.removeAllViewsInLayout();
+            button2.removeAllViewsInLayout();
+
+            actionButton = null;
+            button1 = null;
+            button2 = null;
+
+            actionMenu = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+//        ((ViewGroup)button1.getParent()).removeView(button1);
+        super.onDestroy();
     }
 
     /**

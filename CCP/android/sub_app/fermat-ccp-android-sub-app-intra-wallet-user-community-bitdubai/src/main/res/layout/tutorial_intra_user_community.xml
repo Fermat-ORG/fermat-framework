@@ -45,7 +45,7 @@
                     android:layout_weight="1"
                     android:gravity="left"
                     android:paddingLeft="5dp"
-                    android:text="Welcome!"
+                    android:text="@string/welcome_text"
                     android:textColor="#00a99d"
                     android:textSize="20sp"
                     app:typeface="CAVIAR_DREAMS_BOLD"
@@ -101,7 +101,7 @@
                         android:paddingRight="30dp"
                         android:paddingStart="20dp"
                         android:paddingTop="7sp"
-                        android:text="This app will allow you to find other crypto wallet users within the Fermat Network. Its main features include:"
+                        android:text="@string/crypto_wallet"
                         android:textColor="#1d1d26"
                         android:textSize="12sp"
                         tools:ignore="HardcodedText" />
@@ -130,7 +130,7 @@
                             android:paddingLeft="16dp"
                             android:paddingRight="30dp"
                             android:paddingStart="16dp"
-                            android:text="* Browsing users nearby. \n* Looking for users anywhere. \n* Seeing other users profiles. \n* Sending connection requests"
+                            android:text="@string/community_desc"
                             android:textColor="#1d1d26"
                             android:textSize="12sp"
                             tools:ignore="HardcodedText" />
@@ -144,7 +144,7 @@
                             android:paddingLeft="16dp"
                             android:paddingRight="30dp"
                             android:paddingStart="16dp"
-                            android:text="More..."
+                            android:text=""
                             android:textColor="#1d1d26"
                             android:textSize="12sp"
                             tools:ignore="HardcodedText" />
@@ -173,7 +173,7 @@
                             android:paddingLeft="16dp"
                             android:paddingRight="30dp"
                             android:paddingStart="16dp"
-                            android:text="You need to establish connections to other users first in order to add them as  contacts in your wallets"
+                            android:text="@string/stablish_connection"
                             android:textColor="#1d1d26"
                             android:textSize="12sp"
                             tools:ignore="HardcodedText" />
@@ -207,7 +207,7 @@
                             android:layout_marginEnd="32dp"
                             android:layout_marginRight="32dp"
                             android:gravity="center_vertical"
-                            android:text="Don´t show this again"
+                            android:text="@string/no_id_dont_show_this_again_text"
                             android:textColor="#7c7c7c"
                             android:textSize="12dp"
                             tools:ignore="HardcodedText,RtlCompat,SpUsage" />
@@ -251,8 +251,9 @@
                                 android:layout_width="120dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:text="Be John Doe"
+                                android:text="@string/be_john_doe_text"
                                 android:textSize="12dp"
+                                android:background="#0072bb"
                                 tools:ignore="HardcodedText,SpUsage" />
                         </LinearLayout>
 
@@ -288,8 +289,9 @@
                                 android:layout_width="120dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:text="Be Jane Doe"
+                                android:text="@string/be_jane_doe__text"
                                 android:textSize="12dp"
+                                android:background="#0072bb"
                                 tools:ignore="HardcodedText,SpUsage" />
                         </LinearLayout>
 

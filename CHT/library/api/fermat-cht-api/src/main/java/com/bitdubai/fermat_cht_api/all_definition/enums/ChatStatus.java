@@ -10,8 +10,8 @@ public enum ChatStatus implements FermatEnum {
     /**
      * Definition types
      */
-    INVISSIBLE   ("INVI"),
-    VISSIBLE     ("VISI");
+    INVISIBLE("INVI"),
+    VISIBLE("VISI");
 
     /**
      * Represent the code of the message status
@@ -26,6 +26,7 @@ public enum ChatStatus implements FermatEnum {
     ChatStatus(String code) {
         this.code = code;
     }
+
     /**
      * Throw the method <code>getCode</code> you can get the code of the specific element of the enum.
      *
@@ -33,7 +34,7 @@ public enum ChatStatus implements FermatEnum {
      */
     @Override
     public String getCode() {
-        return this.code ;
+        return this.code;
     }
 
     /**
@@ -47,9 +48,9 @@ public enum ChatStatus implements FermatEnum {
 
         switch (code) {
             case "INVI":
-                return ChatStatus.INVISSIBLE;
+                return ChatStatus.INVISIBLE;
             case "VISI":
-                return ChatStatus.VISSIBLE;
+                return ChatStatus.VISIBLE;
         }
 
         /**

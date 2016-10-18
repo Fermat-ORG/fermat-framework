@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.exceptions.CantRevertTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -80,7 +82,9 @@ public interface CryptoWalletWallet {
                                                                   final BalanceType      balanceType   ,
                                                                   final TransactionType transactionType,
                                                                   final int              max           ,
-                                                                  final int              offset        ) throws CantListTransactionsException;
+                                                                  final int              offset       ,
+                                                                  final BlockchainNetworkType blockchainNetworkType,
+                                                                 final Actors actorType) throws CantListTransactionsException;
     /**
      * Throw the method <code>listLastActorTransactionsByTransactionType</code> you can get the last transaction for each actor
      * who have made transactions with this wallet.
@@ -97,7 +101,8 @@ public interface CryptoWalletWallet {
     List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType     balanceType,
                                                                               TransactionType transactionType,
                                                                               int             max,
-                                                                              int             offset) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
+                                                                              int             offset,
+                                                                             final BlockchainNetworkType blockchainNetworkType) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.

@@ -36,8 +36,8 @@ project(':fermat-wpd-plugin-middleware-wallet-manager-bitdubai').projectDir = ne
 //include ':fermat-wpd-plugin-middleware-wallet-settings-bitdubai'
 //project(':fermat-wpd-plugin-middleware-wallet-settings-bitdubai').projectDir = new File('WPD/plugin/middleware/fermat-wpd-plugin-middleware-wallet-settings-bitdubai')
 
-//include ':fermat-wpd-plugin-middleware-wallet-store-bitdubai'
-//project(':fermat-wpd-plugin-middleware-wallet-store-bitdubai').projectDir = new File('WPD/plugin/middleware/fermat-wpd-plugin-middleware-wallet-store-bitdubai')
+include ':fermat-wpd-plugin-middleware-wallet-store-bitdubai'
+project(':fermat-wpd-plugin-middleware-wallet-store-bitdubai').projectDir = new File('WPD/plugin/middleware/fermat-wpd-plugin-middleware-wallet-store-bitdubai')
 
 //Netwok_service
 include ':fermat-wpd-plugin-network-service-wallet-community-bitdubai'

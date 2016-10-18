@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,14 +31,18 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.PaymentRequestHistoryAdapter;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.Payment_Request_Help_Dialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -125,14 +130,22 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
 
 
-            FermatWalletSettings fermatWalletSettings;
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+
             try {
-                fermatWalletSettings = cryptoWallet.loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
-                this.blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
-            }catch (Exception e){
+                boolean isHelpEnabled = (Boolean)appSession.getData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED);
 
+                if (isHelpEnabled)
+                    setUpTutorial(true);
+                else
+                    setUpTutorial(false);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
 
             onRefresh();
         } catch (Exception ex) {
@@ -174,10 +187,11 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             if(id == 2){
                 changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
                 return true;
-            }else {
-                //setUpPresentation();
+            }else if (id==3){
+                setUpTutorial(true);
                 return true;
-            }
+            }else
+                return true;
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -185,6 +199,26 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
+        // if (isHelpEnabled) {
+        Payment_Request_Help_Dialog payment_request_help_dialog = new Payment_Request_Help_Dialog(getActivity(), appSession, null, checkButton);
+        payment_request_help_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Object b = appSession.getData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED);
+                if (b != null) {
+                    if ((Boolean) b) {
+                        appSession.removeData(SessionConstant.PAYMENT_REQUEST_HELP_ENABLED);
+                    }
+                }
+
+            }
+        });
+        payment_request_help_dialog.show();
+        //  }
+    }
+
     private void setUp(){
         FrameLayout frameLayout = new FrameLayout(getActivity());
 

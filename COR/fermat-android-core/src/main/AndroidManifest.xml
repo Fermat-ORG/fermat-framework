@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_LOGS"/>
     <!-- to get location using GPS -->
@@ -142,15 +143,15 @@
 
 
         <!--<service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationService"-->
-            <!--android:label="CommService"-->
-            <!--android:exported="true"-->
-            <!-->-->
-            <!--<intent-filter>-->
-                <!--&lt;!&ndash;<action android:name="android.intent.action.MAIN" />&ndash;&gt;-->
-                <!--&lt;!&ndash;<category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;-->
-                <!--&lt;!&ndash; Service name &ndash;&gt;-->
-                <!--<action android:name="org.fermat.COMM_SERVICE" />-->
-            <!--</intent-filter>-->
+        <!--android:label="CommService"-->
+        <!--android:exported="true"-->
+        <!-->-->
+        <!--<intent-filter>-->
+        <!--&lt;!&ndash;<action android:name="android.intent.action.MAIN" />&ndash;&gt;-->
+        <!--&lt;!&ndash;<category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;-->
+        <!--&lt;!&ndash; Service name &ndash;&gt;-->
+        <!--<action android:name="org.fermat.COMM_SERVICE" />-->
+        <!--</intent-filter>-->
         <!--</service>-->
 
         <activity android:name="com.bitdubai.android_core.app.LoadingScreenActivity"

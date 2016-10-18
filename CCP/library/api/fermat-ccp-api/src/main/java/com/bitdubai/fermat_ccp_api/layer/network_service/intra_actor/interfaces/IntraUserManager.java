@@ -42,7 +42,7 @@ public interface IntraUserManager extends FermatManager {
      * @return The list of suggestions
      * @throws ErrorSearchingSuggestionsException
      */
-    List<IntraUserInformation> getIntraUsersSuggestions(double distance, String alias,int max, int offset,Location location) throws ErrorSearchingSuggestionsException;
+    void getIntraUsersSuggestions(double distance, String alias,int max, int offset,Location location, String requesterPublicKey) throws ErrorSearchingSuggestionsException;
 
 
     /**
@@ -63,7 +63,8 @@ public interface IntraUserManager extends FermatManager {
          * @param intraUserToAddPublicKey    The public key of the intra user to send the request to
          * @param myProfileImage             The profile image of the user sending the request
          */
-    void askIntraUserForAcceptance(String intraUserLoggedInPublicKey,String intraUserLoggedName,Actors senderType, String intraUserToAddName, String intraUserToAddPublicKey,String intraUserToAddPhrase,Actors destinationType, byte[] myProfileImage) throws CantAskIntraUserForAcceptanceException;
+    void askIntraUserForAcceptance(String intraUserLoggedInPublicKey,String intraUserLoggedName,Actors senderType, String intraUserToAddName, String intraUserToAddPublicKey,String intraUserToAddPhrase,Actors destinationType, byte[] myProfileImage, String city,
+                                    String country) throws CantAskIntraUserForAcceptanceException;
 
     /**
      * The method <code>acceptIntraUser</code> send an acceptance message of a connection request.
@@ -143,6 +144,8 @@ public interface IntraUserManager extends FermatManager {
     Actor buildIdentity(String publicKey, String alias, String phrase, Actors actors, byte[] profileImage);
 
     void updateActor(Actor actor);
+
+    void updateActor(Actor actor, Location location);
 
     /**
      *

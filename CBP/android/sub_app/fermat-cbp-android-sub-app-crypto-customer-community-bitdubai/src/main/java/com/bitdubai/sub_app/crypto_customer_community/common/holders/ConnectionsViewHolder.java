@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.crypto_customer_community.common.holders;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -25,6 +26,8 @@ public class ConnectionsViewHolder extends FermatViewHolder {
     private ImageView customerImage;
     private FermatTextView customerName;
     private FermatTextView customerLocation;
+    private String placeAddress;
+    private String countryAddress;
 
     /**
      * Constructor
@@ -41,9 +44,23 @@ public class ConnectionsViewHolder extends FermatViewHolder {
     }
 
     public void bind(CryptoCustomerCommunityInformation data) {
+
         customerName.setText(data.getAlias());
+        if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("OF"))
+            customerName.setTextColor(Color.RED);
+        else if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+            customerName.setTextColor(Color.parseColor("#3CD84E"));//VERDE NO BRILLANTE
+        else if (data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
+            customerName.setTextColor(Color.parseColor("#4d4d4d"));//BLACK);//res.getColor(R.color.color_black_light));
+
+        if (data.getCountry().equals("null") || data.getCountry().equals("") || data.getCountry().equals("country"))
+            countryAddress = "--";
+        else countryAddress = data.getCountry();
+        if (data.getPlace().equals("null") || data.getPlace().equals("") || data.getPlace().equals("country"))
+            placeAddress = "--";
+        else placeAddress = data.getPlace();
+        customerLocation.setText(String.format("%s / %s", placeAddress, countryAddress));
         customerImage.setImageDrawable(getImgDrawable(data.getImage()));
-        customerLocation.setText(data.getPlace()+" / "+data.getCountry());
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

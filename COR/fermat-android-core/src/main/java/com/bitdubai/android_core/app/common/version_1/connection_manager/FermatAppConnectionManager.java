@@ -11,6 +11,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ComboA
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.app_connection.FermatWalletAppConnection;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection.LossProtectedWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
@@ -24,6 +26,7 @@ import com.bitdubai.sub_app.developer.app_connection.DeveloperFermatAppConnectio
 import com.bitdubai.sub_app.intra_user_community.app_connection.CryptoWalletUserCommunityFermatAppConnection;
 import com.bitdubai.sub_app.intra_user_identity.app_connection.CryptoWalletUserFermatAppConnection;
 import com.bitdubai.sub_app.wallet_manager.app_connection.DesktopFermatAppConnection;
+import com.bitdubai.sub_app.wallet_store.app_connection.WalletStoreFermatAppConnection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +45,7 @@ public class FermatAppConnectionManager {
         if (activity == null) Log.e(TAG, "Activity null");
         if (openConnections.containsKey(publicKey)) {
             fermatAppConnection = openConnections.get(publicKey);
-            if(fermatAppConnection!=null) {
+            if (fermatAppConnection != null) {
                 if (fermatAppConnection.getContext() != null) {
                     if (!fermatAppConnection.getContext().equals(activity)) {
                         fermatAppConnection.clear();
@@ -51,8 +54,8 @@ public class FermatAppConnectionManager {
                 } else {
                     fermatAppConnection.setContext(activity);
                 }
-            }else{
-                Log.e(TAG,"AppConnection null, please check this in the FermatAppConnectionManager class");
+            } else {
+                Log.e(TAG, "AppConnection null, please check this in the FermatAppConnectionManager class");
             }
             return fermatAppConnection;
         }
@@ -61,12 +64,12 @@ public class FermatAppConnectionManager {
             case "reference_wallet":
                 fermatAppConnection = new BitcoinWalletFermatAppConnection(activity);
                 break;
-//            case "loss_protected_wallet":
-//                fermatAppConnection = new LossProtectedWalletFermatAppConnection(activity);
-//                break;
-//            case "fermat_wallet":
-//                fermatAppConnection = new FermatWalletAppConnection(activity);
-//                break;
+            case "loss_protected_wallet":
+                fermatAppConnection = new LossProtectedWalletFermatAppConnection(activity);
+                break;
+            case "fermat_wallet":
+                fermatAppConnection = new FermatWalletAppConnection(activity);
+                break;
             //CCP Sub Apps
             case "public_key_ccp_intra_user_identity":
                 fermatAppConnection = new CryptoWalletUserFermatAppConnection(activity);
@@ -110,7 +113,6 @@ public class FermatAppConnectionManager {
 //            case "public_key_dap_redeem_point_community":
 //                fermatAppConnection = new CommunityRedeemPointFermatAppConnection(activity);
 //                break;
-
             //PIP Sub Apps
             case "public_key_pip_developer_sub_app":
                 fermatAppConnection = new DeveloperFermatAppConnection(activity);
@@ -122,7 +124,6 @@ public class FermatAppConnectionManager {
             case "crypto_customer_wallet":
                 fermatAppConnection = new CryptoCustomerWalletFermatAppConnection(activity);
                 break;
-
             //CBP Sub Apps
             case "public_key_crypto_broker_community":
                 fermatAppConnection = new CryptoBrokerCommunityFermatAppConnection(activity);
@@ -138,17 +139,16 @@ public class FermatAppConnectionManager {
                 break;
             //CASH WALLET
             case "cash_wallet":
-                fermatAppConnection = new CashMoneyWalletFermatAppConnection(activity, null);
+                fermatAppConnection = new CashMoneyWalletFermatAppConnection(activity);
                 break;
             //BANKING WALLET
             case "banking_wallet":
                 fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
                 break;
 //            // WPD Sub Apps
-//            case "public_key_store":
-//                fermatAppConnection = new WalletStoreFermatAppConnection(activity);
-//                break;
-
+            case "public_key_store":
+                fermatAppConnection = new WalletStoreFermatAppConnection(activity);
+                break;
 //            // CHT Sub Apps
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);
@@ -180,11 +180,9 @@ public class FermatAppConnectionManager {
 //            case "public_key_art_fan_identity":
 //                fermatAppConnection = new ArtFanUserFermatAppConnection(activity);
 //                break;
-//
 //            case "public_key_art_artist_identity":
 //                fermatAppConnection = new ArtArtistIdentityAppConnection(activity);
 //                break;
-//
 //            case "public_key_art_music_player":
 //                fermatAppConnection = new MusicPlayerFermatAppConnection(activity);
 //                break;
@@ -210,7 +208,7 @@ public class FermatAppConnectionManager {
                 e.printStackTrace();
             }
         }
-        if(fermatAppConnection!=null) fermatAppConnection.setFullyLoadedSession(session);
+        if (fermatAppConnection != null) fermatAppConnection.setFullyLoadedSession(session);
         return fermatAppConnection;
     }
 

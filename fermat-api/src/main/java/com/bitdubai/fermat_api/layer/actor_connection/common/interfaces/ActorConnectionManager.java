@@ -6,12 +6,12 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantCanc
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantUpdateActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnectionSearch;
-import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.LinkedActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 
@@ -27,7 +27,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface ActorConnectionManager<T extends LinkedActorIdentity, Z extends ActorConnection<T>, M extends ActorConnectionSearch<T, Z>> extends FermatManager {
+public interface ActorConnectionManager<Z extends ActorConnection, M extends ActorConnectionSearch<Z>> extends FermatManager {
 
     /**
      * Through the method <code>getSearch</code> we can get a new instance of Actor Connection Search.
@@ -35,7 +35,7 @@ public interface ActorConnectionManager<T extends LinkedActorIdentity, Z extends
      *
      * @return an ActorConnectionSearch instance.
      */
-    M getSearch(final T actorIdentitySearching);
+    M getSearch(final ActorIdentity actorIdentitySearching);
 
     /**
      * Through the method <code>requestConnection</code> we can request an actor for a connection.

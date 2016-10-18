@@ -30,7 +30,7 @@ public class CantSaveContactConnectionException extends CHTException {
      * @param possibleReason
      */
     public CantSaveContactConnectionException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

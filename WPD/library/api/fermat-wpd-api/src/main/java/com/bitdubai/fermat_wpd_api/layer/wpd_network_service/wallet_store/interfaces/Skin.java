@@ -20,7 +20,9 @@ public interface Skin {
      * Skin identified information
      */
     UUID getSkinId();
+
     String getSkinName();
+
     UUID getWalletId(); //Todo: Refactor a String para que acepte PublicKey
 
     ScreenSize getScreenSize();
@@ -29,15 +31,20 @@ public interface Skin {
      * Version information, current, Inicial and Final versions accepted.
      */
     Version getVersion();
+
     Version getInitialWalletVersion();
+
     Version getFinalWalletVersion();
 
     /**
      * Skin presentation information
      */
     byte[] getPresentationImage() throws CantGetWalletIconException;
+
     List<byte[]> getPreviewImageList() throws CantGetWalletIconException;
+
     boolean hasVideoPreview();
+
     List<URL> getVideoPreviews() throws CantGetSkinVideoPreviewException;
 
     /**

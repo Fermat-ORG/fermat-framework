@@ -19,19 +19,19 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.devel
  */
 public class CryptoBrokerConnectionRequestUpdatesEventHandler implements FermatEventHandler {
 
-    private final ActorConnectionEventActions actorConnectionEventActions          ;
+    private final ActorConnectionEventActions actorConnectionEventActions;
     private final CryptoBrokerActorConnectionPluginRoot cryptoBrokerActorConnectionPluginRoot;
 
     public CryptoBrokerConnectionRequestUpdatesEventHandler(final ActorConnectionEventActions actorConnectionEventActions,
                                                             final CryptoBrokerActorConnectionPluginRoot cryptoBrokerActorConnectionPluginRoot) {
 
-        this.actorConnectionEventActions             = actorConnectionEventActions            ;
+        this.actorConnectionEventActions = actorConnectionEventActions;
         this.cryptoBrokerActorConnectionPluginRoot = cryptoBrokerActorConnectionPluginRoot;
     }
 
     /**
      * FermatEventHandler interface implementation
-     *
+     * <p/>
      * Plugin is started?
      * The event is the expected event?
      */
@@ -46,8 +46,7 @@ public class CryptoBrokerConnectionRequestUpdatesEventHandler implements FermatE
 
             } else {
                 EventType eventExpected = EventType.CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES;
-                String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
-                        "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
+                String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode() + "\n" + "Event expected: " + eventExpected.toString() + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);
             }
         } else {

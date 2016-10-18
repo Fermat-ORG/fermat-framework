@@ -27,8 +27,10 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
  * Created by Joaquin Carrasuquero on 11/04/16.
  */
 
-public class Confirm_send_dialog extends Dialog implements
+public class
+        Confirm_send_dialog extends Dialog implements
         View.OnClickListener {
+
 
 
     public Activity activity;
@@ -36,6 +38,8 @@ public class Confirm_send_dialog extends Dialog implements
 
     private BlockchainNetworkType blockchainNetworkType;
     private long cryptoAmount;
+    private long fee;
+    private long total;
     private CryptoAddress destinationAddress;
     private String notes;
     private String walletPublicKey;
@@ -44,6 +48,7 @@ public class Confirm_send_dialog extends Dialog implements
     private String deliveredToActorPublicKey;
     private Actors deliveredToActorType;
     private ReferenceWallet referenceWallet;
+    //private FeeOrigin feeOrigin;
 
     /**
      *  Deals with crypto wallet interface
@@ -59,15 +64,16 @@ public class Confirm_send_dialog extends Dialog implements
 
     Button cancel_btn;
     Button accept_btn;
-
+    //FermatTextView confirmText;
 
     public Confirm_send_dialog(Activity a,
-                               LossProtectedWallet lossProtectedWallet,
-                               long cryptoAmount,
-                               CryptoAddress destinationAddress,
-                               String notes, String walletPublicKey,
-                               String deliveredByActorPublicKey,
-                               Actors deliveredByActorType,
+                               LossProtectedWallet lossProtectedWallet,//
+                               long cryptoAmount,//
+                               CryptoAddress destinationAddress,//
+                               String notes,
+                               String walletPublicKey,
+                               String deliveredByActorPublicKey,//
+                               Actors deliveredByActorType,//
                                String deliveredToActorPublicKey,
                                Actors deliveredToActorType,
                                ReferenceWallet referenceWallet,
@@ -90,7 +96,34 @@ public class Confirm_send_dialog extends Dialog implements
 
     }
 
+   /* public Confirm_send_dialog(Activity a,
+                             LossProtectedWallet lossProtectedWallet,
+                             long cryptoAmount,
+                             long fee,
+                             long total,
+                             FeeOrigin feeOrigin,
+                             CryptoAddress destinationAddress,
+                             String notes,
+                             String deliveredByActorPublicKey,
+                             Actors deliveredByActorType,
+                             BlockchainNetworkType blockchainNetworkType,
+                             ReferenceAppFermatSession<LossProtectedWallet> appSession) {
+        super(a);
+        this.activity = a;
+        this.lossProtectedWallet=lossProtectedWallet;
+        this.cryptoAmount = cryptoAmount;
+        this.destinationAddress = destinationAddress;
+        this.notes = notes;
+        this.deliveredByActorPublicKey = deliveredByActorPublicKey;
+        this.deliveredByActorType = deliveredByActorType;
+        this.fee = fee;
+        this.total = total;
+        this.feeOrigin = feeOrigin;
+        this.blockchainNetworkType = blockchainNetworkType;
+        this.appSession = appSession;
 
+    }
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +137,6 @@ public class Confirm_send_dialog extends Dialog implements
 
         accept_btn = (Button) findViewById(R.id.accept_btn);
         cancel_btn = (Button) findViewById(R.id.cancel_btn);
-
         accept_btn.setOnClickListener(this);
         cancel_btn.setOnClickListener(this);
 

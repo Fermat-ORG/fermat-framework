@@ -28,18 +28,17 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
-
-import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinBlockchainNetworkSelector;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
 
 import org.apache.commons.lang.StringUtils;
@@ -358,7 +357,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         /**
          * Wil load the table into memory
-          */
+         */
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -657,7 +656,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @return
      */
     private CryptoTransaction getCryptoTransactionFromRecord(DatabaseTableRecord record) {
-       CryptoTransaction cryptoTransaction = new CryptoTransaction();
+        CryptoTransaction cryptoTransaction = new CryptoTransaction();
 
         //TransactionHash
         cryptoTransaction.setTransactionHash(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME));
@@ -844,6 +843,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param keyList
      * @throws CantExecuteDatabaseOperationException
      */
+    //todo: ver esto rodri, está muy feo
     public void updateDetailedCryptoStats(CryptoVaults cryptoVault, BlockchainNetworkType blockchainNetworkType, List<ECKey> keyList)  throws CantExecuteDatabaseOperationException {
         /**
          * If we are not allowed to save detailed information then we will exit
@@ -908,22 +908,13 @@ public class BitcoinCryptoNetworkDatabaseDao {
             return;
 
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME);
-        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME, cryptoVault.getCode(), DatabaseFilterType.EQUAL);
-        try {
-            databaseTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException e) {
-            throwLoadToMemoryException(e, databaseTable.getTableName());
-        }
 
-        /**
-         * delete all records. DB should offer a better way to do this.
-         */
-        for (DatabaseTableRecord record : databaseTable.getRecords()){
-            try {
-                databaseTable.deleteRecord(record);
-            } catch (CantDeleteRecordException e) {
-                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to delete statst record.", "database issue");
-            }
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME, cryptoVault.getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.deleteRecord();
+        } catch (CantDeleteRecordException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to delete statst record.", "database issue");
         }
     }
 
@@ -1017,18 +1008,9 @@ public class BitcoinCryptoNetworkDatabaseDao {
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, Status.IDLE.getCode(), DatabaseFilterType.EQUAL);
 
         try {
-            databaseTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException e) {
-            throwLoadToMemoryException(e, databaseTable.getTableName());
-        }
-
-        if (!databaseTable.getRecords().isEmpty()){
-            DatabaseTableRecord record = databaseTable.getRecords().get(0);
-            try {
-                databaseTable.deleteRecord(record);
-            } catch (CantDeleteRecordException e) {
-                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Error deleting a record from Broadcast table", "database issue");
-            }
+            databaseTable.deleteRecord();
+        } catch (CantDeleteRecordException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Error deleting a record from Broadcast table", "database issue");
         }
     }
 
@@ -1164,8 +1146,8 @@ public class BitcoinCryptoNetworkDatabaseDao {
         else
             broadcastStatus.setRetriesCount(retriesAmount);
 
-            broadcastStatus.setConnectedPeers(connectedPeers);
-            broadcastStatus.setLastException(lastException);
+        broadcastStatus.setConnectedPeers(connectedPeers);
+        broadcastStatus.setLastException(lastException);
 
         /**
          * I will set the new values and execute
@@ -1344,7 +1326,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
          * If no previous record exists, I will insert a new one
          */
         if (databaseTable.getRecords().isEmpty()){
-               record = getNewActiveNetworkRecord(blockchainNetworkType, amountOfKeys);
+            record = getNewActiveNetworkRecord(blockchainNetworkType, amountOfKeys);
             try {
                 databaseTable.insertRecord(record);
             } catch (CantInsertRecordException e) {
@@ -1477,5 +1459,47 @@ public class BitcoinCryptoNetworkDatabaseDao {
             return ProtocolStatus.NO_ACTION_REQUIRED;
         // for every other case, we are returning TO_BE_NOTIFIED
         return ProtocolStatus.TO_BE_NOTIFIED;
+    }
+
+    /**
+     * returns a list of keys from imported seeds, meaning from a vault code IMS.
+     * @param blockchainNetworkType
+     * @return
+     */
+    public List<String> getImportedAddresses(BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_NETWORK_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME, CryptoVaults.IMPORTED_SEED.getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        List<String> addressList = new ArrayList<>();
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            addressList.add(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_MONITORED_ADDRESSES_COLUMN_NAME));
+        }
+
+        return addressList;
+    }
+
+
+    /**
+     * true if the network is active by existing in the database, false if not.
+     * @param blockchainNetworkType
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public boolean isNetworkActive(BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException {
+        for (BlockchainNetworkType activeBlockchainNetworkType : this.getActiveBlockchainNetworkTypes()){
+            if (activeBlockchainNetworkType.getCode().equals(blockchainNetworkType.getCode()))
+                return true;
+        }
+
+        return false;
+
     }
 }

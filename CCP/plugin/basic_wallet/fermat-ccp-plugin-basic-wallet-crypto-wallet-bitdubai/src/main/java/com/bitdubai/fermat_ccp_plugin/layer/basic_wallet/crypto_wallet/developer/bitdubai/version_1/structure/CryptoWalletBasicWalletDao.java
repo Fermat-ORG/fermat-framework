@@ -1,22 +1,12 @@
 package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.version_1.structure;
 
 
-
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
-import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionSummary;
-
-
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -25,12 +15,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-
-
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -41,10 +30,12 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionSummary;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.version_1.exceptions.CantExecuteBitconTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.version_1.util.CryptoWalletTransactionWrapper;
-
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -111,8 +102,8 @@ public class CryptoWalletBasicWalletDao {
     }
 
     public List<CryptoWalletTransaction> listTransactions(BalanceType balanceType,TransactionType transactionType,
-                                                           int max,
-                                                           int offset) throws CantListTransactionsException {
+                                                          int max,
+                                                          int offset) throws CantListTransactionsException {
         try {
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
@@ -134,9 +125,9 @@ public class CryptoWalletBasicWalletDao {
     }
 
     public List<CryptoWalletTransaction> listTransactionsByActor(final String actorPublicKey,
-                                                                  final BalanceType balanceType,
-                                                                  final int max,
-                                                                  final int offset) throws CantListTransactionsException {
+                                                                 final BalanceType balanceType,
+                                                                 final int max,
+                                                                 final int offset) throws CantListTransactionsException {
         try {
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
@@ -169,8 +160,13 @@ public class CryptoWalletBasicWalletDao {
                                                                   final BalanceType balanceType,
                                                                   final TransactionType  transactionType,
                                                                   final int max,
-                                                                  final int offset) throws CantListTransactionsException {
+                                                                  final int offset,
+                                                                        BlockchainNetworkType blockchainNetworkType,
+                                                                        final Actors actorType) throws CantListTransactionsException, CantLoadTableToMemoryException {
+
         try {
+
+
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
             bitcoinWalletTable.setFilterTop   (String.valueOf(max)   );
@@ -184,54 +180,36 @@ public class CryptoWalletBasicWalletDao {
 
             bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, TransactionState.REVERSED.getCode(), DatabaseFilterType.NOT_EQUALS);
 
+            bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+
+
             // filter by actor from or to
 
             if (transactionType == TransactionType.CREDIT)
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+                if(actorType.equals(Actors.INTRA_USER))
+                    bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+                else
+                    bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
             else
                 bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
 
-
             bitcoinWalletTable.loadToMemory();
-
-            if (createTransactionList(bitcoinWalletTable.getRecords()).size()== 0 && transactionType == TransactionType.CREDIT){
-                bitcoinWalletTable.clearAllFilters();
-                bitcoinWalletTable.addFilterOrder(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
-
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
-
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
-                bitcoinWalletTable.loadToMemory();
-                return createTransactionList(bitcoinWalletTable.getRecords());
-            }
-            if (createTransactionList(bitcoinWalletTable.getRecords()).size()== 0 && transactionType == TransactionType.DEBIT){
-                bitcoinWalletTable.clearAllFilters();
-                bitcoinWalletTable.addFilterOrder(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
-
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
-
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
-                bitcoinWalletTable.loadToMemory();
-                return createTransactionList(bitcoinWalletTable.getRecords());
-            }
 
             return createTransactionList(bitcoinWalletTable.getRecords());
 
+
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, cantLoadTableToMemory, "Error loading wallet table ", "");
+            throw new CantLoadTableToMemoryException(CantListTransactionsException.DEFAULT_MESSAGE, cantLoadTableToMemory, "Error loading wallet table ", "");
         } catch (Exception exception){
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Unhandled exception.");
         }
     }
 
     public List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType     balanceType,
-                                                                                     TransactionType transactionType,
-                                                                                     int             max,
-                                                                                     int             offset) throws CantListTransactionsException {
+                                                                                    TransactionType transactionType,
+                                                                                    int             max,
+                                                                                    int             offset,
+                                                                                    BlockchainNetworkType blockchainNetworkType) throws CantListTransactionsException {
         try {
 
 //            DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
@@ -270,20 +248,22 @@ public class CryptoWalletBasicWalletDao {
             //not reversed
             bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, TransactionState.REVERSED.getCode(), DatabaseFilterType.NOT_EQUALS);
 
+            bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
 
-            if ( transactionType == TransactionType.CREDIT){
+           // if ( transactionType == TransactionType.CREDIT){
                // bitcoinWalletTable.clearAllFilters();
 
-                bitcoinWalletTable.addFilterOrder(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+            bitcoinWalletTable.addFilterOrder(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
-                bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+            bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+
+            bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+
+             bitcoinWalletTable.loadToMemory();
 
 
-                bitcoinWalletTable.loadToMemory();
-                return createTransactionList(bitcoinWalletTable.getRecords());
-            }
+          /*  }
             if ( transactionType == TransactionType.DEBIT){
                // bitcoinWalletTable.clearAllFilters();
                 bitcoinWalletTable.addFilterOrder(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
@@ -294,8 +274,8 @@ public class CryptoWalletBasicWalletDao {
 
 
                 bitcoinWalletTable.loadToMemory();
-                return createTransactionList(bitcoinWalletTable.getRecords());
-            }
+
+            }*/
             return createTransactionList(bitcoinWalletTable.getRecords());
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
@@ -310,10 +290,14 @@ public class CryptoWalletBasicWalletDao {
      */
     public void addDebit(final CryptoWalletTransactionRecord transactionRecord, final BalanceType balanceType) throws CantRegisterDebitException {
         try {
+            long total = 0;
+            if (transactionRecord.getFeeOrigin().equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS ))
+                total = transactionRecord.getTotal();
+            else
+                total = transactionRecord.getAmount();
 
-
-            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getTotal() : 0L;
-            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getTotal() : 0L;
+            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? total : 0L;
+            long bookAmount = balanceType.equals(BalanceType.BOOK) ? total : 0L;
             long availableRunningBalance = calculateAvailableRunningBalance(-availableAmount, transactionRecord.getBlockchainNetworkType());
             long bookRunningBalance = calculateBookRunningBalance(-bookAmount,transactionRecord.getBlockchainNetworkType());
 
@@ -335,10 +319,10 @@ public class CryptoWalletBasicWalletDao {
         try {
             //verify fee origin and add or deducted to balance
             long total = 0;
-            if(transactionRecord.getFeeOrigin().equals(FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT.getCode()))
-                total = transactionRecord.getAmount() - transactionRecord.getFee();
+            if (transactionRecord.getFeeOrigin().equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS ))
+                total = transactionRecord.getTotal();
             else
-                total = transactionRecord.getAmount() + transactionRecord.getFee();
+                total = transactionRecord.getAmount();
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? total : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? total : 0L;
@@ -347,7 +331,7 @@ public class CryptoWalletBasicWalletDao {
 
             DatabaseTableRecord balanceRecord = constructBalanceRecord(availableRunningBalance, bookRunningBalance, transactionRecord.getBlockchainNetworkType());
 
-           //Balance table - add filter by network type,
+            //Balance table - add filter by network type,
             DatabaseTable balanceTable = getBalancesTable();
             balanceTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, transactionRecord.getBlockchainNetworkType().getCode(), DatabaseFilterType.EQUAL);
 
@@ -371,15 +355,15 @@ public class CryptoWalletBasicWalletDao {
         try{
 //            if(!isTransactionInTable(transactionRecord.getTransactionId(), TransactionType.CREDIT, balanceType)) {
 
-                if(isTransactionInTable(transactionRecord.getTransactionId(), TransactionType.CREDIT, balanceType))
-                    throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
+          if(isTransactionInTable(transactionRecord.getTransactionId(), TransactionType.CREDIT, balanceType))
+                throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
 
-                long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
-                long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
-                long availableRunningBalance = calculateAvailableRunningBalance(availableAmount, transactionRecord.getBlockchainNetworkType());
-                long bookRunningBalance = calculateBookRunningBalance(bookAmount,transactionRecord.getBlockchainNetworkType());
-                executeTransaction(transactionRecord, TransactionType.CREDIT, balanceType, availableRunningBalance, bookRunningBalance);
+            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
+            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
+            long availableRunningBalance = calculateAvailableRunningBalance(availableAmount, transactionRecord.getBlockchainNetworkType());
+            long bookRunningBalance = calculateBookRunningBalance(bookAmount,transactionRecord.getBlockchainNetworkType());
+            executeTransaction(transactionRecord, TransactionType.CREDIT, balanceType, availableRunningBalance, bookRunningBalance);
 //            }
         } catch(CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteBitconTransactionException exception){
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, exception, null, "Check the cause");
@@ -441,7 +425,7 @@ public class CryptoWalletBasicWalletDao {
     }
 
     public CryptoWalletTransactionSummary getActorTransactionSummary(String actorPublicKey,
-                                                                      BalanceType balanceType) throws CantGetActorTransactionSummaryException {
+                                                                     BalanceType balanceType) throws CantGetActorTransactionSummaryException {
         try {
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
@@ -662,7 +646,9 @@ public class CryptoWalletBasicWalletDao {
 
         for(DatabaseTableRecord record : records)
         {
-            CryptoWalletTransaction transaction = constructBitcoinWalletTransactionFromRecord(record);
+
+           // CryptoWalletTransaction transaction = constructBitcoinWalletTransactionFromRecord(record);
+
             transactions.add(constructBitcoinWalletTransactionFromRecord(record));
 
           /*  if(transaction.getTransactionHash().equals("fab23065-5b3a-4ec1-8a51-6c9bae62bb36"))
@@ -736,8 +722,8 @@ public class CryptoWalletBasicWalletDao {
         TransactionState transactionState = null;
         CryptoCurrency cryptoCurrency = null;
         try {
-         cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_CRYPTO_CURRENCY_COLUMN_NAME));
-                  transactionState = TransactionState.getByCode(record.getStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME));
+            cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_CRYPTO_CURRENCY_COLUMN_NAME));
+            transactionState = TransactionState.getByCode(record.getStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME));
 
         } catch (InvalidParameterException e) {
             e.printStackTrace();
@@ -758,14 +744,8 @@ public class CryptoWalletBasicWalletDao {
              */
             bitcoinwalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
 
-            bitcoinwalletTable.loadToMemory();
+            bitcoinwalletTable.deleteRecord();
 
-            // Read record data and create transactions list
-            for(DatabaseTableRecord record : bitcoinwalletTable.getRecords()){
-                bitcoinwalletTable.deleteRecord(record);
-            }
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantFindTransactionException("Transaction Memo Update Error",cantLoadTableToMemory,"Error load Transaction table" + transactionID.toString(), "");
         } catch (CantDeleteRecordException e) {
             e.printStackTrace();
         }

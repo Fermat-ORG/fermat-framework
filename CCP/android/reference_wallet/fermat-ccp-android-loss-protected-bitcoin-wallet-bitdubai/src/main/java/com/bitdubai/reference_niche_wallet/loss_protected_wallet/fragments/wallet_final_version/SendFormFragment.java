@@ -2,7 +2,6 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wall
 
 import android.content.Context;
 import android.content.DialogInterface;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -22,8 +21,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,15 +55,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantCreateLossProtectedWalletContactException;
@@ -68,21 +72,19 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllLossProtectedWalletContactsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConfirmSendDialog_feeCase;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_send_dialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorExchangeRateConnectionDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.DecimalDigitsInputFilter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.squareup.picasso.Picasso;
 
@@ -97,6 +99,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 
 /**
  * Created by Matias Furszyfer on 2015.11.05..
+ * updated by Andres Abreu aabreu1 2016/07/28
  */
 public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatSession<LossProtectedWallet>,ResourceProviderManager> implements View.OnClickListener{
 
@@ -116,11 +119,17 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private View rootView;
     private AutoCompleteTextView contactName;
     private EditText editTextAmount;
+    private EditText editFeedamount;
     private ImageView imageView_contact;
     private FermatButton send_button;
     private TextView txt_notes;
     private BitcoinConverter bitcoinConverter;
     private TextView txt_balance;
+    private String feeLevel = "";
+    private String feeOrigin = "";
+    private LinearLayout advances_btn;
+
+    private FermatWorker fermatWorker;
 
     /**
      * Adapters
@@ -146,6 +155,15 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private List<WalletContact> walletContactList = new ArrayList<>();
 
     private ExecutorService _executor;
+    private CheckBox feed_Substract;
+    private LinearLayout layoutAdvances;
+    private RadioGroup feeGroup;
+    private RadioButton fee_low_btn;
+    private RadioButton fee_medium_btn;
+    private RadioButton fee_high_btn;
+    private long Balance = 0;
+
+    private BitcoinWalletSettings bitcoinWalletSettings = null;
 
     public static SendFormFragment newInstance() {
         return new SendFormFragment();
@@ -163,21 +181,24 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             lossProtectedWalletManager = appSession.getModuleManager();
 
-            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
 
-            if(lossProtectedWalletSettings != null) {
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
-                blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
+            if(appSession.getData(SessionConstant.FEE_LEVEL) != null)
+                feeLevel = (String)appSession.getData(SessionConstant.FEE_LEVEL);
+            else
+                feeLevel = BitcoinFee.NORMAL.toString();
 
-                lossProtectedEnabled = lossProtectedWalletSettings.getLossProtectedEnabled();
-            }
 
+            if(appSession.getData(SessionConstant.LOSS_PROTECTED_ENABLED) != null)
+                lossProtectedEnabled = (boolean)appSession.getData(SessionConstant.LOSS_PROTECTED_ENABLED);
+            else
+                lossProtectedEnabled = true;
 
-        } catch (CantGetSettingsException e) {
-            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
-
-        } catch (SettingsNotFoundException e) {
+        } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
 
@@ -227,8 +248,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             return rootView;
         } catch (Exception e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.Whooops_text), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+
         }
 
         return null;
@@ -249,7 +271,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 errorConnectingFermatNetworkDialog.dismiss();
                 try {
                     if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
-                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.Wait_a_minute), Toast.LENGTH_SHORT).show();
                         getActivity().onBackPressed();
                     }
                 } catch (CantGetCommunicationNetworkStatusException e) {
@@ -272,11 +294,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
 
         } catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), getResources().getString(R.string.Whooops_text), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
     private void setUpUI() {
+
+        try{
         contactName = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
         spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
         txt_notes = (TextView) rootView.findViewById(R.id.notes);
@@ -286,143 +310,208 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         txt_balance = (TextView) rootView.findViewById(R.id.balance);
+        editFeedamount = (EditText) rootView.findViewById(R.id.feed_amount);
+        feed_Substract= (CheckBox) rootView.findViewById(R.id.checkBoxSubstract);
 
+
+        advances_btn = (LinearLayout) rootView.findViewById(R.id.advances_btn);
+        layoutAdvances = (LinearLayout) rootView.findViewById(R.id.feed_advances);
+        feeGroup = (RadioGroup) rootView.findViewById(R.id.feeGroup);
+        fee_low_btn = (RadioButton) rootView.findViewById(R.id.fee_low);
+        fee_medium_btn = (RadioButton) rootView.findViewById(R.id.fee_Medium);
+        fee_high_btn = (RadioButton) rootView.findViewById(R.id.fee_High);
+
+        advances_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (layoutAdvances.getVisibility() == View.GONE) {
+                    layoutAdvances.setVisibility(View.VISIBLE);
+                } else {
+                    layoutAdvances.setVisibility(View.GONE);
+                }
+
+            }
+        });
+
+        if (feeLevel.equals(String.valueOf(BitcoinFee.SLOW))) {
+            fee_low_btn.setChecked(true);
+        }else if(feeLevel.equals(String.valueOf(BitcoinFee.NORMAL))) {
+            fee_medium_btn.setChecked(true);
+        }else if(feeLevel.equals(String.valueOf(BitcoinFee.FAST))) {
+            fee_high_btn.setChecked(true);
+        }
+
+        editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.valueOf(feeLevel).getFee())));
+
+
+        feeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                try {
+                if (checkedId == R.id.fee_low) {
+                    editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.SLOW.getFee())));
+                    feeLevel = String.valueOf(BitcoinFee.SLOW);
+                } else if (checkedId == R.id.fee_Medium) {
+                    editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.NORMAL.getFee())));
+                    feeLevel = String.valueOf(BitcoinFee.NORMAL);
+                } else if (checkedId == R.id.fee_High) {
+                    editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.FAST.getFee())));
+                    feeLevel = String.valueOf(BitcoinFee.FAST);
+                }
+
+                bitcoinWalletSettings.setFeedLevel(feeLevel);
+
+                    lossProtectedWalletManager.persistSettings(appSession.getAppPublicKey(), lossProtectedWalletSettings);
+                } catch (CantPersistSettingsException e) {
+                    e.printStackTrace();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
-            long balance = 0;
-            balance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
-            txt_balance.setText(WalletUtils.formatBalanceString(balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");
+            Balance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
+            txt_balance.setText(WalletUtils.formatBalanceString(Balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");
 
         } catch (CantGetLossProtectedBalanceException e) {
             e.printStackTrace();
         }
 
+        try {
 
-        List<String> list = new ArrayList<String>();
-        list.add("BTC");
-        list.add("Bits");
-        list.add("Satoshis");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
-                R.layout.list_item_spinner, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
+            List<String> list = new ArrayList<String>();
+            list.add("BTC");
+            list.add("Bits");
+            list.add("Satoshis");
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+                    R.layout.list_item_spinner, list);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(dataAdapter);
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String text = "";
-                String txtType = txt_type.getText().toString();
-                String amount = editTextAmount.getText().toString();
-                String newAmount = "";
-                switch (position) {
-                    case 0:
-                        text = "[btc]";
-                        if (!amount.equals("") && amount != null) {
-                            if (txtType.equals("[bits]")) {
-                                newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
-                            } else if (txtType.equals("[satoshis]")) {
-                                newAmount = bitcoinConverter.getBTC(amount);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String text = "";
+                    String txtType = txt_type.getText().toString();
+                    String amount = editTextAmount.getText().toString();
+                    String newAmount = "";
+                    switch (position) {
+                        case 0:
+                            text = "[btc]";
+                            if (!amount.equals("") && amount != null) {
+                                if (txtType.equals("[bits]")) {
+                                    newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                                } else if (txtType.equals("[satoshis]")) {
+                                    newAmount = bitcoinConverter.getBTC(amount);
+                                } else {
+                                    newAmount = amount;
+                                }
                             } else {
                                 newAmount = amount;
                             }
-                        } else {
-                            newAmount = amount;
-                        }
 
 
-                        break;
-                    case 1:
-                        text = "[bits]";
-                        if (!amount.equals("") && amount != null) {
-                            if (txtType.equals("[btc]")) {
-                                newAmount = bitcoinConverter.getBitsFromBTC(amount);
-                            } else if (txtType.equals("[satoshis]")) {
-                                newAmount = bitcoinConverter.getBits(amount);
+                            break;
+                        case 1:
+                            text = "[bits]";
+                            if (!amount.equals("") && amount != null) {
+                                if (txtType.equals("[btc]")) {
+                                    newAmount = bitcoinConverter.getBitsFromBTC(amount);
+                                } else if (txtType.equals("[satoshis]")) {
+                                    newAmount = bitcoinConverter.getBits(amount);
+                                } else {
+                                    newAmount = amount;
+                                }
                             } else {
                                 newAmount = amount;
                             }
-                        } else {
-                            newAmount = amount;
-                        }
 
-                        break;
-                    case 2:
-                        text = "[satoshis]";
-                        if (!amount.equals("") && amount != null) {
-                            if (txtType.equals("[bits]")) {
-                                newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                            } else if (txtType.equals("[btc]")) {
-                                newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                            break;
+                        case 2:
+                            text = "[satoshis]";
+                            if (!amount.equals("") && amount != null) {
+                                if (txtType.equals("[bits]")) {
+                                    newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                                } else if (txtType.equals("[btc]")) {
+                                    newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                                } else {
+                                    newAmount = amount;
+                                }
                             } else {
                                 newAmount = amount;
                             }
-                        } else {
-                            newAmount = amount;
+                            break;
+                    }
+                    AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
+                    alphaAnimation.setDuration(300);
+                    final String finalText = text;
+                    if (newAmount.equals("0"))
+                        newAmount = "";
+
+                    final String finalAmount = newAmount;
+                    alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            txt_type.setText(finalText);
+                            editTextAmount.setText(finalAmount);
                         }
-                        break;
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                    txt_type.startAnimation(alphaAnimation);
+
                 }
-                AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
-                alphaAnimation.setDuration(300);
-                final String finalText = text;
-                if (newAmount.equals("0"))
-                    newAmount = "";
 
-                final String finalAmount = newAmount;
-                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        txt_type.setText(finalText);
-                        editTextAmount.setText(finalAmount);
-                    }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                txt_type.startAnimation(alphaAnimation);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        spinnerArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                spinner.performClick();
-            }
-        });
-
+                }
+            });
+            spinnerArrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    spinner.performClick();
+                }
+            });
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setUpActions() {
+        try {
+            /**
+             * Listeners
+             */
 
-        /**
-         * Listeners
-         */
+            imageView_contact.setOnClickListener(this);
+            send_button.setOnClickListener(this);
+            rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
 
-        imageView_contact.setOnClickListener(this);
-        send_button.setOnClickListener(this);
-        rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
+            contactName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
-        contactName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            public boolean onEditorAction(TextView v, int actionId,
-                                          KeyEvent event) {
-                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    // in.hideSoftInputFromWindow(autoEditText.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    //Commented line is for hide keyboard. Just make above code as comment and test your requirement
-                    //It will work for your need. I just putted that line for your understanding only
-                    //You can use own requirement here also.
+                public boolean onEditorAction(TextView v, int actionId,
+                                              KeyEvent event) {
+                    if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                        InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        // in.hideSoftInputFromWindow(autoEditText.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                        //Commented line is for hide keyboard. Just make above code as comment and test your requirement
+                        //It will work for your need. I just putted that line for your understanding only
+                        //You can use own requirement here also.
 
                    /* if (!connectionDialogIsShow) {
                         ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), appSession, appSession.getResourceProviderManager());
@@ -436,11 +525,11 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         });
                         connectionDialogIsShow = true;
                     }*/
-                    return true;
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
        /* contactName.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -449,20 +538,20 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 keyboard.showSoftInput(contactName, 0);
             }
         }, 50);*/
-        contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                onFocus = hasFocus;
-                if (!onFocus) {
-                    if (walletContact == null) {
-                        contactName.setText("");
+            contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    onFocus = hasFocus;
+                    if (!onFocus) {
+                        if (walletContact == null) {
+                            contactName.setText("");
+                        }
                     }
                 }
-            }
-        });
-        /**
-         *  Amount observer
-         */
+            });
+            /**
+             *  Amount observer
+             */
         /*editTextAmount.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 try {
@@ -480,13 +569,17 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         });
         */
 
-        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11, 8)});
+            editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11, 8)});
 
 
-        /**
-         * Selector
-         */
-        //send_button.selector(R.drawable.bg_home_accept_normal,R.drawable.bg_home_accept_active, R.drawable.bg_home_accept_normal );
+            /**
+             * Selector
+             */
+            //send_button.selector(R.drawable.bg_home_accept_normal,R.drawable.bg_home_accept_active, R.drawable.bg_home_accept_normal );
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void setUpUIData() {
@@ -516,7 +609,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void setUpContactAddapter() {
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+         fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
                 try{
@@ -584,7 +677,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                             blockchainNetworkType
                                     );
 
-                                    Toast.makeText(getActivity(), "Contact don't have an Address from red " + blockchainNetworkType.getCode() + "\nplease wait 2 minutes.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(),  getResources().getString(R.string.Contact_without_net_address) + " " + blockchainNetworkType.getCode() + "\nplease wait 2 minutes.", Toast.LENGTH_LONG).show();
 
                                 } else {
 
@@ -679,30 +772,31 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     @Override
     public void onClick(View v) {
+        try {
+            int id = v.getId();
 
-        int id = v.getId();
-
-        if (id == R.id.scan_qr) {
-            IntentIntegrator integrator = new IntentIntegrator(getActivity(), (EditText) rootView.findViewById(R.id.address));
-            integrator.initiateScan();
-        } else if (id == R.id.send_button) {
-            InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
-                im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            if (id == R.id.scan_qr) {
+                IntentIntegrator integrator = new IntentIntegrator(getActivity(), (EditText) rootView.findViewById(R.id.address));
+                integrator.initiateScan();
+            } else if (id == R.id.send_button) {
+                InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
+                    im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                }
+                if (lossProtectedWalletContact != null) {
+                    sendCrypto();
+                } else
+                    Toast.makeText(getActivity(), getResources().getString(R.string.Contact_not_found), Toast.LENGTH_LONG).show();
+            } else if (id == R.id.imageView_contact) {
+                // if user press the profile image
+            } else if (id == R.id.btn_expand_send_form) {
+                Object[] objects = new Object[1];
+                objects[0] = walletContact;
+                changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, objects);
             }
-            if (lossProtectedWalletContact != null) {
-                sendCrypto();
-            } else
-                Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.imageView_contact) {
-            // if user press the profile image
-        } else if (id == R.id.btn_expand_send_form) {
-            Object[] objects = new Object[1];
-            objects[0] = walletContact;
-            changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, objects);
+        }catch(Exception e) {
+         e.printStackTrace();
         }
-
-
     }
     //TODO: Check if the setting for protecting the user from spending btc is working
     private void sendCrypto() {
@@ -711,10 +805,18 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)
                     != 0){
                 if (lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
-                    CryptoAddress validAddress = WalletUtils.validateAddress(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWalletManager);
+                    CryptoAddress validAddress = WalletUtils.validateAddress(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWalletManager,blockchainNetworkType);
                     if (validAddress != null) {
                         EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
                         String amount = txtAmount.getText().toString();
+
+                        EditText txtFee= (EditText) rootView.findViewById(R.id.feed_amount);
+                        String fee = txtFee.getText().toString();
+
+                        if(feed_Substract.isChecked())
+                            feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT.getCode();
+                        else
+                            feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode();
 
                         BigDecimal money;
 
@@ -722,7 +824,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             money = new BigDecimal("0");
                         else
                             money = new BigDecimal(amount);
-
                         if(!amount.equals("") && !money.equals(new BigDecimal("0"))) {
                             try {
                                 String notes = "";
@@ -732,23 +833,31 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                                 String txtType = txt_type.getText().toString();
                                 String newAmount = "";
+                                String newFee = "";
                                 String msg = "";
 
                                 if (txtType.equals("[btc]")) {
                                     newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                                    newFee = bitcoinConverter.getSathoshisFromBTC(fee);
                                      msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
 
                                    // newAmount = String.valueOf(Integer.valueOf(newAmount)); //without decimal .00000
                                 } else if (txtType.equals("[satoshis]")) {
                                     newAmount = amount;
+                                    newFee = fee;
                                     msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
                                 } else if (txtType.equals("[bits]")) {
                                     newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                                    newFee = bitcoinConverter.getSathoshisFromBits(fee);
                                     msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                                 }
 
+                                BigDecimal decimalFeed = new BigDecimal(newFee);
                                 long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
                                 BigDecimal amountDecimal = new BigDecimal(newAmount);
+
+
+                                BigDecimal operator = new BigDecimal(newAmount);
 
                                 if (amountDecimal.longValueExact() > minSatoshis) {
 
@@ -769,11 +878,12 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                                     blockchainNetworkType,
                                                     appSession);
                                             confirm_send_dialog.show();
+
                                             confirm_send_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
                                                 @Override
                                                 public void onDismiss(DialogInterface dialog) {
-                                                    Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getActivity(), getResources().getString(R.string.Sending_text), Toast.LENGTH_SHORT).show();
                                                     onBack(null);
                                                 }
                                             });
@@ -781,53 +891,81 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         else
                                         {
                                             //setting protected eneabled can't send
-                                            Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. ", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), getResources().getString(R.string.Action_not_allowed_lpw), Toast.LENGTH_LONG).show();
                                         }
                                     }
                                     else{
                                         try {
 
-                                            lossProtectedWalletManager.send(
-                                                    amountDecimal.longValueExact(),
-                                                    validAddress,
-                                                    notes,
-                                                    appSession.getAppPublicKey(),
-                                                    lossProtectedWalletManager.getActiveIdentities().get(0).getPublicKey(),
-                                                    Actors.INTRA_USER,
-                                                    lossProtectedWalletContact.getActorPublicKey(),
-                                                    lossProtectedWalletContact.getActorType(),
-                                                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-                                                    blockchainNetworkType,
-                                                    CryptoCurrency.BITCOIN,
-                                                    0,
-                                                    FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT
-                                            );
-                                            Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
-                                            onBack(null);
+                                            //check amount + fee less than balance
+                                            long total = 0;
+                                            if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode()))
+                                                total =  operator.longValueExact() +  decimalFeed.longValueExact();
+                                               // total = operator + decimalFeed;
+                                            else{
+                                                total =  operator.longValueExact() -  decimalFeed.longValueExact();
+                                               // total = operator - decimalFeed;
 
-                                        } catch (LossProtectedInsufficientFundsException e) {
+                                            }
+
+
+                                            if(total < Balance)
+                                            {
+                                                ConfirmSendDialog_feeCase sendConfirmDialog = new ConfirmSendDialog_feeCase(getActivity(),
+                                                        lossProtectedWalletManager,
+                                                      //  operator,
+                                                     //   decimalFeed,
+                                                        operator.longValueExact(),
+                                                        decimalFeed.longValueExact(),
+                                                        total,
+                                                        FeeOrigin.getByCode(feeOrigin),
+                                                        validAddress,
+                                                        notes,
+                                                        lossProtectedWalletContact.getActorPublicKey(),
+                                                        lossProtectedWalletContact.getActorType(),
+                                                        blockchainNetworkType,
+                                                        appSession);
+
+                                                sendConfirmDialog.show();
+                                                sendConfirmDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                                                    @Override
+                                                    public void onDismiss(DialogInterface dialog) {
+
+                                                        onBack(null);
+                                                    }
+                                                });
+                                            }
+                                            else{
+                                                Toast.makeText(getActivity(), getResources().getString(R.string.Insufficient_funds), Toast.LENGTH_LONG).show();
+                                            }
+
+
+                                        } catch (Exception e) {
                                             e.printStackTrace();
-                                            Toast.makeText(getActivity(), "Action not allowed, Insufficient Funds. ", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), getResources().getString(R.string.Send_error_text) + " " + e.getMessage(), Toast.LENGTH_LONG).show();
                                         }
                                     }
 
                                 } else {
-                                    Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), getResources().getString(R.string.Invalid_Amount_small)+ " " + msg, Toast.LENGTH_LONG).show();
                                 }
 
 
                             } catch (Exception e) {
                                 appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                                Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), getResources().getString(R.string.Whooops_text2), Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+
                             }
                         } else {
-                            Toast.makeText(getActivity(), "Invalid Amount", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.Invalid_Amount), Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(getActivity(), "Contact don't have an valid Address", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.Contact_without_address), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Contact don't have an Address from red "+ blockchainNetworkType.getCode() + "\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.Contact_without_net_address)+" "+ blockchainNetworkType.getCode() + "\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -841,7 +979,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
 
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.Whooops_text2), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
@@ -907,7 +1045,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
        /* imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);*/
 
+    }
 
+    @Override
+    public void onStop() {
 
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+        super.onStop();
     }
 }

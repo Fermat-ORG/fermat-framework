@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:textColor="@color/color_black"
             android:background="#F9F9F9"
-            android:hint="Search"
+            android:hint="@string/description_search"
             android:textColorHint="#848484"
             android:layout_weight="@android:integer/config_longAnimTime"
             />

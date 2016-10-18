@@ -17,7 +17,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 
 /**
  * FERMAT-ORG
@@ -36,7 +35,7 @@ public class ChatIdentityFermatAppConnection extends AppConnections {
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.CHAT_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.CHAT_IDENTITY_SUP_APP_MODULE,

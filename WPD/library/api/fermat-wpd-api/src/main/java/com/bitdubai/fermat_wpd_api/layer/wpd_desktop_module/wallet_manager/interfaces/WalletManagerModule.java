@@ -21,14 +21,14 @@ import java.util.UUID;
  *
  * @author Ezequiel Postan (ezequiel.postan@gmail.com)
  */
-@PluginInfo(createdBy = "", maintainerMail = "", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "", maintainerMail = "", platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
 public interface WalletManagerModule extends FermatManager {
 
     /**
      * This method let the client create a new wallet of a type already intalled by the user.
      *
      * @param walletIdInTheDevice The identifier of the wallet to copy
-     * @param newName the name to give to the wallet
+     * @param newName             the name to give to the wallet
      * @throws NewWalletCreationFailedException
      */
     void createNewWallet(UUID walletIdInTheDevice, String newName) throws NewWalletCreationFailedException;
@@ -55,11 +55,10 @@ public interface WalletManagerModule extends FermatManager {
      * This method let us change the name (alias) of a given wallet.
      *
      * @param walletIdInTheDevice the identifier of the wallet to rename
-     * @param newName the new name for the wallet
+     * @param newName             the new name for the wallet
      * @throws WalletRenameFailedException
      */
     void renameWallet(UUID walletIdInTheDevice, String newName) throws WalletRenameFailedException;
 
 
-
-    }
+}

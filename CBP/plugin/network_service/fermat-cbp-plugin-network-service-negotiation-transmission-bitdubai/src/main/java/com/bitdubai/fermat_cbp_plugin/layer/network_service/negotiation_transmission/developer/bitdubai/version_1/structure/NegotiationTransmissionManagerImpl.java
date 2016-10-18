@@ -46,8 +46,6 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
     private NegotiationTransmissionNetworkServicePluginRoot pluginRoot;
 
-    ExecutorService executorService;
-
     public NegotiationTransmissionManagerImpl(
             OutgoingNotificationDao outgoingNotificationDao,
             IncomingNotificationDao incomingNotificationDao,
@@ -56,7 +54,6 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
         this.outgoingNotificationDao = outgoingNotificationDao;
         this.pluginRoot = pluginRoot;
         this.incomingNotificationDao = incomingNotificationDao;
-        executorService = Executors.newFixedThreadPool(3);
     }
 
     @Override
@@ -72,11 +69,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 System.out.print("\n\n**** 9) MOCK NEGOTIATION TRANSACTION CLOSE - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO CUSTOMER ****\n");
             }
 
-            System.out.print("\n--- 7/9) Negotiation Mock XML Date" +
-                            "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() +
-                            "\n- TransactionId = " + negotiationTransaction.getTransactionId() +
-                            "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() +
-                            "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
+            System.out.print("\n--- 7/9) Negotiation Mock XML Date" + "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() + "\n- TransactionId = " + negotiationTransaction.getTransactionId() + "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() + "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
             );
 
             PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
@@ -113,11 +106,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
             } else if (transactionType == NegotiationTransactionType.CUSTOMER_BROKER_CLOSE) {
                 System.out.print("\n\n**** 9) MOCK NEGOTIATION TRANSACTION CLOSE - NEGOTIATION TRANSMISSION - MANAGER - SEND NEGOTIATION TO CRYPTO BROKER ****\n");
             }
-            System.out.print("\n--- 9) Negotiation Mock XML Date" +
-                            "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() +
-                            "\n- TransactionId = " + negotiationTransaction.getTransactionId() +
-                            "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() +
-                            "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
+            System.out.print("\n--- 9) Negotiation Mock XML Date" + "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() + "\n- TransactionId = " + negotiationTransaction.getTransactionId() + "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() + "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
             );
 
             PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
@@ -155,11 +144,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
             } else if (transactionType == NegotiationTransactionType.CUSTOMER_BROKER_CLOSE) {
                 System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION CLOSE - NEGOTIATION TRANSMISSION - MANAGER - SEND CONFIRMATION TO CUSTOMER ****\n");
             }
-            System.out.print("\n--- 24 Negotiation Mock XML Date" +
-                            "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() +
-                            "\n- TransactionId = " + negotiationTransaction.getTransactionId() +
-                            "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() +
-                            "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
+            System.out.print("\n--- 24 Negotiation Mock XML Date" + "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() + "\n- TransactionId = " + negotiationTransaction.getTransactionId() + "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() + "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
             );
 
             PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
@@ -199,11 +184,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
             } else if (transactionType == NegotiationTransactionType.CUSTOMER_BROKER_CLOSE) {
                 System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION CLOSE - NEGOTIATION TRANSMISSION - MANAGER - SEND CONFIRMATION TO BROKER ****\n");
             }
-            System.out.print("\n--- 24 Negotiation Mock XML Date" +
-                            "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() +
-                            "\n- TransactionId = " + negotiationTransaction.getTransactionId() +
-                            "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() +
-                            "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
+            System.out.print("\n--- 24 Negotiation Mock XML Date" + "\n- NegotiationId = " + negotiationTransaction.getNegotiationId() + "\n- TransactionId = " + negotiationTransaction.getTransactionId() + "\n- CustomerPublicKey = " + negotiationTransaction.getPublicKeyCustomer() + "\n- BrokerPublicKey = " + negotiationTransaction.getPublicKeyBroker()
             );
 
             PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
@@ -350,34 +331,29 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
     }
 
-    private void sendMessage(final String jsonMessage      ,
-                             final String identityPublicKey,
-                             final Actors identityType     ,
-                             final String actorPublicKey   ,
-                             final Actors actorType        ) {
+    public void sendMessage(final String jsonMessage,
+                            final String identityPublicKey,
+                            final Actors identityType,
+                            final String actorPublicKey,
+                            final Actors actorType) {
 
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
+        try {
+            ActorProfile sender = new ActorProfile();
+            sender.setActorType(identityType.getCode());
+            sender.setIdentityPublicKey(identityPublicKey);
 
-                try {
-                    ActorProfile sender = new ActorProfile();
-                    sender.setActorType(identityType.getCode());
-                    sender.setIdentityPublicKey(identityPublicKey);
+            ActorProfile receiver = new ActorProfile();
+            receiver.setActorType(actorType.getCode());
+            receiver.setIdentityPublicKey(actorPublicKey);
 
-                    ActorProfile receiver = new ActorProfile();
-                    receiver.setActorType(actorType.getCode());
-                    receiver.setIdentityPublicKey(actorPublicKey);
+            pluginRoot.sendNewMessage(
+                    sender,
+                    receiver,
+                    jsonMessage
+            );
+        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
 
-                    pluginRoot.sendNewMessage(
-                            sender,
-                            receiver,
-                            jsonMessage
-                    );
-                } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
-                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-            }
-        });
     }
 }

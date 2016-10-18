@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="280dp"
+    android:layout_height="148dp"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:ellipsize="end"
+            android:padding="8dp"
+            android:singleLine="true"
+            android:text="@string/cbi_dialog_cam_gallery_title"
+            android:textAlignment="center"
+            android:textColor="#979797"
+            android:textSize="12sp"
+            tools:ignore="HardcodedText" />
+
+        <View
+            android:layout_width="248dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="#64AE9E" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/img_cam"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="248dp"
+            android:layout_height="42dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_toLeftOf="@+id/view"
+            android:layout_toStartOf="@+id/view"
+            android:background="#ffffff"
+            android:text="@string/cbi_dialog_cg_take_picture"
+            android:textAllCaps="false"
+            android:textColor="#666666"
+            android:textSize="16sp" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="248dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="#33000000" />
+
+        <Button
+            android:id="@+id/img_gallery"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="248dp"
+            android:layout_height="42dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_toLeftOf="@+id/view"
+            android:layout_toStartOf="@+id/view"
+            android:text="@string/cbi_dialog_cg_take_gallery"
+            android:textAllCaps="false"
+            android:textColor="#666666"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
+
+
+    <!--
+    <?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#414142"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="Profile picture"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:orientation="vertical">
+
+
+    </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/relativeLayout2">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/img_cam"
+                android:src="@drawable/icon_cam"
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/view"
+                android:layout_toLeftOf="@+id/view"
+                />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="1dp"
+                android:background="#cfcfcf"
+                android:id="@+id/view"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/img_gallery"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="100dp"
+                android:src="@drawable/icon_gallery"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/view"
+                android:layout_toRightOf="@+id/view"
+                android:layout_marginStart="0dp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>-->

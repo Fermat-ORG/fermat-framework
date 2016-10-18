@@ -9,13 +9,12 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum ContractType implements FermatEnum {
 
     PURCHASE("PURC"),
-    SALE("SALE"),
-            ;
+    SALE("SALE"),;
 
     String code;
 
-    ContractType(String code){
-        this.code=code;
+    ContractType(String code) {
+        this.code = code;
     }
 
     //PUBLIC METHODS
@@ -29,9 +28,7 @@ public enum ContractType implements FermatEnum {
 
     @Override
     public String toString() {
-        return "OpenContractStatus{" +
-                "code='" + code + '\'' +
-                '}';
+        return "OpenContractStatus{" + "code='" + code + '\'' + '}';
     }
 
     //GETTER AND SETTERS

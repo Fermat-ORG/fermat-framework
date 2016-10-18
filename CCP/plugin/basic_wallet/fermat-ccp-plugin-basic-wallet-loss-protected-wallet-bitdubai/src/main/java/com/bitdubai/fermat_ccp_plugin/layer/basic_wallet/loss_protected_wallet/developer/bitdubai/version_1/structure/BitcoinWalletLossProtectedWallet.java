@@ -101,7 +101,12 @@ public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWal
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeBitcoinLossProtectedWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
-            throw new CantInitializeBitcoinLossProtectedWalletException("Database does not exists", databaseNotFoundException, "WalletId: " + walletId.toString(), "");
+            try {
+                database = this.pluginDatabaseSystem.createDatabase(this.pluginId, walletId.toString());
+            } catch (CantCreateDatabaseException e) {
+                throw new CantInitializeBitcoinLossProtectedWalletException(CantInitializeBitcoinLossProtectedWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "Cant create wallet data base");
+
+            }
         } catch (Exception exception) {
             throw new CantInitializeBitcoinLossProtectedWalletException(CantInitializeBitcoinLossProtectedWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }

@@ -22,21 +22,15 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -124,7 +118,7 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
             txt_amount.setText("USD "+WalletUtils.formatAmountStringWithDecimalEntry(
                             amount,
                             EARN_AND_LOST_MAX_DECIMAL_FORMAT,
-                            EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" earned");
+                            EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" "+ getContext().getResources().getString(R.string.Earned_text));
 
             earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
 
@@ -134,10 +128,10 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
 
         }else if (amount< 0){
 
-            txt_amount.setText("USD "+WalletUtils.formatAmountStringWithDecimalEntry(
+            txt_amount.setText("USD " + WalletUtils.formatAmountStringWithDecimalEntry(
                     amount,
                     EARN_AND_LOST_MAX_DECIMAL_FORMAT,
-                    EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" lost");
+                    EARN_AND_LOST_MIN_DECIMAL_FORMAT) + " " + getContext().getResources().getString(R.string.Lost_text));
 
             earnOrLostImage.setBackgroundResource(R.drawable.lost_icon);
         }

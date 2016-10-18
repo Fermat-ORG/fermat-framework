@@ -23,15 +23,14 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Matias Furszyfer on 2015.11.24..
  */
-public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
+public class LossProtectedWalletNavigationViewPainter extends com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
     //private final ActiveActorIdentityInformation intraUserLoginIdentity;
-    private WeakReference<Context> activity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
     private ReferenceAppFermatSession lossWalletSession;
 
     public LossProtectedWalletNavigationViewPainter(Context activity, ReferenceAppFermatSession lossWalletSession, FermatApplicationCaller applicationsHelper) {
-        this.activity = new WeakReference<Context>(activity);
+        super(activity);
         this.lossWalletSession = lossWalletSession;
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
     }
@@ -40,8 +39,8 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
     public View addNavigationViewHeader() {
         try {
 
-            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),lossWalletSession, applicationsHelper.get());
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), getContext(), lossWalletSession, applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -51,7 +50,7 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            LossProtectedWalletNavigationViewAdapter navigationViewAdapter = new LossProtectedWalletNavigationViewAdapter(activity.get());
+            LossProtectedWalletNavigationViewAdapter navigationViewAdapter = new LossProtectedWalletNavigationViewAdapter(getContext());
             return navigationViewAdapter;
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,7 +73,7 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.get().getResources(), Color.WHITE,options);
+                    getContext().getResources(), Color.WHITE,options);
             //drawable = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.bg_drawer_body);
         }catch (OutOfMemoryError error){
             error.printStackTrace();

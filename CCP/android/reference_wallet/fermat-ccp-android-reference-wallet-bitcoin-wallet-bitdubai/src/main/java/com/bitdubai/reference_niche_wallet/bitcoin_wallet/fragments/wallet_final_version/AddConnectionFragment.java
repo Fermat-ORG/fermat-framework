@@ -34,13 +34,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.AddConnectionCallback;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
@@ -57,6 +57,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     private static final Integer MAX_USER_SHOW = 20;
     private int offset = 0;
     private CryptoWallet moduleManager;
+    private String PublicKey;
     private ErrorManager errorManager;
     private ArrayList<CryptoWalletIntraUserActor> intraUserInformationList;
 
@@ -81,24 +82,17 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             // setting up  module
 
             moduleManager = appSession.getModuleManager();
+            PublicKey = moduleManager.getSelectedActorIdentity().getPublicKey();
             errorManager = appSession.getErrorManager();
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
             isMenuVisible=false;
             connectionPickCounter = 0;
             hnadler = new Handler();
-            BitcoinWalletSettings bitcoinWalletSettings = null;
-            bitcoinWalletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
 
-            if(bitcoinWalletSettings != null) {
-
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
-
-            }
-
-            blockchainNetworkType = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -123,7 +117,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             }
 
         } catch (Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
@@ -225,8 +219,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                intraUserInformationList = (ArrayList) result[0];
                 clean(intraUserInformationList);
+                intraUserInformationList = (ArrayList) result[0];
+
                 if (adapter != null)
                     adapter.changeDataSet(intraUserInformationList);
                 if(intraUserInformationList.isEmpty()){
@@ -298,14 +293,14 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                                     cryptoWalletIntraUserActor.getPublicKey(),
                                     cryptoWalletIntraUserActor.getProfileImage(),
                                     Actors.INTRA_USER,
-                                    moduleManager.getSelectedActorIdentity().getPublicKey()
+                                    PublicKey
                                     , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     blockchainNetworkType);
-                            Toast.makeText(getActivity(),"Contact Created",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),getResources().getString(R.string.contact_created_msg),Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e){
-                        Toast.makeText(getActivity(),"Please try again later",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),getResources().getString(R.string.contact_failed_msg),Toast.LENGTH_SHORT).show();
                         errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
                     }
                 }
@@ -315,8 +310,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            Toast.makeText(getActivity(), "Oooops! recovering from system error",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.error_std_message), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -327,16 +321,17 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         runThread();
         try {
             if (moduleManager == null) {
-                Toast.makeText(getActivity(),"Nodule manager null",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),getResources().getString(R.string.error_std_message),Toast.LENGTH_SHORT).show();
             } else {
-                data = moduleManager.listAllIntraUserConnections(moduleManager.getSelectedActorIdentity().getPublicKey(),
+                data = moduleManager.listAllIntraUserConnections(PublicKey,
                         appSession.getAppPublicKey(),
                         MAX_USER_SHOW,
                         offset);
             }
         }
         catch(Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
+            //Error getting intra user list
+            Toast.makeText(getActivity(),getResources().getString(R.string.error_std_message),Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 

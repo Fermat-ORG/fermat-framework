@@ -2,12 +2,16 @@ package com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes.ActorConnectionDao;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME;
 import static com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME;
@@ -24,17 +28,17 @@ import static com.bitdubai.fermat_api.layer.actor_connection.common.database_com
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T extends ActorConnection<Z>> {
+public abstract class ActorConnectionSearch<T extends ActorConnection> {
 
-    protected final Z                        actorIdentity;
-    protected final ActorConnectionDao<Z, T> dao          ;
-    protected       DatabaseTable            databaseTable;
+    protected final ActorIdentity actorIdentity;
+    protected final ActorConnectionDao<T> dao;
+    protected DatabaseTable databaseTable;
 
-    public ActorConnectionSearch(final Z                        actorIdentity,
-                                 final ActorConnectionDao<Z, T> dao          ) {
+    public ActorConnectionSearch(final ActorIdentity actorIdentity,
+                                 final ActorConnectionDao<T> dao) {
 
         this.actorIdentity = actorIdentity;
-        this.dao           = dao;
+        this.dao = dao;
 
         this.resetFilters();
     }
@@ -67,7 +71,7 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
      *
      * @param actorType of the actor.
      */
-    public final void addActorType(final Actors actorType){
+    public final void addActorType(final Actors actorType) {
 
         databaseTable.addFermatEnumFilter(
                 ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME,
@@ -96,8 +100,7 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
      * with the parameters set.
      *
      * @return a list of crypto brokers with their information.
-     *
-     * @throws CantListActorConnectionsException  if something goes wrong.
+     * @throws CantListActorConnectionsException if something goes wrong.
      */
     public List<T> getResult() throws CantListActorConnectionsException {
 
@@ -110,20 +113,41 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
      * We'll receive at most the quantity of @max set. If null by default the max will be 100.
      * We'll receive the results since @offset set. If null by default the offset will be 0.
      *
-     * @param max     maximum quantity of results expected.
-     * @param offset  position to start bringing the results.
-     *
+     * @param max    maximum quantity of results expected.
+     * @param offset position to start bringing the results.
      * @return a list of crypto brokers with their information.
-     *
-     * @throws CantListActorConnectionsException  if something goes wrong.
+     * @throws CantListActorConnectionsException if something goes wrong.
      */
-    public List<T> getResult(final Integer max   ,
+    public List<T> getResult(final Integer max,
                              final Integer offset) throws CantListActorConnectionsException {
 
         databaseTable.setFilterTop(max.toString());
         databaseTable.setFilterOffSet(offset.toString());
 
         return dao.listActorConnections(databaseTable);
+    }
+
+    public T findByPublicKey(String publicKey) throws CantGetActorConnectionException, ActorConnectionNotFoundException {
+
+        return dao.getActorConnection(actorIdentity, publicKey);
+    }
+
+    public ConnectionState getConnectionState(String publicKey) throws CantGetActorConnectionException {
+
+        try {
+            return dao.getConnectionState(actorIdentity, publicKey);
+        } catch (ActorConnectionNotFoundException exception) {
+            return ConnectionState.NO_CONNECTED;
+        }
+    }
+
+    public UUID getConnectionId(String publicKey) throws CantGetActorConnectionException {
+
+        try {
+            return dao.getConnectionId(actorIdentity, publicKey);
+        } catch (ActorConnectionNotFoundException exception) {
+            return null;
+        }
     }
 
 }

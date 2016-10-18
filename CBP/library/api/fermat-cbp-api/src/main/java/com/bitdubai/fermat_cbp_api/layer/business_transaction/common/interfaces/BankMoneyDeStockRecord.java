@@ -54,13 +54,6 @@ public class BankMoneyDeStockRecord extends AbstractDeStockRecord {
 
     @Override
     public String toString() {
-        return "BankMoneyDeStockRecord{" +
-                abstractToString() +
-                "fiatCurrency=" + fiatCurrency +
-                ", bankWalletPublicKey='" + bankWalletPublicKey + '\'' +
-                ", bankAccount='" + bankAccount + '\'' +
-                ", priceReference=" + priceReference +
-                ", originTransaction=" + originTransaction +
-                '}';
+        return "BankMoneyDeStockRecord{" + abstractToString() + "fiatCurrency=" + fiatCurrency + ", bankWalletPublicKey='" + bankWalletPublicKey + '\'' + ", bankAccount='" + bankAccount + '\'' + ", priceReference=" + priceReference + ", originTransaction=" + originTransaction + '}';
     }
 }

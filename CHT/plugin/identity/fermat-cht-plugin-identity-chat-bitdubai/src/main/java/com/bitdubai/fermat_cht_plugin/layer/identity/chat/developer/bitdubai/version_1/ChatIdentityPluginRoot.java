@@ -20,16 +20,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantExposeActorIdentitiesException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
@@ -37,12 +32,9 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatMa
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
-import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDatabaseConstants;
-import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDeveloperFactory;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatIdentityDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.structure.ChatIdentityManagerImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
@@ -72,9 +64,6 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager;
-
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE)
     private ChatManager chatManager;
 
@@ -87,25 +76,12 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
     public void start() throws CantStartPluginException {
         chatIdentityManager = new ChatIdentityManagerImpl(pluginDatabaseSystem, pluginId, this, deviceUserManager, pluginFileSystem, chatManager, locationManager);
         try {
-            Database database = pluginDatabaseSystem.openDatabase(pluginId, ChatIdentityDatabaseConstants.CHAT_DATABASE_NAME);
             System.out.println("******* Init Chat Identity ******");
-            //super.start();
             this.serviceStatus = ServiceStatus.STARTED;
             //Expose all identities the device
             exposeIdentities();
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
-            try {
-                System.out.println("******* Init Chat Identity ******");
-                ChatIdentityDatabaseFactory databaseFactory = new ChatIdentityDatabaseFactory(pluginDatabaseSystem);
-                databaseFactory.createDatabase(this.pluginId, ChatIdentityDatabaseConstants.CHAT_DATABASE_NAME);
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantStartPluginException();
-            } catch (Exception exception) {
-                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantStartPluginException("Unhandled Exception.", FermatException.wrapException(exception), null, null);
-            }
-          } catch (CantExposeActorIdentitiesException e) {
+
+        } catch (CantExposeActorIdentitiesException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Cant expose Actor Identities.", FermatException.wrapException(e), null, null);
         } catch (CantListChatIdentityException e) {
@@ -118,6 +94,7 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Cant Update Expose Identity.", FermatException.wrapException(e), null, null);
         }
+
     }
 
     @Override
@@ -155,14 +132,14 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
         List<ChatExposingData> chatExposingDataList = new ArrayList<>();
         Location location = null;
         try {
-             location = locationManager.getLocation();
+            location = locationManager.getLocation();
         } catch (CantGetDeviceLocationException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantExposeIdentitiesException("Cant Expose Chat Identity, in Get Location.", FermatException.wrapException(e), null, null);
         }
         long refreshInterval = 0;
         for (final ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser()) {
-           refreshInterval = chatIdentity.getFrecuency().getRefreshInterval();
+            refreshInterval = chatIdentity.getFrecuency().getRefreshInterval();
             chatExposingDataList.add(
                     new ChatExposingData(
                             chatIdentity.getPublicKey(),

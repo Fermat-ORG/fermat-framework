@@ -32,7 +32,7 @@ public class ListComponent implements CustomComponentsObjects{
             } else if (fermatWalletTransaction.getTransactionType().equals(TransactionType.DEBIT)) {
                 titleTransaction += "Send from " + fermatWalletTransaction.getInvolvedActor().getName();
             }
-            titleTransaction+= " "+formatBalanceString(fermatWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode());
+            titleTransaction+= " "+formatBalanceString(fermatWalletTransaction.getAmount(), ShowMoneyType.FRMT.getCode());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -40,12 +40,12 @@ public class ListComponent implements CustomComponentsObjects{
 
     private void generateDetailTransaction(){
         try {
-        String textBody = fermatWalletTransaction.getMemo();
-        if(textBody.length() != 0){
-            detailTransaction+= textBody;
-        }else{
-            detailTransaction+= "Add memo to this transaction";
-        }
+            String textBody = fermatWalletTransaction.getMemo();
+            if(textBody.length() != 0){
+                detailTransaction+= textBody;
+            }else{
+                detailTransaction+= "Add memo to this transaction";
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

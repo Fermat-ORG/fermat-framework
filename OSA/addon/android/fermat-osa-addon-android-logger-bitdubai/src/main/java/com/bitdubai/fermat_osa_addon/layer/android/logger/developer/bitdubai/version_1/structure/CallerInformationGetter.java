@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.structure;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -12,6 +11,7 @@ public final class CallerInformationGetter {
 
     /**
      * returns information of the thread.
+     *
      * @return
      */
     public final List<String> getCurrentThreadInformation() {
@@ -25,6 +25,7 @@ public final class CallerInformationGetter {
 
     /**
      * returns information of the class and method
+     *
      * @return
      */
     public final List<String> getCurrentMethodInformation() {
@@ -35,7 +36,7 @@ public final class CallerInformationGetter {
 
         list.add("Class name:" + e.getClassName());
         try {
-             Class c = Class.forName(e.getClassName());
+            Class c = Class.forName(e.getClassName());
             list.add("Package: " + c.getPackage().getName());
         } catch (ClassNotFoundException e1) {
             /**

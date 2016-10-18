@@ -15,13 +15,12 @@ public enum TransactionStatus implements FermatEnum {
     IN_MERCHANDISE_SUBMIT("IMSU"),
     IN_PENDING_MERCHANDISE("IPME"),
     COMPLETED("COMP"),
-    CANCELLED("CANC")
-    ;
+    CANCELLED("CANC");
 
     String code;
 
-    TransactionStatus(String code){
-        this.code=code;
+    TransactionStatus(String code) {
+        this.code = code;
     }
 
     //PUBLIC METHODS
@@ -35,9 +34,7 @@ public enum TransactionStatus implements FermatEnum {
 
     @Override
     public String toString() {
-        return "TransactionStatus{" +
-                "code='" + code + '\'' +
-                '}';
+        return "TransactionStatus{" + "code='" + code + '\'' + '}';
     }
 
     //GETTER AND SETTERS

@@ -26,8 +26,10 @@
         android:layout_width="match_parent"
         android:layout_height="26dp"
         android:layout_toRightOf="@android:id/icon"
+        android:layout_toEndOf="@android:id/icon"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:fontFamily="sans-serif"
         android:singleLine="true"
         android:ellipsize="marquee"
@@ -44,17 +46,21 @@
     <TextView android:id="@+id/text1"
         android:paddingLeft="1dp"
         android:paddingRight="@dimen/listview_item_padding"
+        android:paddingEnd="@dimen/listview_item_padding"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/listPreferredItemHeight"
         android:layout_toRightOf="@+id/icon"
+        android:layout_toEndOf="@+id/icon"
         android:gravity="center_vertical"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
         android:singleLine="true"
         android:ellipsize="marquee"
         android:textColor="@color/black"
         android:layout_alignParentStart="false"
+        android:layout_alignParentLeft="false"
         />
 
     <CheckBox
@@ -64,6 +70,8 @@
         android:id="@+id/checkBoxSelectContact"
         android:layout_below="@android:id/text2"
         android:layout_toEndOf="@+id/icon"
-        android:layout_marginStart="270dp" />
+        android:layout_toRightOf="@+id/icon"
+        android:layout_marginStart="270dp"
+        android:layout_marginLeft="270dp"/>
 
 </RelativeLayout>

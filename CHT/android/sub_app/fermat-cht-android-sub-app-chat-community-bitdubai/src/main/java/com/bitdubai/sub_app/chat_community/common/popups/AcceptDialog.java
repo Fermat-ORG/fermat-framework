@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.chat_community.common.popups;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -12,16 +11,21 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantAcceptChatRequestException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ChatActorConnectionDenialFailedException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ChatActorDisconnectingFailedException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.session.SessionConstants;
 
@@ -40,24 +44,25 @@ public class AcceptDialog
      * UI components
      */
     private final ChatActorCommunityInformation chatUserInformation;
-    private final ChatActorCommunitySelectableIdentity identity            ;
+    private final ChatActorCommunitySelectableIdentity identity;
+    private Context activity;
 
-    private FermatTextView title      ;
+    private FermatTextView title;
     private FermatTextView description;
-    private FermatTextView userName   ;
-    private FermatButton   positiveBtn;
-    private FermatButton   negativeBtn;
+    private FermatTextView userName;
+    private FermatButton positiveBtn;
+    private FermatButton negativeBtn;
 
-    public AcceptDialog(final Context activity              ,
+    public AcceptDialog(final Context activity,
                         final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
-                        final SubAppResourcesProviderManager subAppResources       ,
-                        final ChatActorCommunityInformation  chatUserInformation  ,
-                        final ChatActorCommunitySelectableIdentity identity              ) {
+                        final SubAppResourcesProviderManager subAppResources,
+                        final ChatActorCommunityInformation chatUserInformation,
+                        final ChatActorCommunitySelectableIdentity identity) {
 
         super(activity, chatUserSubAppSession, subAppResources);
-
+        this.activity = activity;
         this.chatUserInformation = chatUserInformation;
-        this.identity            = identity;
+        this.identity = identity;
     }
 
 
@@ -66,17 +71,17 @@ public class AcceptDialog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        title       = (FermatTextView) findViewById(R.id.title          );
-        description = (FermatTextView) findViewById(R.id.description    );
-        userName    = (FermatTextView) findViewById(R.id.user_name      );
-        positiveBtn = (FermatButton)   findViewById(R.id.positive_button);
-        negativeBtn = (FermatButton)   findViewById(R.id.negative_button);
+        title = (FermatTextView) findViewById(R.id.title);
+        description = (FermatTextView) findViewById(R.id.description);
+        userName = (FermatTextView) findViewById(R.id.user_name);
+        positiveBtn = (FermatButton) findViewById(R.id.positive_button);
+        negativeBtn = (FermatButton) findViewById(R.id.negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText("Connection Request");
-        description.setText(chatUserInformation.getAlias() + " wants to be your friend in P2P Chat");
+        title.setText(activity.getResources().getString(R.string.cht_comm_pending));
+        description.setText(chatUserInformation.getAlias() + " " + activity.getResources().getString(R.string.cht_comm_text_accept));
         userName.setText("");
 
     }
@@ -101,10 +106,10 @@ public class AcceptDialog
             try {
                 if (chatUserInformation != null && identity != null) {
                     getSession().getModuleManager()
-                     .acceptChatActor(chatUserInformation.getConnectionId());
-                    getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED,Boolean.TRUE);
+                            .acceptChatActor(chatUserInformation.getConnectionId());
+                    getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED, Boolean.TRUE);
                     Toast.makeText(getContext(),
-                            chatUserInformation.getAlias() + " Accepted connection request",
+                             activity.getResources().getString(R.string.cht_comm_text_accpet_toast) + " " + chatUserInformation.getAlias() ,
                             Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();
@@ -121,15 +126,20 @@ public class AcceptDialog
         } else if (i == R.id.negative_button) {
             try {
                 if (chatUserInformation != null && identity != null) {
+                    //To avoid contact blocking on the 1st CHT version, uncomment when everyone agree w. it
                     getSession().getModuleManager()
-                        .denyChatConnection(chatUserInformation.getConnectionId());
-                }else {
+                            .disconnectChatActor(chatUserInformation.getConnectionId());//.denyChatConnection(chatUserInformation.getConnectionId());
+                } else {
                     super.toastDefaultError();
                 }
-            } catch (final ChatActorConnectionDenialFailedException e) {
-                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                super.toastDefaultError();
-            } catch (final ActorConnectionRequestNotFoundException e) {
+            } catch (/*ChatActorConnectionDenialFailedException
+                    | ActorConnectionRequestNotFoundException
+                    | */ChatActorDisconnectingFailedException
+                    | ActorConnectionRequestNotFoundException
+                    | ConnectionRequestNotFoundException
+                    | CantDisconnectFromActorException
+                    | UnexpectedConnectionStateException
+                    | ActorConnectionNotFoundException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
             }

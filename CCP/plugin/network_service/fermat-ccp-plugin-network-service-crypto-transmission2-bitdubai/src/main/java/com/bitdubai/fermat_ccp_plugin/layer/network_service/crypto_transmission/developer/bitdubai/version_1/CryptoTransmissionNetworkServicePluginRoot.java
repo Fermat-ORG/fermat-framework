@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -10,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -23,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
@@ -48,13 +52,12 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.CryptoTransmissionMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.CryptoTransmissionMessageType;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.CryptoTransmissionMetadataRecord;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.CryptoTransmissionResponseMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.CryptoTransmissionTransactionProtocolManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.google.gson.Gson;
 
@@ -77,6 +80,12 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         CryptoTransmissionNetworkServiceManager,
         DatabaseManagerForDevelopers {
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    protected PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
+    
     Timer timer = new Timer();
 
     private long reprocessTimer = 300000; //five minutes
@@ -383,9 +392,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     }
 
     @Override
-    public void onSentMessage(NetworkServiceMessage messageSent) {
+    public void onSentMessage(UUID messageSent) {
 
-
+/*
         CryptoTransmissionMessage cryptoTransmissionMetadata = new Gson().fromJson(messageSent.getContent(), CryptoTransmissionMessage.class);
         try {
             if (cryptoTransmissionMetadata.getCryptoTransmissionMetadataState() == CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET) {
@@ -408,22 +417,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         System.out.println("-----------------------\n" +
                 "CRYPTO METADATA ENVIADA----------------------- \n" +
                 "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataState());
+    */
     }
 
     @Override
     public void stop() {
         super.stop();
         executorService.shutdownNow();
-    }
-
-    @Override
-    public void onActorUnreachable(ActorProfile remoteParticipant) {
-        System.out.println("----------------------------------\n" +
-                "CRYPTO TRANSMISSION FAILED CONNECTION " + "\n" +
-                "--------------------------------------------------------");
-        //I check my time trying to send the message
-        checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
-
     }
 
     protected void reprocessPendingMessage() {
@@ -666,11 +666,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
      */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        if(developerDatabase.getName().equals(CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME))
-            return new CryptoTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
-        else
-            return new CryptoTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
 
+            return new CryptoTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
     }
 
     /**
@@ -796,10 +793,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     }
 
     private void lauchNotification(){
-        FermatEvent fermatEvent = this.getEventManager().getNewEvent(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
+        FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
         IncomingCryptoMetadataEvent incomingCryptoMetadataReceive = (IncomingCryptoMetadataEvent) fermatEvent;
         incomingCryptoMetadataReceive.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
-        this.getEventManager().raiseEvent(incomingCryptoMetadataReceive);
+        eventManager.raiseEvent(incomingCryptoMetadataReceive);
     }
 
     private void sendMessageToActor(final CryptoTransmissionMetadataRecord cpr){
@@ -823,7 +820,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                             sendNewMessage(
                                     sender,
                                     receiver,
-                                    cpr.toJson()
+                                    cpr.toJson(), true
                             );
                         } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
                             e.printStackTrace();
@@ -840,7 +837,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                             sendNewMessage(
                                     sender,
                                     receiver,
-                                    buildJsonMetadataResponseMessage(cpr)
+                                    buildJsonMetadataResponseMessage(cpr), true
                             );
                         } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
                             e.printStackTrace();

@@ -1,7 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="message_tittle">Welcome!</string>
+    <string name="dialog_title">Welcome!</string>
+    <string name="text_subtitle">This is a basic Bitcoin wallet. It\&#39;s main features include:</string>
+    <string name="text_body">* Checking your balance.\n* Sending/receiving Bitcoins.\n* Requesting Bitcoins.\n* Browsing your transaction history.</string>
+    <string name="text_footer">To begin pick an avatar from below. You can customize it later with your own name and image</string>
     <string name="name_left">John Doe</string>
     <string name="name_right">Jane Doe</string>
+    <string name="checkbox_show">Dont show this again</string>
+    <string name="dialog_button_close">Close</string>
+
+    <string name="confirm_dialog_title">Title</string>
+    <string name="confirm_dialog_body">You want to save this?</string>
+    <string name="confirm_dialog_yes">Yes</string>
+    <string name="confirm_dialog_no">No</string>
+
+    <!-- dialog_blockchain_download.xml-->
+    <string name="advertisement_text">Advertisement!</string>
+    <string name="the_process_of_downloading_text">The process of downloading blocks \nfrom the Blockchain is in progress.\n  As this occurs, the action bar is shown in red.</string>
+
+    <!--Help Dialog for Payment Request-->
+    <string name="payment_title">Payment Request</string>
+    <string name="payment_subtitle">This is Payment Request interfaces. You can send a bitcoin request to your contacts.</string>
+    <string name="payment_body">* Browse your Sent/Received Payment Request.\n* Send a new Bitcoin Payment Request.</string>
+
 
 </resources>

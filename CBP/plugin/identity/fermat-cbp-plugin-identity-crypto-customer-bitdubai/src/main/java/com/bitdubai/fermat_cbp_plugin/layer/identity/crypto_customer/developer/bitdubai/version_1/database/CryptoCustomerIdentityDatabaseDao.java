@@ -166,6 +166,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
 
             for (DatabaseTableRecord record : table.getRecords()) {
                 list.add(getIdentityFromRecord(record));
+                System.out.println("LOSTWOOD_CUSTOMER_IDENTITY:"+list);
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantListCryptoCustomerIdentitiesException(e.getMessage(), e, "Crypto Customer Identity", "Cant load " + CRYPTO_CUSTOMER_TABLE_NAME + " table in memory.");

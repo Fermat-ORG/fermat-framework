@@ -271,6 +271,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
     @Override
     public void stop() {
         try {
+            if (processorAgent!=null)
             processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception exception) {

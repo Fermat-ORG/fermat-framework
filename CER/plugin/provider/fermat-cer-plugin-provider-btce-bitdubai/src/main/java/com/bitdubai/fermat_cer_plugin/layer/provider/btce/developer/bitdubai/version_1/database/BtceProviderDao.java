@@ -63,7 +63,7 @@ public class BtceProviderDao {
                 errorManager.reportUnexpectedPluginException(Plugins.BTCE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeBtceProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + BtceProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, "");
             }
-        }catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BTCE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeBtceProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + BtceProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, "");
         } catch (Exception e) {
@@ -74,9 +74,9 @@ public class BtceProviderDao {
 
     public void initializeProvider(String providerName) throws CantInitializeProviderInfoException {
         //Try to get info, if there's no info, populate.
-        try{
+        try {
             this.getProviderInfo();
-        }catch (CantGetProviderInfoException e){
+        } catch (CantGetProviderInfoException e) {
             this.populateProviderInfo(providerName);
         }
     }
@@ -89,26 +89,24 @@ public class BtceProviderDao {
         constructRecordFromExchangeRate(newRecord, exchangeRate);
         try {
             table.insertRecord(newRecord);
-        }catch (CantInsertRecordException e) {
+        } catch (CantInsertRecordException e) {
             throw new CantSaveExchangeRateException(e.getMessage(), e, "Btce provider plugin", "Cant save new record in table");
         }
     }
 
 
-
-    public List<ExchangeRate> getQueriedExchangeRateHistory(ExchangeRateType exchangeRateType, CurrencyPair currencyPair) throws CantGetExchangeRateException
-    {
+    public List<ExchangeRate> getQueriedExchangeRateHistory(ExchangeRateType exchangeRateType, CurrencyPair currencyPair) throws CantGetExchangeRateException {
         List<ExchangeRate> exchangeRateList = new ArrayList<>();
         DatabaseTable table = null;
 
-        switch(exchangeRateType) {
+        switch (exchangeRateType) {
             case CURRENT:
                 table = this.database.getTable(BtceProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME);
                 table.addStringFilter(BtceProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
                 table.addStringFilter(BtceProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME, currencyPair.getTo().getCode(), DatabaseFilterType.EQUAL);
                 break;
             default:
-                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, null, "Failed to get History for currencyPair: " + currencyPair.toString(), "ExchangeRateType ("+exchangeRateType+") unsupported");
+                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, null, "Failed to get History for currencyPair: " + currencyPair.toString(), "ExchangeRateType (" + exchangeRateType + ") unsupported");
         }
 
         try {
@@ -120,7 +118,7 @@ public class BtceProviderDao {
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
-        }catch (CantCreateExchangeRateException e) {
+        } catch (CantCreateExchangeRateException e) {
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't create ExchangeRate object");
         }
 
@@ -148,7 +146,7 @@ public class BtceProviderDao {
         List<DatabaseTableRecord> records;
         DatabaseTable table = this.database.getTable(BtceProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
 
-        try{
+        try {
             table.loadToMemory();
             records = table.getRecords();
         } catch (CantLoadTableToMemoryException e) {
@@ -160,6 +158,7 @@ public class BtceProviderDao {
 
         return records.get(0);
     }
+
     private void populateProviderInfo(String providerName) throws CantInitializeProviderInfoException {
         DatabaseTable table = this.database.getTable(BtceProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
         DatabaseTableRecord newRecord = table.getEmptyRecord();
@@ -169,7 +168,7 @@ public class BtceProviderDao {
 
         try {
             table.insertRecord(newRecord);
-        }catch (CantInsertRecordException e) {
+        } catch (CantInsertRecordException e) {
             throw new CantInitializeProviderInfoException(e.getMessage());
         }
     }
@@ -201,35 +200,32 @@ public class BtceProviderDao {
         try {
             String fromCurrencyStr = record.getStringValue(BtceProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME);
 
-            if(FiatCurrency.codeExists(fromCurrencyStr))
+            if (FiatCurrency.codeExists(fromCurrencyStr))
                 fromCurrency = FiatCurrency.getByCode(fromCurrencyStr);
-            else if(CryptoCurrency.codeExists(fromCurrencyStr))
+            else if (CryptoCurrency.codeExists(fromCurrencyStr))
                 fromCurrency = CryptoCurrency.getByCode(fromCurrencyStr);
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Btce provider plugin", "Invalid From Currency value stored in table"
-                    + BtceProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "Btce provider plugin", "Invalid From Currency value stored in table" + BtceProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
         }
 
         Currency toCurrency;
         try {
             String toCurrencyStr = record.getStringValue(BtceProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME);
 
-            if(FiatCurrency.codeExists(toCurrencyStr))
+            if (FiatCurrency.codeExists(toCurrencyStr))
                 toCurrency = FiatCurrency.getByCode(toCurrencyStr);
-            else if(CryptoCurrency.codeExists(toCurrencyStr))
+            else if (CryptoCurrency.codeExists(toCurrencyStr))
                 toCurrency = CryptoCurrency.getByCode(toCurrencyStr);
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Btce provider plugin", "Invalid To Currency value stored in table"
-                    + BtceProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "Btce provider plugin", "Invalid To Currency value stored in table" + BtceProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME + " for id " + id);
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);
     }
-
 
 
 }

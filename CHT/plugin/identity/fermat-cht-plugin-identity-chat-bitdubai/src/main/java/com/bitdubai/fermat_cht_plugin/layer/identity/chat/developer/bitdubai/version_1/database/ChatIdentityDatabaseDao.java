@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.ve
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -23,7 +24,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ExposureLevel;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetPrivateKeyException;
@@ -67,8 +67,8 @@ public class ChatIdentityDatabaseDao {
     public ChatIdentityDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId,
                                    PluginFileSystem pluginFileSystem) throws CantOpenDatabaseException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId;
-        this.pluginFileSystem     = pluginFileSystem;
+        this.pluginId = pluginId;
+        this.pluginFileSystem = pluginFileSystem;
 
         try {
             database = openDatabase();
@@ -134,8 +134,7 @@ public class ChatIdentityDatabaseDao {
         }
     }
 
-    public void changeExposureLevel(String publicKey, ExposureLevel exposureLevel) throws CantUpdateChatIdentityException
-    {
+    public void changeExposureLevel(String publicKey, ExposureLevel exposureLevel) throws CantUpdateChatIdentityException {
         try {
             /**
              * 1) Get the table.
@@ -151,20 +150,16 @@ public class ChatIdentityDatabaseDao {
 
             // 2) Find the Intra users.
             table.addStringFilter(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
-            table.loadToMemory();
 
-
-            // 3) Get Intra users.
-            for (DatabaseTableRecord record : table.getRecords()) {
-                //set new values
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_EXPOSURE_LEVEL_COLUMN_NAME, exposureLevel.getCode());
-                table.updateRecord(record);
-            }
+            DatabaseTableRecord record = table.getEmptyRecord();
+            //set new values
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_EXPOSURE_LEVEL_COLUMN_NAME, exposureLevel.getCode());
+            table.updateRecord(record);
 
         } catch (CantUpdateRecordException e) {
 
             throw new CantUpdateChatIdentityException(e.getMessage(), e, "Chat Identity", "Cant update Chat Identity, database problems.");
-        }  catch (Exception e) {
+        } catch (Exception e) {
 
             throw new CantUpdateChatIdentityException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Cant update Chat Identity, unknown failure.");
         }
@@ -187,22 +182,18 @@ public class ChatIdentityDatabaseDao {
 
             // 2) Find the Intra users.
             table.addStringFilter(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
-            table.loadToMemory();
 
+            DatabaseTableRecord record = table.getEmptyRecord();
+            //set new values
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME, alias);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME, state);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME, country);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME, city);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME, connectionState);
+            record.setLongValue(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME, accuracy);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME, frecuency.getCode());
 
-            // 3) Get Intra users.
-            for (DatabaseTableRecord record : table.getRecords()) {
-                //set new values
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME, alias);
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME, state);
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME, country);
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME, city);
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME, connectionState);
-                record.setLongValue(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME, accuracy);
-                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME, frecuency.getCode());
-
-                table.updateRecord(record);
-            }
+            table.updateRecord(record);
 
             if (profileImage != null)
                 persistNewUserProfileImage(publicKey, profileImage);
@@ -258,7 +249,7 @@ public class ChatIdentityDatabaseDao {
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME),
-                        record.getLongValue( ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME),
+                        record.getLongValue(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME),
                         GeoFrequency.getByCode(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME)));
 
             }
@@ -315,7 +306,7 @@ public class ChatIdentityDatabaseDao {
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME),
-                        record.getLongValue( ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME),
+                        record.getLongValue(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME),
                         GeoFrequency.getByCode(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME))));
             }
         } catch (CantLoadTableToMemoryException e) {
@@ -352,10 +343,8 @@ public class ChatIdentityDatabaseDao {
             }
 
             table.addStringFilter(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
-            table.loadToMemory();
 
-            return table.getRecords().size() > 0;
-
+            return table.getCount() > 0;
 
         } catch (CantLoadTableToMemoryException e) {
 

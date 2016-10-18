@@ -18,9 +18,6 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.interfaces.RecyclerListFragment;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -51,6 +48,7 @@ public abstract class FermatWalletListFragment<M,S extends FermatSession,RP exte
     protected FermatAdapter adapter;
     protected RecyclerView.LayoutManager layoutManager;
     protected SwipeRefreshLayout swipeRefreshLayout;
+    protected RecyclerView.OnScrollListener scrollListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +71,11 @@ public abstract class FermatWalletListFragment<M,S extends FermatSession,RP exte
         if (_executor != null) {
             _executor.shutdown();
             _executor = null;
+        }
+
+        if (scrollListener != null && recyclerView != null) {
+            recyclerView.removeOnScrollListener(scrollListener);
+            scrollListener = null;
         }
     }
 
@@ -119,6 +122,10 @@ public abstract class FermatWalletListFragment<M,S extends FermatSession,RP exte
             if (adapter != null) {
                 recyclerView.setAdapter(adapter);
             }
+            scrollListener = getScrollListener();
+            if (scrollListener != null) {
+                recyclerView.addOnScrollListener(scrollListener);
+            }
             swipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(getSwipeRefreshLayoutId());
             if (swipeRefreshLayout != null) {
                 isRefreshing = false;
@@ -144,7 +151,7 @@ public abstract class FermatWalletListFragment<M,S extends FermatSession,RP exte
      *
      * @param refreshType Fermat Refresh Enum Type
      */
-    public List<M> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoLossProtectedWalletException, CantListLossProtectedTransactionsException {
+    public List<M> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         return null;
     }
 
@@ -161,5 +168,17 @@ public abstract class FermatWalletListFragment<M,S extends FermatSession,RP exte
             if (getExecutor() != null)
                 getExecutor().execute(worker);
         }
+    }
+
+
+    /**
+     * Override this method if yo want to implement infinite scrolling or pagination.
+     * Return a {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.
+     *
+     * @return the {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.
+     * This return <code>null</code> by default
+     */
+    public RecyclerView.OnScrollListener getScrollListener() {
+        return null;
     }
 }

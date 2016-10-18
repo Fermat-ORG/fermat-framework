@@ -30,8 +30,7 @@ public enum NegotiationStepStatus {
             case "CONFIR":
                 return CONFIRM;
             default:
-                throw new InvalidParameterException("Code Received: " + code +
-                        " - This Code Is Not Valid for the ClauseType enum");
+                throw new InvalidParameterException("Code Received: " + code + " - This Code Is Not Valid for the ClauseType enum");
         }
     }
 
@@ -39,7 +38,7 @@ public enum NegotiationStepStatus {
         try {
             getByCode(code);
             return true;
-        } catch(InvalidParameterException e) {
+        } catch (InvalidParameterException e) {
             return false;
         }
     }

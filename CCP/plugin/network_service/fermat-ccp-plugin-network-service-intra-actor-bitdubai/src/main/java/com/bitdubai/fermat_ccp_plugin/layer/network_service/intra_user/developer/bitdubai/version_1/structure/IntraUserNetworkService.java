@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
 import java.io.Serializable;
 
@@ -14,14 +16,17 @@ public class IntraUserNetworkService  implements IntraUserInformation,Serializab
     private String publicKey;
     private byte[] profileImage;
     private String name;
-
+private ProfileStatus state;
     private String phrase;
+    private Location location;
 
-    public IntraUserNetworkService(String publicKey,byte[] profileImage,String name, String phrase){
+    public IntraUserNetworkService(String publicKey,byte[] profileImage,String name, String phrase, ProfileStatus state, Location location){
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.name = name;
         this.phrase = phrase;
+        this.state = state;
+        this.location = location;
     }
 
     @Override
@@ -45,17 +50,37 @@ public class IntraUserNetworkService  implements IntraUserInformation,Serializab
     }
 
     @Override
+    public String getCity() {
+        return "";
+    }
+
+    @Override
+    public String getCountry() {
+        return "";
+    }
+
+    @Override
     public ConnectionState getConnectionState() {
         return null;
     }
 
     @Override
-    public String getState() {
-        return null;
+    public ProfileStatus getState() {
+        return this.state;
     }
 
     @Override
     public void setProfileImageNull() {
         profileImage = new byte[0];
+    }
+
+    @Override
+    public long getContactRegistrationDate() {
+        return 0;
+    }
+
+    @Override
+    public Location getLocation() {
+        return location;
     }
 }

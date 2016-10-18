@@ -30,9 +30,9 @@ public class IdentityBrokerPreferenceSettings implements SubAppSettings, Seriali
         return isHomeTutorialDialogEnabled;
     }
 
-    public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {
-        this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;
-    }
+//    public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {
+//        this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;
+//    }
 
     @Override
     public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {

@@ -39,6 +39,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
     ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
     Typeface tf;
     private ShowMoneyType typeAmountSelected = ShowMoneyType.BITCOIN;
+    private Context context;
     /**
      * DATA
      * **/
@@ -54,6 +55,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
         this.lossProtectedWalletSession =lossProtectedWalletSession;
         //this.mOnClickListener = onClickListener;
         this.onRefreshList = onRefresh;
+        this.context = context;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
 
         if(lossProtectedWalletSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
@@ -131,7 +133,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
                         data.getAmount(),
                         MAX_DECIMAL_FOR_BALANCE_TRANSACTION,
                         MIN_DECIMAL_FOR_BALANCE_TRANSACTION,
-                        typeAmountSelected.getCode()) + "  (" + percentage + "% Spend)");
+                        typeAmountSelected.getCode()) + "  (" + percentage + "% "+  context.getResources().getString(R.string.chunck_values_history_spend) +")");
         holder.getTxt_amount().setTypeface(tf);
 
         if ((double)lossProtectedWalletSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE) >= data.getExchangeRate())
@@ -139,7 +141,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
         else
             holder.getTxt_amount().setTextColor(Color.parseColor("#FF0000"));
 
-        holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = "+
+        holder.getTxt_exchange_rate().setText(context.getResources().getString(R.string.chunck_values_history_rate) +
                 WalletUtils.formatAmountStringWithDecimalEntry(
                         data.getExchangeRate(),
                         MAX_DECIMAL_EXCHANGE_RATE_AMOUNT,

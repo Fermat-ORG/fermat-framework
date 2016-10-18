@@ -84,12 +84,6 @@ public class CryptoMoneyDeStockRecord extends AbstractDeStockRecord {
 
     @Override
     public String toString() {
-        return "CryptoMoneyDeStockRecord{" +
-                "cryptoCurrency=" + cryptoCurrency +
-                ", cryptoWalletPublicKey='" + cryptoWalletPublicKey + '\'' +
-                ", blockchainNetworkType=" + blockchainNetworkType +
-                ", fee=" + fee +
-                ", feeOrigin=" + feeOrigin +
-                '}';
+        return "CryptoMoneyDeStockRecord{" + "cryptoCurrency=" + cryptoCurrency + ", cryptoWalletPublicKey='" + cryptoWalletPublicKey + '\'' + ", blockchainNetworkType=" + blockchainNetworkType + ", fee=" + fee + ", feeOrigin=" + feeOrigin + '}';
     }
 }

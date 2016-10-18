@@ -45,7 +45,7 @@
     <string name="second_description_text">the fermat network.</string>
     <string name="connect_text">Connect</string>
     <!-- donut_header.xml -->
-    <string name="txt_balance_amount_29_text">39.00</string>
+    <string name="txt_balance_amount_29_text">0.00</string>
     <string name="balance_amount_type_text">btc</string>
     <!-- loss_fragment_add_connections_list.xmlt.xml -->
     <string name="click_me_to_search_text">Click on me\nto look for contacts!</string>
@@ -64,14 +64,39 @@
     <string name="notes_text">Notes</string>
     <!-- loss_fragment_transaction_main_main.xml -->
     <string name="no_history_send_or_receive">No history\nsend or receive\nto fill this!!</string>
+    <string name="Date_text">Date: </string>
+    <string name="Note_text">Note: </string>
+    <string name="To_text">To: </string>
+    <string name="From_text">From: </string>
+    <string name="confirmation_text">"You will sending Amount btc. Confirm?</string>
+
     <!-- header.xml -->
     <string name="header_text">Header</string>
     <!-- loss_history_request_row.xml -->
+    <string name="waiting_receive_text">Waiting for response</string>
     <string name="accepted_text">Accepted</string>
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
+    <string name="Paid_text">Paid</string>
+    <string name="Pending_response">Pending response</string>
+    <string name="Error">Error</string>
+    <string name="Not_sent_yet">Not sent yet</string>
+    <string name="Payment_process_started">Payment process started</string>
+    <string name="Denied_by_incompatibility">Denied by incompatibility</string>
+    <string name="In_approving_process">In approving process</string>
+    <string name="Error_contact_with_support">Error, contact with support</string>
+    <string name="denied">Denied</string>
+    <string name="Waiting_for_response">Waiting for response</string>
+
     <!-- home_receive_main.xml -->
     <string name="no_transactions_text">No transactions</string>
+    <string name="Total_earnings_lost">Total earnings and lost:</string>
+    <string name="Today_text">Today: </string>
+    <string name="Earned_text">earned</string>
+    <string name="Lost_text">lost</string>
+
+    <string name="No_data">No Data</string>
+
     <!-- home_request_fragment_main.xml -->
     <string name="reason_text">Reason</string>
     <string name="you_dont_have_requests_text">You don\'t have\n requests</string>
@@ -86,8 +111,58 @@
     <string name="refuse_text">Refuse</string>
     <!-- loss_presentation_bitcoin_wallet_without_identities.xml -->
     <string name="welcome_text">Welcome!</string>
-    <string name="this_is_a_loss_protected_wallet_text">This is a wallet that will allow you to protect against loss of money. It\'s main features are:</string>
+    <string name="this_is_a_loss_protected_wallet_text">This is a wallet that will allow you to protect against loss of money. It\s main features are:</string>
     <string name="close_text">Close</string>
+    <!-- loss_toast -->
+
+    <string name="Whooops_text">Recovering from system error.</string>
+    <string name="Whooops_text2">We have a problem here.</string>
+    <string name="Whooops_text3">Whooops! recovering from system error In Graphic"</string>
+
+    <string name="Recovering">Recovering from system error.</string>
+    <string name="Insufficient_funds">Insufficient funds.</string>
+    <string name="Wait_a_minute">Wait a minute please, trying to reconnect...</string>
+
+    <string name="Contact_without_net_address">Contact don\'t have an Address from red</string>
+    <string name="Contact_without_address">Contact don\'t have an Address</string>
+
+    <string name="Contact_not_found">Contact not found, please add it.</string>
+    <string name="Sending_text">Sending...</string>
+    <string name="Action_not_allowed_lpw">Action not allowed, you will lose money. Restricted by LossProtected Configuration.</string>
+    <string name="Send_error_text">Send Error.</string>
+    <string name="Invalid_Amount_small">Invalid Amount, must be greater than</string>
+    <string name="Invalid_Amount">Invalid Amount</string>
+    <string name="Unexpected_error">Unexpected Error</string>
+
+    <string name="Request_accepted">Request accepted</string>
+    <string name="Request_denied">Request denied</string>
+    <string name="Action_not_allowed2">Action not allowed.Could not retrieve the dollar exchange rate.\nCheck your internet connection.. </string>
+    <string name="Cant_accept">Can\'t Accept or Denied Receive Payment Exception -</string>
+    <string name="Error_spending_chart">Error Get SpendingList for Chart</string>
+
+    <!-- loss_notification_painter.xml -->
+    <string name="lpw_notification_transaction_arrive_1">Received money</string>
+    <string name="lpw_notification_transaction_arrive_2">BTC Arrived</string>
+    <string name="lpw_notification_transaction_reverse_1">Sent Transaction reversed</string>
+    <string name="lpw_notification_transaction_reverse_2">Sending</string>
+    <string name="lpw_notification_transaction_reverse_3">BTC could not be completed.</string>
+    <string name="lpw_notification_request_arrive_1">Received new Payment Request</string>
+    <string name="lpw_notification_request_arrive_2">You have received a Payment Request, for</string>
+    <string name="lpw_notification_payment_denied_1">Payment Request deny</string>
+    <string name="lpw_notification_payment_denied_2">Your Payment Request, for </string>
+    <string name="lpw_notification_payment_denied_3">BTC was deny.</string>
+    <string name="lpw_notification_payment_error_1">Payment Request reverted</string>
+    <string name="lpw_notification_payment_error_2">Your Payment Request, for </string>
+    <string name="lpw_notification_payment_error_3">BTC was reverted.</string>
+
+    <!-- loss_presentation_settings.xml -->
+    <string name="Enabled_notificacions">Enabled Notifications</string>
+    <string name="Enabled_loss_protected">Enabled Loss Protected</string>
+    <string name="Select_network">Select Network</string>
+    <string name="Received_Testnet_Bitcoins">Received Testnet Bitcoins</string>
+    <string name="TestNet_download">"TestNet download Init"</string>
+    <string name="TestNet_bitcoin_arrived">TestNet bitcoin arrived</string>
+    <string name="TestNet_Request_Error">TestNet Request Error</string>
 
     <!-- loss_presentation_wallet.xml -->
     <string name="to_begin_choose_an_avatar_below_text">To begin, choose an avatar below. You might change it later with any picture and your own alias.</string>
@@ -107,6 +182,13 @@
     <string name="btc_text">[btc]</string>
     <string name="balance_amount_0_text">0</string>
     <string name="amount_text">Amount</string>
+    <string name="fee_amount_text">Fee</string>
+    <string name="fee_option_text">Substract Fee from Amount</string>
+    <string name="fee_advances_text">Advanced configuration</string>
+    <string name="title_Fee">Fee Level Settings</string>
+    <string name="fee_low">Slow</string>
+    <string name="fee_Medium">Normal</string>
+    <string name="fee_High">Fast</string>
     <!-- setting_base.xml -->
     <string name="empty_transactions_text">Empty transactions</string>
     <!-- wallet_manager_transaction_view.xml -->
@@ -149,7 +231,7 @@
     <string name="title_section15">Factory Projects</string>
     <string name="title_section16">Published Wallets</string>
     <string name="title_section17">Shops</string>
-    <string name="app_name">Fermat Bitcoin Wallet</string>
+    <string name="app_name">Fermat Loss Protected Wallet</string>
     <string name="button_send">Send</string>
     <string name="title_activity_main">Young Wallet</string>
     <string name="action_search">Buscar</string>
@@ -175,7 +257,7 @@
         <item>Hockey</item>
     </string-array>
     <string name="action_contact">Wallets</string>
-    <string name="title_activity_app_desktop">AppDesktop</string>
+    <string name="title_activity_app_desktop" translatable="false">AppDesktop</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_navegation_drawler">Smart Wallets</string>
@@ -207,8 +289,8 @@
     <string name="title_activity_received_detail">ReceivedDetailActivity</string>
     <string name="title_activity_receive_from_new_contact">ReceiveFromNewContactActivity</string>
     <string name="title_activity_receive_from_contact">Receive From Contact Activity</string>
-    <string name="title_activity_chat_over_trx">Chat Over Trx Activity</string>
-    <string name="title_activity_blank_activity_with_fragment">BlankActivityWithFragment</string>
+    <string name="title_activity_chat_over_trx" translatable="false">Chat Over Trx Activity</string>
+    <string name="title_activity_blank_activity_with_fragment" translatable="false">BlankActivityWithFragment</string>
     <string name="title_activity_balance_available">BalanceAvailableActivity</string>
     <string name="title_activity_wallet">Wallet Activity</string>
     <string-array name="account_name">
@@ -226,9 +308,9 @@
     <string name="title_activity_activity_main">Main Activity</string>
     <string name="empty_view">Empty List view</string>
     <!-- TAB BALANCE STRINGS -->
-    <string name="available_balance">available balance</string>
+    <string name="available_balance">Available balance</string>
     <string name="book_balance">book balance</string>
-    <string name="real_balance">real balance</string>
+    <string name="real_balance">Real balance</string>
     <string name="search_hint">Contact name</string>
     <string name="empty_list_msg">No contacts</string>
     <!-- TAB TRANSACTIONS -->
@@ -259,9 +341,21 @@
     <array name="items" translatable="false">
         <item>MainNet</item>
         <item>TestNet</item>
-        <item>RegTest</item>
     </array>
 
     <string name="exchange_title_label">Exchange Rate Providers</string>
-    <!-- Custom Dialog Fragment -->
+    <string name="income_expense" >On this screen you can see your income and expenses of all transactions sent and received</string>
+    <string name="spending_details" >Spending Details</string>
+
+    <string name="chunck_values_history_rate">Exchange Rate: 1 BTC = </string>
+    <string name="chunck_values_history_spend">Spent</string>
+
+    <string name="chunck_values_btc_spent">BTC Spent</string>
+    <string name="chunck_values_btc_rate">Exchange Rate</string>
+    <string name="chunck_values_btc_date">Date</string>
+
+    <!--Delete Wallet Contact Dialog-->
+    <string name="delete_title">Delete Contact</string>
+    <string name="delete_sub_title">Do you want delete this contact from your wallet?</string>
+    <string name="deleted_toast">Contact Deleted</string>
 </resources>

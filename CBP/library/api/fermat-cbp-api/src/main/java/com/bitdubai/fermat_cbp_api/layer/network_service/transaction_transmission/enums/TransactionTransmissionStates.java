@@ -36,7 +36,7 @@ public enum TransactionTransmissionStates {
     public static TransactionTransmissionStates getByTransactionTransmissionStates(TransactionTransmissionStates transactionTransmissionStates) throws InvalidParameterException {
 
         for (TransactionTransmissionStates states : TransactionTransmissionStates.values()) {
-            if (states.getCode().equals(transactionTransmissionStates))
+            if (states.getCode().equals(transactionTransmissionStates.getCode()))
                 return transactionTransmissionStates;
         }
         throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "cryptoTransmissionStates: " + transactionTransmissionStates, "This cryptoTransmissionStates is not valid for the transactionTransmissionStates enum.");

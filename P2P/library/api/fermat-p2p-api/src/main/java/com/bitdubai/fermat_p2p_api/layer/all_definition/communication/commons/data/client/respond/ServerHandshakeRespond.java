@@ -6,7 +6,11 @@
 */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.MsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.base.STATUS;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ServerHandshakeRespond</code>
@@ -16,7 +20,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ut
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ServerHandshakeRespond extends MsgRespond{
+public class ServerHandshakeRespond extends MsgRespond {
 
     /**
      * Represent the identityPublicKey of the profile
@@ -30,8 +34,8 @@ public class ServerHandshakeRespond extends MsgRespond{
      * @param details
      * @param identityPublicKey
      */
-    public ServerHandshakeRespond(STATUS status, String details, String identityPublicKey) {
-        super(status, details);
+    public ServerHandshakeRespond(UUID packageId, STATUS status, String details, String identityPublicKey) {
+        super(packageId,status, details);
         this.identityPublicKey = identityPublicKey;
     }
 

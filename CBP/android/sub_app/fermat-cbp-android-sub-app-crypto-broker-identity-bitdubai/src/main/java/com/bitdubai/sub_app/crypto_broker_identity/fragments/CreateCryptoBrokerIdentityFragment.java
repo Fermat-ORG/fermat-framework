@@ -44,12 +44,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
-
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateIdentityWorker;
 import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
@@ -86,8 +82,6 @@ public class CreateCryptoBrokerIdentityFragment
     boolean isGpsDialogEnable;
 
 
-
-
     private final TextWatcher textWatcher = new TextWatcher() {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));
@@ -108,38 +102,35 @@ public class CreateCryptoBrokerIdentityFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //If we landed here from CryptoBrokerImageCropperFragment, save the cropped Image.
+        //If we landed here from CryptoBrokerImageCropperFragment or geo settings fragment
+        //Use the cropped image, if there is one (!=null)
         if (appSession.getData(FragmentsCommons.CROPPED_IMAGE) != null) {
             identityImgByteArray = (byte[]) appSession.getData(FragmentsCommons.CROPPED_IMAGE);
             cryptoBrokerBitmap = BitmapFactory.decodeByteArray(identityImgByteArray, 0, identityImgByteArray.length);
             appSession.removeData(FragmentsCommons.CROPPED_IMAGE);
-
-        } else if (appSession.getData(FragmentsCommons.ORIGINAL_IMAGE) != null) {
-            cryptoBrokerBitmap = (Bitmap) appSession.getData(FragmentsCommons.ORIGINAL_IMAGE);
-            identityImgByteArray = ImagesUtils.toByteArray(cryptoBrokerBitmap);
-            appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
         }
 
+        //And the broker name, if there is one (!=null)
         if (appSession.getData(FragmentsCommons.BROKER_NAME) != null) {
             cryptoBrokerName = (String) appSession.getData(FragmentsCommons.BROKER_NAME);
             appSession.removeData(FragmentsCommons.BROKER_NAME);
         }
 
+        //Check if GPS is on and coordinates are fine
         try {
-            isGpsDialogEnable=true;
+            location = appSession.getModuleManager().getLocation();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            isGpsDialogEnable = true;
             settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
             isGpsDialogEnable = settings.isGpsDialogEnabled();
         } catch (Exception e) {
             settings = new IdentityBrokerPreferenceSettings();
             settings.setGpsDialogEnabled(true);
-            isGpsDialogEnable=true;
-        }
-
-        //Check if GPS is on and coordinate are fine
-        try {
-            location = appSession.getModuleManager().getLocation();
-        } catch (Exception e) {
-            e.printStackTrace();
+            isGpsDialogEnable = true;
         }
 
         turnGPSOn();
@@ -165,12 +156,12 @@ public class CreateCryptoBrokerIdentityFragment
         if (cryptoBrokerName != null)
             mBrokerName.setText(cryptoBrokerName);
 
-        mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        /*mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
-        });
+        });*/
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,9 +203,10 @@ public class CreateCryptoBrokerIdentityFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID) {
-            appSession.setData(FragmentsCommons.BROKER_NAME, mBrokerName.getText().toString());
-            appSession.setData(FragmentsCommons.ORIGINAL_IMAGE, cryptoBrokerBitmap);
 
+            //Save broker name and cropped image
+            appSession.setData(FragmentsCommons.BROKER_NAME, mBrokerName.getText().toString());
+            appSession.setData(FragmentsCommons.CROPPED_IMAGE, identityImgByteArray);
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_CREATE_IDENTITY, appSession.getAppPublicKey());
             return true;
         }
@@ -282,8 +274,12 @@ public class CreateCryptoBrokerIdentityFragment
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER, appSession.getAppPublicKey());
         }
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private Bitmap convertImage(int resImage) {
+        return BitmapFactory.decodeResource(getActivity().getResources(), resImage);
     }
 
     private void createNewIdentityInDevice() {
@@ -292,15 +288,12 @@ public class CreateCryptoBrokerIdentityFragment
         if (brokerAlias.trim().isEmpty()) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
 
-        } else if (cryptoBrokerBitmap == null) {
-            Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
-
         } else {
             final int accuracy = getAccuracyData();
             final GeoFrequency frequency = getFrequencyData();
 
             FermatWorker fermatWorker = new CreateIdentityWorker(getActivity(), appSession.getModuleManager(), this,
-                    brokerAlias, identityImgByteArray, accuracy, frequency);
+                    brokerAlias, (identityImgByteArray == null) ? ImagesUtils.toByteArray(convertImage(R.drawable.no_profile_image)) : identityImgByteArray, accuracy, frequency);
 
             progressBar.setVisibility(View.VISIBLE);
             executor = fermatWorker.execute();
@@ -337,7 +330,7 @@ public class CreateCryptoBrokerIdentityFragment
     }
 
     private void dispatchTakePictureIntent() {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         // Check permission for CAMERA
         if (Build.VERSION.SDK_INT >= 23) {
             if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
@@ -379,8 +372,8 @@ public class CreateCryptoBrokerIdentityFragment
     }
 
     private void loadImageFromGallery() {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        Intent loadImageIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
 
@@ -449,8 +442,7 @@ public class CreateCryptoBrokerIdentityFragment
             }
             in.close();
 
-            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " +
-                    b.getHeight());
+            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " + b.getHeight());
             return b;
         } catch (IOException e) {
             Log.e("", e.getMessage(), e);
@@ -487,14 +479,14 @@ public class CreateCryptoBrokerIdentityFragment
                     String provider = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if (!provider.contains("gps")) { //if gps is disabled
                         Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
-                        Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        Intent gpsOptionsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
                 } else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if (!provider.contains("gps")) { //if gps is disabled
                         Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
-                        Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        Intent gpsOptionsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
                     }
                 }
@@ -534,6 +526,7 @@ public class CreateCryptoBrokerIdentityFragment
         }
 
     }
+
     public void turnOnGPSDialog() {
         try {
             PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
@@ -542,6 +535,7 @@ public class CreateCryptoBrokerIdentityFragment
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIconRes(R.drawable.bi_icon)
                     .setBannerRes(R.drawable.banner_identity)
+                    .setVIewColor(R.color.background_toolbar)
                     .setIsCheckEnabled(false)
                     .build();
             settings.setGpsDialogEnabled(false);

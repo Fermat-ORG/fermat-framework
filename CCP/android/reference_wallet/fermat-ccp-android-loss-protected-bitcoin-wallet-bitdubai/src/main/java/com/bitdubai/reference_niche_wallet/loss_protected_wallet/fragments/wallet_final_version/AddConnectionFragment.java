@@ -45,6 +45,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.AddConnectionCallback;
 
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -73,6 +74,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
     LossProtectedWalletSettings lossProtectedWalletSettings;
     BlockchainNetworkType blockchainNetworkType;
 
+    private com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = null;
+    private FloatingActionMenu actionMenu;
+
     public static AddConnectionFragment newInstance() {
         return new AddConnectionFragment();
     }
@@ -91,19 +95,10 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
             connectionPickCounter = 0;
             hnadler = new Handler();
 
-            lossProtectedWalletSettings = moduleManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
-
-            if(lossProtectedWalletSettings != null) {
-
-                if (lossProtectedWalletSettings.getBlockchainNetworkType() == null) {
-                    lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                moduleManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), lossProtectedWalletSettings);
-
-            }
-
-            blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
-
+            if(appSession.getData(SessionConstant.BLOCKCHANIN_TYPE) != null)
+                blockchainNetworkType = (BlockchainNetworkType)appSession.getData(SessionConstant.BLOCKCHANIN_TYPE);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
 
             getActivity().getWindow().setSoftInputMode(
@@ -169,11 +164,11 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
         frameLayout.addView(view);
         frameLayout.setOnClickListener(onClickListener);
         view.setOnClickListener(onClickListener);
-        final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+        actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout).setBackgroundDrawable(R.drawable.floatbutton_community)
                 .build();
 
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+        actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .attachTo(actionButton)
                 .build();
     }
@@ -427,6 +422,23 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
         intraUserInformationList.add(cryptoWalletIntraUserActor);
 
 
+    }
+    @Override
+    public void onDestroy() {
+        try {
+
+            actionButton.setVisibility(View.GONE);
+
+            actionButton.detach();
+            actionButton.removeAllViewsInLayout();
+
+            actionButton = null;
+            actionMenu = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+//        ((ViewGroup)button1.getParent()).removeView(button1);
+        super.onDestroy();
     }
 
     public static void hideSoftKeyboard(Activity activity) {
