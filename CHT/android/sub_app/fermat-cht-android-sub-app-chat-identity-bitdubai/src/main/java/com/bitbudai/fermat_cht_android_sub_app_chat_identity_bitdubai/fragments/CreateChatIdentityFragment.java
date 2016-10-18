@@ -374,19 +374,19 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                             if (checkWriteExternalPermission()) {
                                 if (chatBitmap != null) {
                                     //if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
-                                        final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
-                                        dialogCropImage.show();
-                                        dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                            @Override
-                                            public void onDismiss(DialogInterface dialog) {
-                                                if (dialogCropImage.getCroppedImage() != null) {
-                                                    chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
-                                                    mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
-                                                } else {
-                                                    chatBitmap = null;
-                                                }
+                                    final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
+                                    dialogCropImage.show();
+                                    dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            if (dialogCropImage.getCroppedImage() != null) {
+                                                chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                                mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
+                                            } else {
+                                                chatBitmap = null;
                                             }
-                                        });
+                                        }
+                                    });
 //                                    } else {
 //                                       Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
 //                                    }
@@ -411,19 +411,19 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             chatBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
 //                            if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
-                                final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
-                                dialogCropImagee.show();
-                                dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-                                        if (dialogCropImagee.getCroppedImage() != null) {
-                                            chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
-                                            mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
-                                        } else {
-                                            chatBitmap = null;
-                                        }
+                            final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
+                            dialogCropImagee.show();
+                            dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    if (dialogCropImagee.getCroppedImage() != null) {
+                                        chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                        mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
+                                    } else {
+                                        chatBitmap = null;
                                     }
-                                });
+                                }
+                            });
 //                            } else {
 //                                Toast.makeText(getActivity(), getContext().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
 //                            }
@@ -457,19 +457,19 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                         if (isAttached) {
                             chatBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImagee);
 //                            if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
-                                final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
-                                dialogCropImagee.show();
-                                dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-                                        if (dialogCropImagee.getCroppedImage() != null) {
-                                            chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
-                                            mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
-                                        } else {
-                                            chatBitmap = null;
-                                        }
+                            final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
+                            dialogCropImagee.show();
+                            dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    if (dialogCropImagee.getCroppedImage() != null) {
+                                        chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                        mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
+                                    } else {
+                                        chatBitmap = null;
                                     }
-                                });
+                                }
+                            });
 //                            } else {
 //                                Toast.makeText(getActivity(), getContext().getResources().getString(R.string.cht_identity_image_small), Toast.LENGTH_LONG).show();
 //                            }
